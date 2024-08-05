@@ -9,6 +9,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import FileUpload from "./FileUpload";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface IFormInput {
   barcode: string;
@@ -109,7 +111,15 @@ export default function CpgForm() {
           data.ingrediants,
           responseJSON.URL
         );
-        alert("Form submitted successfully!");
+        toast.success("Form submitted successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         if (response.ok) {
           setTimeout(() => {
             window.location.reload();
@@ -119,11 +129,10 @@ export default function CpgForm() {
         throw new Error("Image upload failed");
       }
     } catch (error) {
-      alert("Failed to submit the form!");
+      toast.error("Failed to submit the form!");
       console.error(error);
     }
   };
-  
 
   return (
     <section className="flex gap-20 mt-5">
@@ -367,6 +376,18 @@ export default function CpgForm() {
       >
         <FileUpload setFile={setFile} file={file} />
       </Card>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </section>
   );
 }
