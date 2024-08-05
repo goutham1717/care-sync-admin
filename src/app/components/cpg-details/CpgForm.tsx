@@ -74,6 +74,7 @@ export default function CpgForm() {
   `,
     };
     try {
+      console.log("TAKING URL", process.env.CARE_SYNC_ENDPOINT || "http://localhost:3000/graphql");
       const response = await axios.post(
         process.env.CARE_SYNC_ENDPOINT || "http://localhost:3000/graphql",
         query,
@@ -102,6 +103,7 @@ export default function CpgForm() {
         body,
       });
       const responseJSON = await response.json();
+      console.log("responseJSON", responseJSON, responseJSON.URL)
       if (responseJSON && responseJSON.URL) {
         await addGpgDetails(
           data.barcode,
@@ -111,19 +113,16 @@ export default function CpgForm() {
           data.ingrediants,
           responseJSON.URL
         );
-        toast.success("Form submitted successfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
         if (response.ok) {
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
+          toast.success("Form submitted successfully!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         }
       } else {
         throw new Error("Image upload failed");
@@ -351,11 +350,10 @@ export default function CpgForm() {
           />
 
           <Button
-            className={`mt-6 w-full ${
-              !isValid || !isImageUploaded
-                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                : "bg-blue-500 text-white"
-            }`}
+            className={`mt-6 w-full ${!isValid || !isImageUploaded
+              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+              : "bg-blue-500 text-white"
+              }`}
             fullWidth
             onClick={handleSubmit(onSubmit)}
             disabled={!isValid || !isImageUploaded}
