@@ -74,9 +74,8 @@ export default function CpgForm() {
   `,
     };
     try {
-      console.log("TAKING URL", process.env.CARE_SYNC_ENDPOINT || "http://localhost:3000/graphql");
       const response = await axios.post(
-        process.env.CARE_SYNC_ENDPOINT || "http://localhost:3000/graphql",
+        process.env.NEXT_PUBLIC_CARE_SYNC_ENDPOINT || "http://localhost:3000/graphql",
         query,
         {
           headers: {
