@@ -21,10 +21,9 @@ interface IFormInput {
   image: any;
 }
 
-export default function CpgForm() {
+export default function CpgForm({ setSelectedItem, selectedItem }) {
   const [file, setFile] = useState<any>();
   const [isImageUploaded, setIsImageUploaded] = useState<boolean>(false);
-
   const {
     control,
     handleSubmit,
@@ -33,19 +32,36 @@ export default function CpgForm() {
     formState: { isValid },
   } = useForm<IFormInput>({
     defaultValues: {
-      barcode: "",
-      productName: "",
-      size: "",
-      ingrediants: "",
-      nutritionalFacts: "",
+      barcode: selectedItem?.barCode || "",
+      productName: selectedItem?.productName || "",
+      size: selectedItem?.size || "",
+      ingrediants: selectedItem?.ingrediants || "",
+      nutritionalFacts: selectedItem?.nutritionalFacts || "",
     },
-    mode: "onChange",
+    //mode: "onChange",
   });
 
+  useEffect(() => {
+    if (selectedItem) {
+      reset({
+        barcode: selectedItem?.barCode || "",
+        productName: selectedItem?.productName || "",
+        size: selectedItem?.size || "",
+        ingrediants: selectedItem?.ingrediants || "",
+        nutritionalFacts: selectedItem?.nutritionalFacts || "",
+      });
+    }
+  }, [selectedItem, reset]);
   useEffect(() => {
     setValue("image", file);
     setIsImageUploaded(!!file); // Set isImageUploaded based on whether file is truthy
   }, [file, setValue]);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    }
+  }, [])
 
   const addGpgDetails = async (
     barCode: string,
@@ -85,6 +101,7 @@ export default function CpgForm() {
       );
       console.log("response", response);
       reset();
+      setValue("image", null);
       return response;
     } catch (e) {
       console.error(e);
@@ -102,7 +119,6 @@ export default function CpgForm() {
         body,
       });
       const responseJSON = await response.json();
-      console.log("responseJSON", responseJSON, responseJSON.URL)
       if (responseJSON && responseJSON.URL) {
         await addGpgDetails(
           data.barcode,
@@ -133,7 +149,7 @@ export default function CpgForm() {
   };
 
   return (
-    <section className="flex gap-20 mt-5">
+    <section className="flex gap-20 mt-5 w-fit">
       <Card
         placeholder={undefined}
         onPointerEnterCapture={undefined}
@@ -371,7 +387,7 @@ export default function CpgForm() {
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
       >
-        <FileUpload setFile={setFile} file={file} />
+        <FileUpload setFile={setFile} file={file} url={selectedItem?.imageURL} />
       </Card>
       <ToastContainer
         position="top-right"

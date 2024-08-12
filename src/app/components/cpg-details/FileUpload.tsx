@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import cloudImg from "../../../../asssets/cloud-computing.png"
 import Image from 'next/image'
@@ -6,9 +6,10 @@ import Image from 'next/image'
 type Props = {
   setFile: React.Dispatch<React.SetStateAction<any>>;
   file: any;
+  url: string;
 };
 
-export default function FileUpload({ setFile, file }: Props) {
+export default function FileUpload({ setFile, file, url }: Props) {
   const onDrop = useCallback((acceptedFiles: any) => {
     const uploadedFile = acceptedFiles[0];
     const file: any = Object.assign(uploadedFile, {
@@ -23,12 +24,26 @@ export default function FileUpload({ setFile, file }: Props) {
       "text/html": [".html", ".htm"],
     },
   });
+  useEffect(() => {
+    return () => {
+      setFile(null);
+    }
+  }, [])
   const submitFile = async () => {
     const body = new FormData();
     body.append("file", file, file.name);
     const response = await fetch("/api/cpg/Upload", { method: "POST", body });
     return await response.json();
   };
+  const getURL = () => {
+    if (file) {
+      return file?.preview
+    }
+    if (!file && url) {
+      return url
+    }
+    return null;
+  }
   return (
     <div>
       <div {...getRootProps()}>
@@ -57,12 +72,12 @@ export default function FileUpload({ setFile, file }: Props) {
         }
       </div>
       <div className="flex items-center justify-center mt-10">
-        {file?.preview ? (
+        {getURL() ? (
           <img
-          className="h-50 w-64 object-cover object-center"
-          src={file?.preview}
-          alt="product image"
-        />
+            className="h-50 w-64 object-cover object-center"
+            src={getURL()}
+            alt="product image"
+          />
         ) : (
           <Image
             className="h-50 w-64 object-cover object-center"
