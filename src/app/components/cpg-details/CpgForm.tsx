@@ -60,8 +60,8 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
   useEffect(() => {
     return () => {
       reset();
-    }
-  }, [])
+    };
+  }, []);
 
   const addGpgDetails = async (
     barCode: string,
@@ -91,7 +91,8 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
     };
     try {
       const response = await axios.post(
-        process.env.NEXT_PUBLIC_CARE_SYNC_ENDPOINT || "http://localhost:3000/graphql",
+        process.env.NEXT_PUBLIC_CARE_SYNC_ENDPOINT ||
+          "http://localhost:3000/graphql",
         query,
         {
           headers: {
@@ -100,8 +101,16 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
         }
       );
       console.log("response", response);
-      reset();
-      setValue("image", null);
+      reset({
+        barcode: "",
+        productName: "",
+        size: "",
+        ingrediants: "",
+        nutritionalFacts: "",
+        image: null,
+      });
+      setFile(null);
+      setIsImageUploaded(false);
       return response;
     } catch (e) {
       console.error(e);
@@ -365,10 +374,11 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
           />
 
           <Button
-            className={`mt-6 w-full ${!isValid || !isImageUploaded
-              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-              : "bg-blue-500 text-white"
-              }`}
+            className={`mt-6 w-full ${
+              !isValid || !isImageUploaded
+                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                : "bg-blue-500 text-white"
+            }`}
             fullWidth
             onClick={handleSubmit(onSubmit)}
             disabled={!isValid || !isImageUploaded}
@@ -387,7 +397,11 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
         onPointerEnterCapture={undefined}
         onPointerLeaveCapture={undefined}
       >
-        <FileUpload setFile={setFile} file={file} url={selectedItem?.imageURL} />
+        <FileUpload
+          setFile={setFile}
+          file={file}
+          url={selectedItem?.imageURL}
+        />
       </Card>
       <ToastContainer
         position="top-right"
