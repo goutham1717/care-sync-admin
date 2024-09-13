@@ -11,6 +11,8 @@ import { Controller, useForm } from "react-hook-form";
 import FileUpload from "./FileUpload";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface IFormInput {
   barcode: string;
@@ -20,6 +22,16 @@ interface IFormInput {
   nutritionalFacts: string;
   image: any;
 }
+
+const schema = yup
+  .object({
+    barcode: yup.number().required("Barcode is required").min(4),
+    productName: yup.string().required("Product name is required").min(8),
+    size: yup.string().required("Product size is required").min(2),
+    ingrediants: yup.string().required("Ingredients are required").min(8),
+    nutritionalFacts: yup.string().required("Nutritional facts are required").min(8),
+  })
+  .required()
 
 export default function CpgForm({ setSelectedItem, selectedItem }) {
   const [file, setFile] = useState<any>();
@@ -38,7 +50,8 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
       ingrediants: selectedItem?.ingrediants || "",
       nutritionalFacts: selectedItem?.nutritionalFacts || "",
     },
-    //mode: "onChange",
+    resolver: yupResolver(schema),  // This should be correct
+    mode: "onChange",  // Optional: To validate on input change
   });
 
   useEffect(() => {
@@ -92,7 +105,7 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
     try {
       const response = await axios.post(
         process.env.NEXT_PUBLIC_CARE_SYNC_ENDPOINT ||
-          "http://localhost:3000/graphql",
+        "http://localhost:3000/graphql",
         query,
         {
           headers: {
@@ -138,7 +151,7 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
           responseJSON.URL
         );
         if (response.ok) {
-          toast.success("Form submitted successfully!", {
+          toast.success("Product added successfully!", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: true,
@@ -374,11 +387,10 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
           />
 
           <Button
-            className={`mt-6 w-full ${
-              !isValid || !isImageUploaded
-                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                : "bg-blue-500 text-white"
-            }`}
+            className={`mt-6 w-full ${!isValid || !isImageUploaded
+              ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+              : "bg-blue-500 text-white"
+              }`}
             fullWidth
             onClick={handleSubmit(onSubmit)}
             disabled={!isValid || !isImageUploaded}

@@ -5,9 +5,10 @@ import {
   CardHeader,
   Drawer,
   IconButton,
+  Input,
   Typography,
 } from "@material-tailwind/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -15,12 +16,50 @@ import axios from "axios";
 import CpgForm from "./CpgForm";
 
 type Props = {};
-const TABLE_HEAD = ["Bar code", "Product Name", "Image"];
+const TABLE_HEAD = ["Bar code", "Product Name", "Ingrediants", "Nutritional Facts", ""];
 const CpgList = (props: Props) => {
+  const [searchProduct, setSearchProduct] = useState<null |
+    string>(null);
+  const searchRef = useRef(null);
+
+  async function fetchProduct(barcode: string) {
+    const code = new String(barcode);
+    const query = {
+      query: `query GetProduct {
+    getProduct(barcode: "${code}") {
+      barCode
+          createdAt
+          healthScore
+          imageURL
+          ingrediants
+          nutritionalFacts
+          productName
+          size
+          updatedAt
+    }
+  }`
+    };
+    try {
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_CARE_SYNC_ENDPOINT ||
+        "http://localhost:3000/graphql",
+        query,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("response", response);
+      setSelectedItem(response.data.data.getProduct);
+      setOpenDrawer(true);
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async function fetchServerPage(
     cursor: any
   ): Promise<{ rows: Array<any>; nextOffset: any; hasNextPage: boolean }> {
-    console.log("COMING HERE");
     const cursorValue = cursor ? `"${cursor}"` : null;
     const query = {
       query: `query GetProducts {
@@ -48,7 +87,7 @@ const CpgList = (props: Props) => {
     try {
       const response = await axios.post(
         process.env.NEXT_PUBLIC_CARE_SYNC_ENDPOINT ||
-          "http://localhost:3000/graphql",
+        "http://localhost:3000/graphql",
         query,
         {
           headers: {
@@ -83,17 +122,16 @@ const CpgList = (props: Props) => {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: ["projects"],
+    queryKey: ["cpglist"],
     queryFn: (ctx) => {
       console.log("CTX", ctx);
       return fetchServerPage(ctx.pageParam);
-      // return fetchServerPageTest(10, ctx.pageParam)
     },
     getNextPageParam: (lastGroup: any) => {
       console.log("lastGroup.nextOffset", lastGroup.nextOffset);
       return lastGroup.nextOffset;
     },
-    initialPageParam: null,
+    initialPageParam: 0,
   });
 
   const allRows = data ? data.pages.flatMap((d) => d.rows) : [];
@@ -142,6 +180,28 @@ const CpgList = (props: Props) => {
               <Typography color="gray" className="mt-1 font-normal">
                 List of all available goods in Care Sync
               </Typography>
+              <div className="mt-2">
+                <Typography color="gray" className="mt-1 font-normal">
+                  Search Product By Bar Code
+                </Typography>
+                <div className="flex">
+                  <Input placeholder="345762"
+                    inputRef={searchRef}
+                    className="!border-t-blue-gray-200 focus:!border-t-gray-900 mr-2"
+                    labelProps={{
+                      className: "before:content-none after:content-none",
+                    }}
+                  />
+                  <Button
+                    className="ml-2"
+                    onClick={() => {
+                      if (searchRef?.current?.value) {
+                        //setSearchProduct(searchRef.current.value);
+                        fetchProduct(searchRef.current.value);
+                      }
+                    }}>Search </Button>
+                </div>
+              </div>
             </div>
             <Button
               onClick={() => {
@@ -214,7 +274,7 @@ const CpgList = (props: Props) => {
                             index % 2 !== 0 ? `bg-blue-gray-50/50` : ""
                           }
                         >
-                          <td className="p-4">
+                          <td className="p-2">
                             <Typography
                               variant="small"
                               color="blue-gray"
@@ -223,23 +283,42 @@ const CpgList = (props: Props) => {
                               {node.barCode}
                             </Typography>
                           </td>
-                          <td className="p-4">
+                          <td className="p-2">
+                            <div className="flex items-center">
+                              <img src={node.imageURL} width="30" height="30" style={{
+                                border: 'solid 1.5px #dcdcdc',
+                                borderRadius: "50%",
+                                objectFit: "cover"
+                              }} />
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal mx-2"
+                              >
+                                {node.productName} - {node.size}
+                              </Typography>
+                            </div>
+
+                          </td>
+                          <td className="p-2">
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {node.productName} - {node.size}
+                              {node.ingrediants}
                             </Typography>
                           </td>
-                          <td className="p-4">
-                            <img
-                              src={node.imageUrl}
-                              alt={node.productName}
-                              className="w-16 h-auto" // Adjust width and height as necessary
-                            />
+                          <td className="p-2">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {node.nutritionalFacts}
+                            </Typography>
                           </td>
-                          <td className="p-4">
+                          <td className="p-2">
                             <Typography
                               as="a"
                               href="#"
