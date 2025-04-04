@@ -13,7 +13,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
+  uri: process.env.NEXT_PUBLIC_CARE_SYNC_ENDPOINT,
   credentials: "include",
 });
 
