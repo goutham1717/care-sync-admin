@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import FileUpload from "./FileUpload";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,7 +15,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 interface IFormInput {
-  barcode: string;
+  barcode: string | number;
   productName: string;
   size: string;
   ingrediants: string;
@@ -23,17 +23,23 @@ interface IFormInput {
   image: any;
 }
 
-const schema = yup
+const schema: yup.Schema<IFormInput> = yup
   .object({
     barcode: yup.number().required("Barcode is required").min(4),
     productName: yup.string().required("Product name is required").min(8),
     size: yup.string().required("Product size is required").min(2),
     ingrediants: yup.string().required("Ingredients are required").min(8),
     nutritionalFacts: yup.string().required("Nutritional facts are required").min(8),
+    image: yup.string().required(),
   })
   .required()
 
-export default function CpgForm({ setSelectedItem, selectedItem }) {
+type Props = {
+  selectedItem: any
+}
+
+export default function CpgForm(props: Props) {
+  const { selectedItem } = props;
   const [file, setFile] = useState<any>();
   const [isImageUploaded, setIsImageUploaded] = useState<boolean>(false);
   const {
@@ -43,14 +49,15 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
     reset,
     formState: { isValid },
   } = useForm<IFormInput>({
+    //resolver: yupResolver(schema),
     defaultValues: {
       barcode: selectedItem?.barCode || "",
       productName: selectedItem?.productName || "",
       size: selectedItem?.size || "",
       ingrediants: selectedItem?.ingrediants || "",
       nutritionalFacts: selectedItem?.nutritionalFacts || "",
+      image: selectedItem?.image || ""
     },
-    resolver: yupResolver(schema),  // This should be correct
     mode: "onChange",  // Optional: To validate on input change
   });
 
@@ -64,7 +71,7 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
         nutritionalFacts: selectedItem?.nutritionalFacts || "",
       });
     }
-  }, [selectedItem, reset]);
+  }, [selectedItem]);
   useEffect(() => {
     setValue("image", file);
     setIsImageUploaded(!!file); // Set isImageUploaded based on whether file is truthy
@@ -92,8 +99,8 @@ export default function CpgForm({ setSelectedItem, selectedItem }) {
           barCode: "${barCode}"
           productName: "${productName}"
           size: "${size}"
-          nutritionalFacts: "${nutritionalFacts}"
-          ingrediants: "${ingrediants}"
+          nutritionalFacts: "${nutritionalFacts.replaceAll("\n", ",")}"
+          ingrediants: "${ingrediants.replaceAll("\n", ",")}"
           imageURL:  "${imageURL}"
         }
       ) {
