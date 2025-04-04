@@ -20,7 +20,7 @@ const TABLE_HEAD = ["Bar code", "Product Name", "Ingrediants", "Nutritional Fact
 const CpgList = (props: Props) => {
   const [searchProduct, setSearchProduct] = useState<null |
     string>(null);
-  const searchRef = useRef(null);
+  const searchRef = useRef<any>(null);
 
   async function fetchProduct(barcode: string) {
     const code = new String(barcode);
@@ -136,12 +136,12 @@ const CpgList = (props: Props) => {
 
   const allRows = data ? data.pages.flatMap((d) => d.rows) : [];
 
-  const parentRef = React.useRef<HTMLDivElement>(null);
+  const parentRef = React.useRef<any>(null);
 
   const rowVirtualizer = useVirtualizer({
     count: hasNextPage ? allRows.length + 1 : allRows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 100,
+    estimateSize: () => 20,
     overscan: 5,
   });
 
@@ -170,18 +170,18 @@ const CpgList = (props: Props) => {
   const [selectedItem, setSelectedItem] = React.useState(null);
   return (
     <>
-      <Card className="h-full w-full">
-        <CardHeader floated={false} shadow={false} className="rounded-none">
+      <Card className="h-full w-full" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+        <CardHeader floated={false} shadow={false} className="rounded-none" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <div className="mb-2 flex items-center justify-between gap-8">
             <div>
-              <Typography variant="h5" color="blue-gray">
+              <Typography variant="h5" color="blue-gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 Consumer Packaged Goods List
               </Typography>
-              <Typography color="gray" className="mt-1 font-normal">
+              <Typography color="gray" className="mt-1 font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                 List of all available goods in Care Sync
               </Typography>
               <div className="mt-2">
-                <Typography color="gray" className="mt-1 font-normal">
+                <Typography color="gray" className="mt-1 font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                   Search Product By Bar Code
                 </Typography>
                 <div className="flex">
@@ -190,24 +190,22 @@ const CpgList = (props: Props) => {
                     className="!border-t-blue-gray-200 focus:!border-t-gray-900 mr-2"
                     labelProps={{
                       className: "before:content-none after:content-none",
-                    }}
-                  />
+                    }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
                   <Button
                     className="ml-2"
                     onClick={() => {
-                      if (searchRef?.current?.value) {
+                      if (searchRef?.current && searchRef?.current?.value) {
                         //setSearchProduct(searchRef.current.value);
                         fetchProduct(searchRef.current.value);
                       }
-                    }}>Search </Button>
+                    }} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Search </Button>
                 </div>
               </div>
             </div>
             <Button
               onClick={() => {
                 setOpenDrawer(true);
-              }}
-            >
+              }} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}            >
               Add a product
             </Button>
           </div>
@@ -215,7 +213,7 @@ const CpgList = (props: Props) => {
         <CardBody
           className="overflow-y-auto px-0"
           style={{ maxHeight: "500px" }} // Adjust the height as necessary
-        >
+          placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
           <table
             className="w-full min-w-max table-auto text-left"
             ref={parentRef}
@@ -231,8 +229,7 @@ const CpgList = (props: Props) => {
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
-                    >
+                      className="flex items-center justify-between gap-2 font-normal leading-none opacity-70" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
                       {head}{" "}
                       {index !== TABLE_HEAD.length - 1 && (
                         <ChevronUpDownIcon
@@ -278,8 +275,7 @@ const CpgList = (props: Props) => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
-                            >
+                              className="font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                            >
                               {node.barCode}
                             </Typography>
                           </td>
@@ -293,8 +289,7 @@ const CpgList = (props: Props) => {
                               <Typography
                                 variant="small"
                                 color="blue-gray"
-                                className="font-normal mx-2"
-                              >
+                                className="font-normal mx-2" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                              >
                                 {node.productName} - {node.size}
                               </Typography>
                             </div>
@@ -304,8 +299,7 @@ const CpgList = (props: Props) => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
-                            >
+                              className="font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                            >
                               {node.ingrediants}
                             </Typography>
                           </td>
@@ -313,8 +307,7 @@ const CpgList = (props: Props) => {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
-                            >
+                              className="font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                            >
                               {node.nutritionalFacts}
                             </Typography>
                           </td>
@@ -328,8 +321,7 @@ const CpgList = (props: Props) => {
                               onClick={() => {
                                 setSelectedItem(node);
                                 setOpenDrawer(true);
-                              }}
-                            >
+                              }} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                            >
                               Edit
                             </Typography>
                           </td>
@@ -352,18 +344,16 @@ const CpgList = (props: Props) => {
           setOpenDrawer(false);
           setSelectedItem(null);
         }}
-        className="p-4 w-9/12"
-      >
+        className="p-4 w-9/12" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
         <>
           <div className="flex items-center justify-between px-4 pb-2">
-            <Typography variant="h5" color="blue-gray">
+            <Typography variant="h5" color="blue-gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
               Add Product Details
             </Typography>
             <IconButton
               variant="text"
               color="blue-gray"
-              onClick={() => setOpenDrawer(false)}
-            >
+              onClick={() => setOpenDrawer(false)} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -382,7 +372,6 @@ const CpgList = (props: Props) => {
           </div>
           <CpgForm
             selectedItem={selectedItem}
-            setSelectedItem={setSelectedItem}
           />
         </>
       </Drawer>
