@@ -71,17 +71,18 @@ export default function CpgForm(props: Props) {
         nutritionalFacts: selectedItem?.nutritionalFacts || "",
       });
     }
-  }, [selectedItem]);
+  }, [selectedItem, reset]);
+
   useEffect(() => {
     setValue("image", file);
-    setIsImageUploaded(!!file); // Set isImageUploaded based on whether file is truthy
+    setIsImageUploaded(!!file);
   }, [file, setValue]);
 
   useEffect(() => {
     return () => {
       reset();
     };
-  }, []);
+  }, [reset]);
 
   const addGpgDetails = async (
     barCode: string,

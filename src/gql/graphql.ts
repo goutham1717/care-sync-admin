@@ -69,9 +69,11 @@ export type AppointmentDetails = {
 };
 
 export type AppointmentDetailsDto = {
+  age?: InputMaybe<Scalars['String']['input']>;
   aid?: InputMaybe<Scalars['String']['input']>;
   channel: Scalars['String']['input'];
   clinic_id: Scalars['String']['input'];
+  dob?: InputMaybe<Scalars['String']['input']>;
   doctor_id: Scalars['String']['input'];
   duration?: InputMaybe<Scalars['Float']['input']>;
   patientProfileId: Scalars['String']['input'];
@@ -184,6 +186,19 @@ export type ClinicPatient = {
   profiles: PatientProfileLastVisited;
 };
 
+export type ClinicPatientBasicInfo = {
+  __typename?: 'ClinicPatientBasicInfo';
+  first_name: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  last_name?: Maybe<Scalars['String']['output']>;
+  mobile: Scalars['String']['output'];
+};
+
+export type ClinicPatientsResponse = {
+  __typename?: 'ClinicPatientsResponse';
+  patients: Array<ClinicPatientBasicInfo>;
+};
+
 export type ClinicWorkingHoursDto = {
   closeTime: Scalars['String']['input'];
   openTime: Scalars['String']['input'];
@@ -200,10 +215,11 @@ export type CpgDto = {
 };
 
 export type CreditsUpdateDto = {
-  call: Scalars['Float']['input'];
+  call?: InputMaybe<Scalars['Float']['input']>;
   clinicId: Scalars['String']['input'];
-  sms: Scalars['Float']['input'];
-  whatsapp: Scalars['Float']['input'];
+  sms?: InputMaybe<Scalars['Float']['input']>;
+  videoCall?: InputMaybe<Scalars['Float']['input']>;
+  whatsapp?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type Degree = {
@@ -683,12 +699,13 @@ export type OnBoaringDto = {
 };
 
 export type OnlineAppointmentDetailsDto = {
+  age?: InputMaybe<Scalars['String']['input']>;
   aid?: InputMaybe<Scalars['String']['input']>;
   business_id: Scalars['String']['input'];
   channel: Scalars['String']['input'];
   clinic_id: Scalars['String']['input'];
   designation: Scalars['String']['input'];
-  dob: Scalars['String']['input'];
+  dob?: InputMaybe<Scalars['String']['input']>;
   doctor_id: Scalars['String']['input'];
   duration?: InputMaybe<Scalars['Float']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -730,8 +747,9 @@ export type PatientDto = {
 export type PatientProfile = {
   __typename?: 'PatientProfile';
   address?: Maybe<Address>;
+  age?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
-  dob: Scalars['String']['output'];
+  dob?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   first_name: Scalars['String']['output'];
   gender: Scalars['String']['output'];
@@ -744,8 +762,9 @@ export type PatientProfile = {
 
 export type PatientProfileDto = {
   address?: InputMaybe<AddressDto>;
+  age?: InputMaybe<Scalars['String']['input']>;
   designation: Scalars['String']['input'];
-  dob: Scalars['String']['input'];
+  dob?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   first_name: Scalars['String']['input'];
   gender: Scalars['String']['input'];
@@ -758,8 +777,9 @@ export type PatientProfileDto = {
 export type PatientProfileLastVisited = {
   __typename?: 'PatientProfileLastVisited';
   address?: Maybe<Address>;
+  age?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
-  dob: Scalars['String']['output'];
+  dob?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   first_name: Scalars['String']['output'];
   gender: Scalars['String']['output'];
@@ -781,8 +801,9 @@ export type PatientsWithAppointment = {
   __typename?: 'PatientsWithAppointment';
   AppointmentDetails?: Maybe<Array<AppointmentDetails>>;
   address?: Maybe<Address>;
+  age?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
-  dob: Scalars['String']['output'];
+  dob?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   first_name: Scalars['String']['output'];
   gender: Scalars['String']['output'];
@@ -802,17 +823,22 @@ export type PaymentCount = {
 export type PaymentDetails = {
   __typename?: 'PaymentDetails';
   amount: Scalars['Float']['output'];
+  billURL?: Maybe<Scalars['String']['output']>;
+  discount?: Maybe<Scalars['Float']['output']>;
   payment_status: Scalars['String']['output'];
   payment_type: Scalars['String']['output'];
   pid: Scalars['String']['output'];
+  services?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type PaymentDto = {
   aid: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
   billURL?: InputMaybe<Scalars['String']['input']>;
+  discount: Scalars['Float']['input'];
   payment_status: Scalars['String']['input'];
   payment_type: Scalars['String']['input'];
+  services: Array<Scalars['String']['input']>;
 };
 
 export type PaymentOrderDto = {
@@ -868,6 +894,7 @@ export type PrescriptionDto = {
   aid: Scalars['String']['input'];
   clinicId: Scalars['String']['input'];
   doctor_id: Scalars['String']['input'];
+  followUp?: InputMaybe<Scalars['String']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
   patientProfileId: Scalars['String']['input'];
   privateNotes?: InputMaybe<Scalars['String']['input']>;
@@ -878,14 +905,16 @@ export type PrescriptionDto = {
 
 export type PrescriptionDetails = {
   __typename?: 'PrescriptionDetails';
+  followUp?: Maybe<Scalars['String']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
   privateNotes?: Maybe<Scalars['String']['output']>;
   rx_entities: Scalars['JSON']['output'];
   rx_id: Scalars['String']['output'];
+  rx_url?: Maybe<Scalars['String']['output']>;
 };
 
 export type PrescriptionMedication = {
-  dose: Scalars['String']['input'];
+  dose?: InputMaybe<Scalars['String']['input']>;
   duration: Scalars['String']['input'];
   frequency: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -906,7 +935,7 @@ export type Professional = {
 export type ProfessionalDto = {
   about: Scalars['String']['input'];
   active?: Scalars['Boolean']['input'];
-  degree?: InputMaybe<Array<DegreeDto>>;
+  degree: Array<DegreeDto>;
   language: Array<LanguageDto>;
   major_speciality: MajorSpecailityDto;
   medicalLicenseNumber?: InputMaybe<Scalars['String']['input']>;
@@ -949,6 +978,8 @@ export type Query = {
   getClinicDoctors: Array<Doctor>;
   getClinicNotification: Array<Notifications>;
   getClinicPatients: Array<ClinicPatient>;
+  getClinicPatientsBasicInfo: ClinicPatientsResponse;
+  getClinics: Array<Clinic>;
   getDiagnosisList: Array<DiagnosisList>;
   getDoctor: Doctor;
   getDoctors: Array<Doctor>;
@@ -1088,6 +1119,11 @@ export type QueryGetClinicPatientsArgs = {
 };
 
 
+export type QueryGetClinicPatientsBasicInfoArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetDiagnosisListArgs = {
   query: Scalars['String']['input'];
 };
@@ -1126,6 +1162,7 @@ export type QueryGetOnGoingArgs = {
 
 
 export type QueryGetPatientHistoryArgs = {
+  includePayment?: InputMaybe<Scalars['Boolean']['input']>;
   patientProfileId: Scalars['String']['input'];
 };
 
@@ -1389,6 +1426,33 @@ export type ValidateDoctorOtp = {
   phone_number: Scalars['String']['input'];
 };
 
+export type CreateBusinessMutationVariables = Exact<{
+  businessInput: BusinessDto;
+}>;
+
+
+export type CreateBusinessMutation = { __typename?: 'Mutation', createBusiness: { __typename?: 'Business', id: string, name: string } };
+
+export type AddClinicMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  clinicInput: ClinicDto;
+}>;
+
+
+export type AddClinicMutation = { __typename?: 'Mutation', addClinic: { __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, location: Array<string>, logoUrl?: string | null, name: string, openTime: string, workingDays: Array<boolean> } };
+
+export type GetClinicsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetClinicsQuery = { __typename?: 'Query', getClinics: Array<{ __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, latitude?: number | null, location: Array<string>, logoUrl?: string | null, name: string, workingDays: Array<boolean>, longitude?: number | null, openTime: string, address: { __typename?: 'Address', city: string, country: string, line1: string, line2?: string | null, pin: string, state: string }, phone_number: Array<{ __typename?: 'PhoneNumber', n: string, name: string }>, speciality?: Array<{ __typename?: 'Speciality', name: string }> | null }> };
+
+export type GetClinicDoctorsQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicDoctorsQuery = { __typename?: 'Query', getClinicDoctors: Array<{ __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', designation: string, dob: any, email: string, first_name: string, gender: string, last_name: string, middle_name?: string | null, phone_number?: string | null, profile_pic?: string | null }, professional: { __typename?: 'Professional', about?: string | null, active: boolean, language: Array<{ __typename?: 'Language', name: string }>, major_speciality: { __typename?: 'MajorSpecaility', name: string }, speciality: Array<{ __typename?: 'Speciality', name: string }>, degree?: Array<{ __typename?: 'Degree', branch_name: string, college_name: string, end_year: any, name: string, start_year: any }> | null } } }> };
+
 export type GetAllDraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1403,6 +1467,10 @@ export type ApproveOrRejectQueryVariables = Exact<{
 export type ApproveOrRejectQuery = { __typename?: 'Query', approveOrReject: string };
 
 
+export const CreateBusinessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateBusiness"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"businessInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BusinessDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBusiness"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"businessInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"businessInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateBusinessMutation, CreateBusinessMutationVariables>;
+export const AddClinicDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddClinic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"businessId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ClinicDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addClinic"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"businessId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"businessId"}}},{"kind":"Argument","name":{"kind":"Name","value":"clinicInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}},{"kind":"Field","name":{"kind":"Name","value":"city_name"}},{"kind":"Field","name":{"kind":"Name","value":"closeTime"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"openTime"}},{"kind":"Field","name":{"kind":"Name","value":"workingDays"}}]}}]}}]} as unknown as DocumentNode<AddClinicMutation, AddClinicMutationVariables>;
+export const GetClinicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}},{"kind":"Field","name":{"kind":"Name","value":"city_name"}},{"kind":"Field","name":{"kind":"Name","value":"closeTime"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"line1"}},{"kind":"Field","name":{"kind":"Name","value":"line2"}},{"kind":"Field","name":{"kind":"Name","value":"pin"}},{"kind":"Field","name":{"kind":"Name","value":"state"}}]}},{"kind":"Field","name":{"kind":"Name","value":"phone_number"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"workingDays"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"openTime"}}]}}]}}]} as unknown as DocumentNode<GetClinicsQuery, GetClinicsQueryVariables>;
+export const GetClinicDoctorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicDoctors"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicDoctors"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"personal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"designation"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"phone_number"}},{"kind":"Field","name":{"kind":"Name","value":"profile_pic"}}]}},{"kind":"Field","name":{"kind":"Name","value":"professional"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"major_speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"degree"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"branch_name"}},{"kind":"Field","name":{"kind":"Name","value":"college_name"}},{"kind":"Field","name":{"kind":"Name","value":"end_year"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_year"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
 export const GetAllDraftsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllDrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllDrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clinicName"}},{"kind":"Field","name":{"kind":"Name","value":"doctorName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]} as unknown as DocumentNode<GetAllDraftsQuery, GetAllDraftsQueryVariables>;
 export const ApproveOrRejectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ApproveOrReject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"approveOrReject"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status"}}}]}]}}]} as unknown as DocumentNode<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
@@ -1464,9 +1532,11 @@ export type AppointmentDetails = {
 };
 
 export type AppointmentDetailsDto = {
+  age?: InputMaybe<Scalars['String']['input']>;
   aid?: InputMaybe<Scalars['String']['input']>;
   channel: Scalars['String']['input'];
   clinic_id: Scalars['String']['input'];
+  dob?: InputMaybe<Scalars['String']['input']>;
   doctor_id: Scalars['String']['input'];
   duration?: InputMaybe<Scalars['Float']['input']>;
   patientProfileId: Scalars['String']['input'];
@@ -1579,6 +1649,19 @@ export type ClinicPatient = {
   profiles: PatientProfileLastVisited;
 };
 
+export type ClinicPatientBasicInfo = {
+  __typename?: 'ClinicPatientBasicInfo';
+  first_name: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  last_name?: Maybe<Scalars['String']['output']>;
+  mobile: Scalars['String']['output'];
+};
+
+export type ClinicPatientsResponse = {
+  __typename?: 'ClinicPatientsResponse';
+  patients: Array<ClinicPatientBasicInfo>;
+};
+
 export type ClinicWorkingHoursDto = {
   closeTime: Scalars['String']['input'];
   openTime: Scalars['String']['input'];
@@ -1595,10 +1678,11 @@ export type CpgDto = {
 };
 
 export type CreditsUpdateDto = {
-  call: Scalars['Float']['input'];
+  call?: InputMaybe<Scalars['Float']['input']>;
   clinicId: Scalars['String']['input'];
-  sms: Scalars['Float']['input'];
-  whatsapp: Scalars['Float']['input'];
+  sms?: InputMaybe<Scalars['Float']['input']>;
+  videoCall?: InputMaybe<Scalars['Float']['input']>;
+  whatsapp?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type Degree = {
@@ -2078,12 +2162,13 @@ export type OnBoaringDto = {
 };
 
 export type OnlineAppointmentDetailsDto = {
+  age?: InputMaybe<Scalars['String']['input']>;
   aid?: InputMaybe<Scalars['String']['input']>;
   business_id: Scalars['String']['input'];
   channel: Scalars['String']['input'];
   clinic_id: Scalars['String']['input'];
   designation: Scalars['String']['input'];
-  dob: Scalars['String']['input'];
+  dob?: InputMaybe<Scalars['String']['input']>;
   doctor_id: Scalars['String']['input'];
   duration?: InputMaybe<Scalars['Float']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -2125,8 +2210,9 @@ export type PatientDto = {
 export type PatientProfile = {
   __typename?: 'PatientProfile';
   address?: Maybe<Address>;
+  age?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
-  dob: Scalars['String']['output'];
+  dob?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   first_name: Scalars['String']['output'];
   gender: Scalars['String']['output'];
@@ -2139,8 +2225,9 @@ export type PatientProfile = {
 
 export type PatientProfileDto = {
   address?: InputMaybe<AddressDto>;
+  age?: InputMaybe<Scalars['String']['input']>;
   designation: Scalars['String']['input'];
-  dob: Scalars['String']['input'];
+  dob?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   first_name: Scalars['String']['input'];
   gender: Scalars['String']['input'];
@@ -2153,8 +2240,9 @@ export type PatientProfileDto = {
 export type PatientProfileLastVisited = {
   __typename?: 'PatientProfileLastVisited';
   address?: Maybe<Address>;
+  age?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
-  dob: Scalars['String']['output'];
+  dob?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   first_name: Scalars['String']['output'];
   gender: Scalars['String']['output'];
@@ -2176,8 +2264,9 @@ export type PatientsWithAppointment = {
   __typename?: 'PatientsWithAppointment';
   AppointmentDetails?: Maybe<Array<AppointmentDetails>>;
   address?: Maybe<Address>;
+  age?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
-  dob: Scalars['String']['output'];
+  dob?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   first_name: Scalars['String']['output'];
   gender: Scalars['String']['output'];
@@ -2197,17 +2286,22 @@ export type PaymentCount = {
 export type PaymentDetails = {
   __typename?: 'PaymentDetails';
   amount: Scalars['Float']['output'];
+  billURL?: Maybe<Scalars['String']['output']>;
+  discount?: Maybe<Scalars['Float']['output']>;
   payment_status: Scalars['String']['output'];
   payment_type: Scalars['String']['output'];
   pid: Scalars['String']['output'];
+  services?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export type PaymentDto = {
   aid: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
   billURL?: InputMaybe<Scalars['String']['input']>;
+  discount: Scalars['Float']['input'];
   payment_status: Scalars['String']['input'];
   payment_type: Scalars['String']['input'];
+  services: Array<Scalars['String']['input']>;
 };
 
 export type PaymentOrderDto = {
@@ -2263,6 +2357,7 @@ export type PrescriptionDto = {
   aid: Scalars['String']['input'];
   clinicId: Scalars['String']['input'];
   doctor_id: Scalars['String']['input'];
+  followUp?: InputMaybe<Scalars['String']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
   patientProfileId: Scalars['String']['input'];
   privateNotes?: InputMaybe<Scalars['String']['input']>;
@@ -2273,14 +2368,16 @@ export type PrescriptionDto = {
 
 export type PrescriptionDetails = {
   __typename?: 'PrescriptionDetails';
+  followUp?: Maybe<Scalars['String']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
   privateNotes?: Maybe<Scalars['String']['output']>;
   rx_entities: Scalars['JSON']['output'];
   rx_id: Scalars['String']['output'];
+  rx_url?: Maybe<Scalars['String']['output']>;
 };
 
 export type PrescriptionMedication = {
-  dose: Scalars['String']['input'];
+  dose?: InputMaybe<Scalars['String']['input']>;
   duration: Scalars['String']['input'];
   frequency: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -2301,7 +2398,7 @@ export type Professional = {
 export type ProfessionalDto = {
   about: Scalars['String']['input'];
   active?: Scalars['Boolean']['input'];
-  degree?: InputMaybe<Array<DegreeDto>>;
+  degree: Array<DegreeDto>;
   language: Array<LanguageDto>;
   major_speciality: MajorSpecailityDto;
   medicalLicenseNumber?: InputMaybe<Scalars['String']['input']>;
@@ -2344,6 +2441,8 @@ export type Query = {
   getClinicDoctors: Array<Doctor>;
   getClinicNotification: Array<Notifications>;
   getClinicPatients: Array<ClinicPatient>;
+  getClinicPatientsBasicInfo: ClinicPatientsResponse;
+  getClinics: Array<Clinic>;
   getDiagnosisList: Array<DiagnosisList>;
   getDoctor: Doctor;
   getDoctors: Array<Doctor>;
@@ -2483,6 +2582,11 @@ export type QueryGetClinicPatientsArgs = {
 };
 
 
+export type QueryGetClinicPatientsBasicInfoArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetDiagnosisListArgs = {
   query: Scalars['String']['input'];
 };
@@ -2521,6 +2625,7 @@ export type QueryGetOnGoingArgs = {
 
 
 export type QueryGetPatientHistoryArgs = {
+  includePayment?: InputMaybe<Scalars['Boolean']['input']>;
   patientProfileId: Scalars['String']['input'];
 };
 
@@ -2784,6 +2889,33 @@ export type ValidateDoctorOtp = {
   phone_number: Scalars['String']['input'];
 };
 
+export type CreateBusinessMutationVariables = Exact<{
+  businessInput: BusinessDto;
+}>;
+
+
+export type CreateBusinessMutation = { __typename?: 'Mutation', createBusiness: { __typename?: 'Business', id: string, name: string } };
+
+export type AddClinicMutationVariables = Exact<{
+  businessId: Scalars['String']['input'];
+  clinicInput: ClinicDto;
+}>;
+
+
+export type AddClinicMutation = { __typename?: 'Mutation', addClinic: { __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, location: Array<string>, logoUrl?: string | null, name: string, openTime: string, workingDays: Array<boolean> } };
+
+export type GetClinicsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetClinicsQuery = { __typename?: 'Query', getClinics: Array<{ __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, latitude?: number | null, location: Array<string>, logoUrl?: string | null, name: string, workingDays: Array<boolean>, longitude?: number | null, openTime: string, address: { __typename?: 'Address', city: string, country: string, line1: string, line2?: string | null, pin: string, state: string }, phone_number: Array<{ __typename?: 'PhoneNumber', n: string, name: string }>, speciality?: Array<{ __typename?: 'Speciality', name: string }> | null }> };
+
+export type GetClinicDoctorsQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicDoctorsQuery = { __typename?: 'Query', getClinicDoctors: Array<{ __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', designation: string, dob: any, email: string, first_name: string, gender: string, last_name: string, middle_name?: string | null, phone_number?: string | null, profile_pic?: string | null }, professional: { __typename?: 'Professional', about?: string | null, active: boolean, language: Array<{ __typename?: 'Language', name: string }>, major_speciality: { __typename?: 'MajorSpecaility', name: string }, speciality: Array<{ __typename?: 'Speciality', name: string }>, degree?: Array<{ __typename?: 'Degree', branch_name: string, college_name: string, end_year: any, name: string, start_year: any }> | null } } }> };
+
 export type GetAllDraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2798,6 +2930,225 @@ export type ApproveOrRejectQueryVariables = Exact<{
 export type ApproveOrRejectQuery = { __typename?: 'Query', approveOrReject: string };
 
 
+export const CreateBusinessDocument = gql`
+    mutation CreateBusiness($businessInput: BusinessDTO!) {
+  createBusiness(businessInput: $businessInput) {
+    id
+    name
+  }
+}
+    `;
+export type CreateBusinessMutationFn = Apollo.MutationFunction<CreateBusinessMutation, CreateBusinessMutationVariables>;
+
+/**
+ * __useCreateBusinessMutation__
+ *
+ * To run a mutation, you first call `useCreateBusinessMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBusinessMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBusinessMutation, { data, loading, error }] = useCreateBusinessMutation({
+ *   variables: {
+ *      businessInput: // value for 'businessInput'
+ *   },
+ * });
+ */
+export function useCreateBusinessMutation(baseOptions?: Apollo.MutationHookOptions<CreateBusinessMutation, CreateBusinessMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBusinessMutation, CreateBusinessMutationVariables>(CreateBusinessDocument, options);
+      }
+export type CreateBusinessMutationHookResult = ReturnType<typeof useCreateBusinessMutation>;
+export type CreateBusinessMutationResult = Apollo.MutationResult<CreateBusinessMutation>;
+export type CreateBusinessMutationOptions = Apollo.BaseMutationOptions<CreateBusinessMutation, CreateBusinessMutationVariables>;
+export const AddClinicDocument = gql`
+    mutation AddClinic($businessId: String!, $clinicInput: ClinicDTO!) {
+  addClinic(businessId: $businessId, clinicInput: $clinicInput) {
+    about
+    business_id
+    city_name
+    closeTime
+    email
+    id
+    location
+    logoUrl
+    name
+    openTime
+    workingDays
+  }
+}
+    `;
+export type AddClinicMutationFn = Apollo.MutationFunction<AddClinicMutation, AddClinicMutationVariables>;
+
+/**
+ * __useAddClinicMutation__
+ *
+ * To run a mutation, you first call `useAddClinicMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddClinicMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addClinicMutation, { data, loading, error }] = useAddClinicMutation({
+ *   variables: {
+ *      businessId: // value for 'businessId'
+ *      clinicInput: // value for 'clinicInput'
+ *   },
+ * });
+ */
+export function useAddClinicMutation(baseOptions?: Apollo.MutationHookOptions<AddClinicMutation, AddClinicMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddClinicMutation, AddClinicMutationVariables>(AddClinicDocument, options);
+      }
+export type AddClinicMutationHookResult = ReturnType<typeof useAddClinicMutation>;
+export type AddClinicMutationResult = Apollo.MutationResult<AddClinicMutation>;
+export type AddClinicMutationOptions = Apollo.BaseMutationOptions<AddClinicMutation, AddClinicMutationVariables>;
+export const GetClinicsDocument = gql`
+    query GetClinics {
+  getClinics {
+    about
+    business_id
+    city_name
+    closeTime
+    email
+    id
+    latitude
+    location
+    logoUrl
+    name
+    address {
+      city
+      country
+      line1
+      line2
+      pin
+      state
+    }
+    phone_number {
+      n
+      name
+    }
+    speciality {
+      name
+    }
+    workingDays
+    longitude
+    openTime
+  }
+}
+    `;
+
+/**
+ * __useGetClinicsQuery__
+ *
+ * To run a query within a React component, call `useGetClinicsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClinicsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClinicsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetClinicsQuery(baseOptions?: Apollo.QueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+      }
+export function useGetClinicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+        }
+export function useGetClinicsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+        }
+export type GetClinicsQueryHookResult = ReturnType<typeof useGetClinicsQuery>;
+export type GetClinicsLazyQueryHookResult = ReturnType<typeof useGetClinicsLazyQuery>;
+export type GetClinicsSuspenseQueryHookResult = ReturnType<typeof useGetClinicsSuspenseQuery>;
+export type GetClinicsQueryResult = Apollo.QueryResult<GetClinicsQuery, GetClinicsQueryVariables>;
+export const GetClinicDoctorsDocument = gql`
+    query GetClinicDoctors($clinicId: String!) {
+  getClinicDoctors(clinicId: $clinicId) {
+    createdAt
+    doctor_id
+    updatedAt
+    profile {
+      personal {
+        designation
+        dob
+        email
+        first_name
+        gender
+        last_name
+        middle_name
+        phone_number
+        profile_pic
+      }
+      professional {
+        about
+        active
+        language {
+          name
+        }
+        major_speciality {
+          name
+        }
+        speciality {
+          name
+        }
+        degree {
+          branch_name
+          college_name
+          end_year
+          name
+          start_year
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetClinicDoctorsQuery__
+ *
+ * To run a query within a React component, call `useGetClinicDoctorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClinicDoctorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClinicDoctorsQuery({
+ *   variables: {
+ *      clinicId: // value for 'clinicId'
+ *   },
+ * });
+ */
+export function useGetClinicDoctorsQuery(baseOptions: Apollo.QueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables> & ({ variables: GetClinicDoctorsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+      }
+export function useGetClinicDoctorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+        }
+export function useGetClinicDoctorsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+        }
+export type GetClinicDoctorsQueryHookResult = ReturnType<typeof useGetClinicDoctorsQuery>;
+export type GetClinicDoctorsLazyQueryHookResult = ReturnType<typeof useGetClinicDoctorsLazyQuery>;
+export type GetClinicDoctorsSuspenseQueryHookResult = ReturnType<typeof useGetClinicDoctorsSuspenseQuery>;
+export type GetClinicDoctorsQueryResult = Apollo.QueryResult<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
 export const GetAllDraftsDocument = gql`
     query GetAllDrafts {
   getAllDrafts {

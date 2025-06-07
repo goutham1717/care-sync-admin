@@ -16,7 +16,7 @@ export default function FileUpload({ setFile, file, url }: Props) {
       preview: URL.createObjectURL(uploadedFile),
     });
     setFile(file);
-  }, []);
+  }, [setFile]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: onDrop,
     accept: {
@@ -28,7 +28,7 @@ export default function FileUpload({ setFile, file, url }: Props) {
     return () => {
       setFile(null);
     }
-  }, [])
+  }, [setFile]);
   const submitFile = async () => {
     const body = new FormData();
     body.append("file", file, file.name);
@@ -73,16 +73,20 @@ export default function FileUpload({ setFile, file, url }: Props) {
       </div>
       <div className="flex items-center justify-center mt-10">
         {getURL() ? (
-          <img
+          <Image
             className="h-50 w-64 object-cover object-center"
             src={getURL()}
             alt="product image"
+            width={256}
+            height={200}
           />
         ) : (
           <Image
             className="h-50 w-64 object-cover object-center"
             src={cloudImg}
             alt="default image"
+            width={256}
+            height={200}
           />
         )}
       </div>
