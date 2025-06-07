@@ -8,12 +8,13 @@ import {
   Input,
   Typography,
 } from "@material-tailwind/react";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import axios from "axios";
 import CpgForm from "./CpgForm";
+import Image from 'next/image';
 
 type Props = {};
 const TABLE_HEAD = ["Bar code", "Product Name", "Ingrediants", "Nutritional Facts", ""];
@@ -145,7 +146,10 @@ const CpgList = (props: Props) => {
     overscan: 5,
   });
 
-  React.useEffect(() => {
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [selectedItem, setSelectedItem] = React.useState(null);
+
+  useEffect(() => {
     const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
 
     if (!lastItem) {
@@ -164,10 +168,9 @@ const CpgList = (props: Props) => {
     fetchNextPage,
     allRows.length,
     isFetchingNextPage,
-    rowVirtualizer.getVirtualItems(),
+    rowVirtualizer,
   ]);
-  const [openDrawer, setOpenDrawer] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState(null);
+
   return (
     <>
       <Card className="h-full w-full" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
@@ -281,19 +284,25 @@ const CpgList = (props: Props) => {
                           </td>
                           <td className="p-2">
                             <div className="flex items-center">
-                              <img src={node.imageURL} width="30" height="30" style={{
-                                border: 'solid 1.5px #dcdcdc',
-                                borderRadius: "50%",
-                                objectFit: "cover"
-                              }} />
+                              <Image
+                                src={node.imageURL}
+                                width={30}
+                                height={30}
+                                alt={`${node.productName} product image`}
+                                style={{
+                                  border: 'solid 1.5px #dcdcdc',
+                                  borderRadius: "50%",
+                                  objectFit: "cover"
+                                }}
+                              />
                               <Typography
                                 variant="small"
                                 color="blue-gray"
-                                className="font-normal mx-2" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                              >
+                                className="font-normal mx-2" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                              >
                                 {node.productName} - {node.size}
                               </Typography>
                             </div>
-
                           </td>
                           <td className="p-2">
                             <Typography

@@ -3,7 +3,7 @@ import React from "react";
 import { ThemeProvider } from "@material-tailwind/react";
 import CpgList from "./components/cpg-details/CpgList";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Drafts from "@/pages/drafts";
+import Drafts from "./drafts/page";
 
 export default function Home() {
   const queryClient = new QueryClient()

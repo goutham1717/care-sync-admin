@@ -82,12 +82,12 @@ const DraftsTable = (props: Props) => {
                 </Typography>
               </td>
               <td className="p-4">
-                <Typography variant="small" color="blue-gray" className="font-normal">
+                <Typography variant="small" color="blue-gray" className="font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                   {doctorName}
                 </Typography>
               </td>
               <td className="p-4">
-                <Typography variant="small" color="blue-gray" className="font-normal">
+                <Typography variant="small" color="blue-gray" className="font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                   {clinicName}
                 </Typography>
               </td>
@@ -96,6 +96,9 @@ const DraftsTable = (props: Props) => {
                   color="green"
                   size="sm"
                   onClick={() => handleApprove(id)}
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
                 >
                   Approve
                 </Button>
@@ -103,6 +106,9 @@ const DraftsTable = (props: Props) => {
                   color="red"
                   size="sm"
                   onClick={() => handleReject(id)}
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
                 >
                   Reject
                 </Button>

@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
   Button,
@@ -5,7 +7,6 @@ import {
   ThemeProvider
 } from "@material-tailwind/react";
 import { json2csv } from 'json-2-csv';
-
 
 export default function Barcode() {
   const handleSubmit = async () => {
@@ -47,4 +48,4 @@ export default function Barcode() {
       </Button>
     </ThemeProvider>
   )
-}
+} 
