@@ -94,10 +94,19 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
     e.preventDefault();
     if (!createdBusinessId) return;
 
+    // Format the time values before sending
+    const formattedClinicData = {
+      ...clinicFormData,
+      openTime: formatTimeToAMPM(clinicFormData.openTime),
+      closeTime: formatTimeToAMPM(clinicFormData.closeTime),
+    };
+
+    console.log('Formatted clinic data:', formattedClinicData);
+
     addClinic({
       variables: {
         businessId: createdBusinessId,
-        clinicInput: clinicFormData
+        clinicInput: formattedClinicData
       }
     });
   };
@@ -149,6 +158,22 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
       ...prev,
       phone_number: [{ n: value, name: 'Mobile' }]
     }));
+  };
+
+  // Add time formatting function
+  const formatTimeToAMPM = (timeString: string): string => {
+    if (!timeString) return '';
+
+    // Parse the time string (assuming format like "09:00" or "18:00")
+    const [hours, minutes] = timeString.split(':').map(Number);
+
+    if (isNaN(hours) || isNaN(minutes)) return timeString;
+
+    const period = hours >= 12 ? 'pm' : 'am';
+    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+    const displayMinutes = minutes.toString().padStart(2, '0');
+
+    return `${displayHours.toString().padStart(2, '0')}:${displayMinutes}${period}`;
   };
 
   return (
