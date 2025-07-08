@@ -5,6 +5,7 @@ query GetClinicDoctors($clinicId: String!) {
         createdAt
         doctor_id
         updatedAt
+        isActive
         profile {
             personal {
                 designation
