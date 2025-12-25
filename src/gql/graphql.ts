@@ -1,4 +1,5 @@
 /* eslint-disable */
+//@ts-nocheck
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
@@ -23,6 +24,15 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type AddStockDto = {
+  batchNumber?: InputMaybe<Scalars['String']['input']>;
+  expiryDate?: InputMaybe<Scalars['DateTime']['input']>;
+  itemId: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  purchasePrice?: InputMaybe<Scalars['Float']['input']>;
+  quantity: Scalars['Int']['input'];
+};
+
 export type Address = {
   __typename?: 'Address';
   city: Scalars['String']['output'];
@@ -88,6 +98,16 @@ export type AppointmentStats = {
   percentageChange: Scalars['Float']['output'];
 };
 
+export type AssignClinicFeaturesDto = {
+  clinicId: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
+export type AssignCustomFeaturesDto = {
+  doctor_id: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
 export type Business = {
   __typename?: 'Business';
   id: Scalars['String']['output'];
@@ -137,6 +157,7 @@ export type Clinic = {
   business_id: Scalars['String']['output'];
   city_name: Scalars['String']['output'];
   closeTime: Scalars['String']['output'];
+  customFeatures?: Maybe<Array<ClinicFeature>>;
   doctors?: Maybe<Array<Doctor>>;
   email: Scalars['String']['output'];
   id: Scalars['String']['output'];
@@ -180,6 +201,12 @@ export type ClinicDetailDto = {
   stringValue?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ClinicFeature = {
+  __typename?: 'ClinicFeature';
+  id?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
+};
+
 export type ClinicPatient = {
   __typename?: 'ClinicPatient';
   id: Scalars['String']['output'];
@@ -214,12 +241,80 @@ export type CpgDto = {
   size: Scalars['String']['input'];
 };
 
+export type CreateDoctorWorkingHoursDto = {
+  consultingMins?: InputMaybe<Scalars['Int']['input']>;
+  doctorId: Scalars['String']['input'];
+  endTime: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
+};
+
+export type CreateInventoryItemDto = {
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  clinicId: Scalars['String']['input'];
+  costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  type: Scalars['String']['input'];
+  unit: Scalars['String']['input'];
+};
+
+export type CreateInventoryTransactionDto = {
+  itemId: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  quantity: Scalars['Int']['input'];
+  referenceId?: InputMaybe<Scalars['String']['input']>;
+  type: Scalars['String']['input'];
+  unitPrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type CreatePatientPurchaseDto = {
+  clinicId: Scalars['String']['input'];
+  items: Array<PatientPurchaseItemDto>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  patientProfileId: Scalars['String']['input'];
+  paymentStatus?: InputMaybe<Scalars['String']['input']>;
+  paymentType?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateReportSettingsInput = {
+  clinicId: Scalars['String']['input'];
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  serviceGroups: Array<CreateServiceGroupInput>;
+};
+
+export type CreateServiceGroupInput = {
+  name: Scalars['String']['input'];
+  order: Scalars['Float']['input'];
+  services: Array<ServiceGroupServiceInput>;
+};
+
+export type CreateSubscriptionDto = {
+  doctorId: Scalars['String']['input'];
+  endDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  trialEndDate?: InputMaybe<Scalars['String']['input']>;
+  trialStartDate?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreditsUpdateDto = {
   call?: InputMaybe<Scalars['Float']['input']>;
   clinicId: Scalars['String']['input'];
   sms?: InputMaybe<Scalars['Float']['input']>;
   videoCall?: InputMaybe<Scalars['Float']['input']>;
   whatsapp?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type CustomFeature = {
+  __typename?: 'CustomFeature';
+  id?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
 };
 
 export type Degree = {
@@ -253,14 +348,36 @@ export type DiagnosisList = {
 export type Doctor = {
   __typename?: 'Doctor';
   createdAt: Scalars['DateTime']['output'];
+  customFeatures?: Maybe<Array<CustomFeature>>;
+  doctorSettings?: Maybe<DoctorSettings>;
   doctor_id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   profile: Profile;
   updatedAt: Scalars['DateTime']['output'];
+  workingHours?: Maybe<DoctorWorkingHours>;
 };
 
 export type DoctorDto = {
   profile: ProfileDto;
+};
+
+export type DoctorSettings = {
+  __typename?: 'DoctorSettings';
+  allowMultipleAppointments: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  doctor_id: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DoctorWorkingHours = {
+  __typename?: 'DoctorWorkingHours';
+  consultingMins?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  endTime: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  startTime: Scalars['DateTime']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type Draft = {
@@ -308,6 +425,13 @@ export type GenderGroup = {
   age_65_plus: AgeGroupStats;
 };
 
+export type GenerateReportDto = {
+  clinicId: Scalars['String']['input'];
+  doctorIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  endDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+};
+
 export type GraphData = {
   __typename?: 'GraphData';
   timestamp: Scalars['String']['output'];
@@ -319,6 +443,93 @@ export type GroupedPatients = {
   FEMALE: GenderGroup;
   MALE: GenderGroup;
 };
+
+export type InventoryFilterDto = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  lowStock?: InputMaybe<Scalars['Boolean']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type InventoryItem = {
+  __typename?: 'InventoryItem';
+  barcode?: Maybe<Scalars['String']['output']>;
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  costPerUnit?: Maybe<Scalars['Float']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  currentStock: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  lowStockThreshold: Scalars['Int']['output'];
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  reorderLevel?: Maybe<Scalars['Int']['output']>;
+  sellingPrice?: Maybe<Scalars['Float']['output']>;
+  stock?: Maybe<Array<InventoryStock>>;
+  transactions?: Maybe<Array<InventoryTransaction>>;
+  type: InventoryItemType;
+  unit: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum InventoryItemType {
+  Consumable = 'CONSUMABLE',
+  Equipment = 'EQUIPMENT',
+  MedicalSupply = 'MEDICAL_SUPPLY',
+  Medicine = 'MEDICINE',
+  Other = 'OTHER'
+}
+
+export type InventoryStats = {
+  __typename?: 'InventoryStats';
+  lowStockItems: Scalars['Int']['output'];
+  outOfStockItems: Scalars['Int']['output'];
+  totalInventoryValue: Scalars['Float']['output'];
+  totalItems: Scalars['Int']['output'];
+};
+
+export type InventoryStock = {
+  __typename?: 'InventoryStock';
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  itemId: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  purchaseDate: Scalars['DateTime']['output'];
+  purchasePrice?: Maybe<Scalars['Float']['output']>;
+  quantity: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type InventoryTransaction = {
+  __typename?: 'InventoryTransaction';
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  itemId: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  quantity: Scalars['Int']['output'];
+  referenceId?: Maybe<Scalars['String']['output']>;
+  totalAmount?: Maybe<Scalars['Float']['output']>;
+  type: InventoryTransactionType;
+  unitPrice?: Maybe<Scalars['Float']['output']>;
+};
+
+export enum InventoryTransactionType {
+  Adjustment = 'ADJUSTMENT',
+  Damaged = 'DAMAGED',
+  Expired = 'EXPIRED',
+  Purchase = 'PURCHASE',
+  Restock = 'RESTOCK',
+  Sale = 'SALE',
+  Usage = 'USAGE'
+}
 
 export type Language = {
   __typename?: 'Language';
@@ -408,16 +619,30 @@ export type Mutation = {
   addMedication: Medication;
   addMedicationViaPhoneNumber: Medication;
   addPatient: Patient;
+  addStock: InventoryStock;
+  assignClinicFeatures: Clinic;
+  assignCustomFeaturesToDoctor: Doctor;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
   createBusiness: Business;
+  createDoctorWorkingHours: DoctorWorkingHours;
   createDraft: Draft;
+  createInventoryItem: InventoryItem;
+  createInventoryTransaction: InventoryTransaction;
   createOrder: Scalars['String']['output'];
+  createPatientPurchase: PatientPurchase;
+  createReportSettings: ReportSettings;
   createService: ServicesModel;
+  createSubscription: Subscription;
   createTemplate: Template;
+  deleteBusiness: Scalars['Boolean']['output'];
   deleteDoctor: Scalars['Boolean']['output'];
+  deleteDoctorWorkingHours: Scalars['String']['output'];
+  deleteInventoryItem: Scalars['String']['output'];
+  deleteReportSettings: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
   editMedication: Medication;
+  generateReport: Scalars['String']['output'];
   getAppointmentGraph: Array<GraphData>;
   getAppointmentStats: AppointmentStats;
   getProductMetrics: Cpg;
@@ -427,6 +652,8 @@ export type Mutation = {
   refreshToken: Scalars['String']['output'];
   register: RegisterResponse;
   registerViaOTP: RegisterResponse;
+  removeClinicFeatures: Clinic;
+  removeCustomFeaturesFromDoctor: Doctor;
   savePrescription: Prescription;
   sendMessage: Scalars['String']['output'];
   sendOTP: OtpStatus;
@@ -437,11 +664,17 @@ export type Mutation = {
   updateCredits: UpdatedCount;
   updateDoctor: Doctor;
   updateDoctorActiveStatus: Scalars['Boolean']['output'];
+  updateDoctorSettings: Scalars['Boolean']['output'];
+  updateDoctorWorkingHours: DoctorWorkingHours;
+  updateInventoryItem: InventoryItem;
   updateMedicationStatus: MedicationStatus;
   updateNotifications: Notifications;
   updatePaymentDetails: Scalars['String']['output'];
   updateProfilePicUrl: Doctor;
+  updateReportSettings: ReportSettings;
   updateService: ServicesModel;
+  updateSubscription: Subscription;
+  updateSubscriptionStatus: Subscription;
   updateVideoDuration: Scalars['String']['output'];
   validateDoctorOTP: Doctor;
 };
@@ -491,6 +724,21 @@ export type MutationAddPatientArgs = {
 };
 
 
+export type MutationAddStockArgs = {
+  input: AddStockDto;
+};
+
+
+export type MutationAssignClinicFeaturesArgs = {
+  input: AssignClinicFeaturesDto;
+};
+
+
+export type MutationAssignCustomFeaturesToDoctorArgs = {
+  input: AssignCustomFeaturesDto;
+};
+
+
 export type MutationBookAppointmentArgs = {
   appointmentInput: AppointmentDetailsDto;
 };
@@ -506,13 +754,38 @@ export type MutationCreateBusinessArgs = {
 };
 
 
+export type MutationCreateDoctorWorkingHoursArgs = {
+  input: CreateDoctorWorkingHoursDto;
+};
+
+
 export type MutationCreateDraftArgs = {
   draftInput: DraftsDto;
 };
 
 
+export type MutationCreateInventoryItemArgs = {
+  input: CreateInventoryItemDto;
+};
+
+
+export type MutationCreateInventoryTransactionArgs = {
+  input: CreateInventoryTransactionDto;
+};
+
+
 export type MutationCreateOrderArgs = {
   paymentInput: PaymentOrderDto;
+};
+
+
+export type MutationCreatePatientPurchaseArgs = {
+  input: CreatePatientPurchaseDto;
+};
+
+
+export type MutationCreateReportSettingsArgs = {
+  input: CreateReportSettingsInput;
 };
 
 
@@ -522,13 +795,38 @@ export type MutationCreateServiceArgs = {
 };
 
 
+export type MutationCreateSubscriptionArgs = {
+  input: CreateSubscriptionDto;
+};
+
+
 export type MutationCreateTemplateArgs = {
   templateInput: TemplateDto;
 };
 
 
+export type MutationDeleteBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteDoctorArgs = {
   doctor_id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDoctorWorkingHoursArgs = {
+  workingHoursId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteInventoryItemArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteReportSettingsArgs = {
+  clinicId: Scalars['String']['input'];
 };
 
 
@@ -540,6 +838,11 @@ export type MutationDeleteScheduleArgs = {
 export type MutationEditMedicationArgs = {
   id: Scalars['String']['input'];
   medicationInput: MedicationDto;
+};
+
+
+export type MutationGenerateReportArgs = {
+  input: GenerateReportDto;
 };
 
 
@@ -576,6 +879,16 @@ export type MutationRegisterArgs = {
 
 export type MutationRegisterViaOtpArgs = {
   otpRegistrationInput: OtpRegistrationDto;
+};
+
+
+export type MutationRemoveClinicFeaturesArgs = {
+  input: RemoveClinicFeaturesDto;
+};
+
+
+export type MutationRemoveCustomFeaturesFromDoctorArgs = {
+  input: RemoveCustomFeaturesDto;
 };
 
 
@@ -634,6 +947,22 @@ export type MutationUpdateDoctorActiveStatusArgs = {
 };
 
 
+export type MutationUpdateDoctorSettingsArgs = {
+  allowMultipleAppointments: Scalars['Boolean']['input'];
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateDoctorWorkingHoursArgs = {
+  input: UpdateDoctorWorkingHoursDto;
+};
+
+
+export type MutationUpdateInventoryItemArgs = {
+  input: UpdateInventoryItemDto;
+};
+
+
 export type MutationUpdateMedicationStatusArgs = {
   medicationStatusInput: MedicationStatusDto;
 };
@@ -657,9 +986,25 @@ export type MutationUpdateProfilePicUrlArgs = {
 };
 
 
+export type MutationUpdateReportSettingsArgs = {
+  clinicId: Scalars['String']['input'];
+  input: UpdateReportSettingsInput;
+};
+
+
 export type MutationUpdateServiceArgs = {
   serviceId: Scalars['String']['input'];
   serviceInput: ServicesDto;
+};
+
+
+export type MutationUpdateSubscriptionArgs = {
+  input: UpdateSubscriptionDto;
+};
+
+
+export type MutationUpdateSubscriptionStatusArgs = {
+  input: UpdateSubscriptionStatusDto;
 };
 
 
@@ -805,6 +1150,43 @@ export type PatientProfileLastVisited = {
   mobile: Scalars['String']['output'];
 };
 
+export type PatientPurchase = {
+  __typename?: 'PatientPurchase';
+  billNo?: Maybe<Scalars['String']['output']>;
+  billURL?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  finalAmount: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  items: Array<PatientPurchaseItem>;
+  notes?: Maybe<Scalars['String']['output']>;
+  patientProfileId: Scalars['String']['output'];
+  paymentStatus?: Maybe<Scalars['String']['output']>;
+  paymentType?: Maybe<Scalars['String']['output']>;
+  totalAmount: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PatientPurchaseItem = {
+  __typename?: 'PatientPurchaseItem';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  item?: Maybe<InventoryItem>;
+  itemId: Scalars['String']['output'];
+  purchaseId: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
+  totalPrice: Scalars['Float']['output'];
+  unitPrice: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PatientPurchaseItemDto = {
+  itemId: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+  unitPrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type PatientStatsResponse = {
   __typename?: 'PatientStatsResponse';
   groupedPatients: GroupedPatients;
@@ -943,6 +1325,7 @@ export type Professional = {
   degree?: Maybe<Array<Degree>>;
   language: Array<Language>;
   major_speciality: MajorSpecaility;
+  medicalLicenseNumber?: Maybe<Scalars['String']['output']>;
   speciality: Array<Speciality>;
 };
 
@@ -976,13 +1359,17 @@ export type Query = {
   createRazorPayOrder: RazorPayOrder;
   deleteService: Scalars['String']['output'];
   deleteTemplate: Array<Scalars['String']['output']>;
+  downloadReport: Scalars['String']['output'];
   getAClinic: Clinic;
+  getAccessToken?: Maybe<Scalars['String']['output']>;
+  getAllClinicFeatures: Array<ClinicFeature>;
   getAllClinicTemplates: Array<Template>;
   getAllDrafts: Array<DraftModel>;
   getAllMedication: Array<Medication>;
   getAllPatientProfiles: Array<PatientProfile>;
   getAllPatientsByStatus: Array<AppointmentDetails>;
   getAllTomorrowPatients: Array<AppointmentDetails>;
+  getAllVitalsByPatientId: Array<VitalsType>;
   getAppointmentChannelStats: Array<ChannelStats>;
   getAppointmentCount: Array<AppointmentCount>;
   getAppointmentStatus: AppointmentDetails;
@@ -990,29 +1377,45 @@ export type Query = {
   getBusinessClinics: Array<Clinic>;
   getChannelCount: Array<ChannelCount>;
   getClinicDoctors: Array<Doctor>;
+  getClinicFeatures: Array<ClinicFeature>;
   getClinicNotification: Array<Notifications>;
   getClinicPatients: Array<ClinicPatient>;
   getClinicPatientsBasicInfo: ClinicPatientsResponse;
   getClinics: Array<Clinic>;
+  getCustomFeatures: Array<CustomFeature>;
   getDiagnosisList: Array<DiagnosisList>;
   getDoctor: Doctor;
+  getDoctorSubscription?: Maybe<Subscription>;
+  getDoctorWorkingHours?: Maybe<DoctorWorkingHours>;
   getDoctors: Array<Doctor>;
   getDrugList: Array<DrugList>;
+  getExpiringItems: Array<InventoryStock>;
+  getInventoryItem: InventoryItem;
+  getInventoryItems: Array<InventoryItem>;
+  getInventoryStats: InventoryStats;
+  getInventoryTransactions: Array<InventoryTransaction>;
+  getLowStockItems: Array<InventoryItem>;
   getMedicationRange: Array<Medication>;
   getNearestDoctors: Array<Doctor>;
   getNotificationCredits: NotificationCredits;
   getOnGoing: Array<Medication>;
   getPatientHistory: Array<AppointmentDetails>;
+  getPatientPurchase: PatientPurchase;
+  getPatientPurchases: Array<PatientPurchase>;
   getPatientsByAgeAndGender: PatientStatsResponse;
   getPatientsCount: Scalars['Float']['output'];
   getPatientsPaginated: PaginatedPatients;
   getPaymentAnalytics: Array<PaymentCount>;
   getProduct: Cpg;
   getProducts: PaginatedCpg;
+  getReportSettings?: Maybe<ReportSettings>;
+  getReportStatus: Scalars['String']['output'];
   getRooms: Scalars['String']['output'];
   getServices: Array<ServicesModel>;
   getSlots: Array<Scalars['String']['output']>;
   getStats: Stats;
+  getStock: Array<InventoryStock>;
+  getSubscription: Subscription;
   getSymptomsList: Array<SymptomsList>;
   getUserByPhoneNumber: User;
   getUsers: Array<User>;
@@ -1057,6 +1460,11 @@ export type QueryDeleteTemplateArgs = {
 };
 
 
+export type QueryDownloadReportArgs = {
+  jobId: Scalars['String']['input'];
+};
+
+
 export type QueryGetAllClinicTemplatesArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -1078,6 +1486,11 @@ export type QueryGetAllPatientsByStatusArgs = {
 export type QueryGetAllTomorrowPatientsArgs = {
   clinic_id: Scalars['String']['input'];
   doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetAllVitalsByPatientIdArgs = {
+  patientProfileId: Scalars['String']['input'];
 };
 
 
@@ -1123,6 +1536,11 @@ export type QueryGetClinicDoctorsArgs = {
 };
 
 
+export type QueryGetClinicFeaturesArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetClinicNotificationArgs = {
   clinic_id: Scalars['String']['input'];
 };
@@ -1148,8 +1566,52 @@ export type QueryGetDoctorArgs = {
 };
 
 
+export type QueryGetDoctorSubscriptionArgs = {
+  doctorId: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorWorkingHoursArgs = {
+  doctorId: Scalars['String']['input'];
+};
+
+
 export type QueryGetDrugListArgs = {
   query: Scalars['String']['input'];
+};
+
+
+export type QueryGetExpiringItemsArgs = {
+  clinicId: Scalars['String']['input'];
+  days?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetInventoryItemArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetInventoryItemsArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<InventoryFilterDto>;
+};
+
+
+export type QueryGetInventoryStatsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetInventoryTransactionsArgs = {
+  clinicId?: InputMaybe<Scalars['String']['input']>;
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetLowStockItemsArgs = {
+  clinicId: Scalars['String']['input'];
 };
 
 
@@ -1178,6 +1640,18 @@ export type QueryGetOnGoingArgs = {
 export type QueryGetPatientHistoryArgs = {
   includePayment?: InputMaybe<Scalars['Boolean']['input']>;
   patientProfileId: Scalars['String']['input'];
+};
+
+
+export type QueryGetPatientPurchaseArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPatientPurchasesArgs = {
+  clinicId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Float']['input']>;
+  patientProfileId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1216,6 +1690,16 @@ export type QueryGetProductsArgs = {
 };
 
 
+export type QueryGetReportSettingsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetReportStatusArgs = {
+  jobId: Scalars['String']['input'];
+};
+
+
 export type QueryGetServicesArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -1230,6 +1714,16 @@ export type QueryGetStatsArgs = {
   clinic_id: Scalars['String']['input'];
   endTime: Scalars['String']['input'];
   startTime: Scalars['String']['input'];
+};
+
+
+export type QueryGetStockArgs = {
+  itemId: Scalars['String']['input'];
+};
+
+
+export type QueryGetSubscriptionArgs = {
+  subscriptionId: Scalars['String']['input'];
 };
 
 
@@ -1257,6 +1751,7 @@ export type Rx_Entries = {
   diagnosis: Array<Diagnosis>;
   prescriptionMedication: Array<PrescriptionMedication>;
   symptoms: Array<Symptoms>;
+  vitals?: InputMaybe<Array<Vitals>>;
 };
 
 export type RazorPayOrder = {
@@ -1280,6 +1775,46 @@ export type RegisterResponse = {
   __typename?: 'RegisterResponse';
   error?: Maybe<ErrorType>;
   user?: Maybe<User>;
+};
+
+export type RemoveClinicFeaturesDto = {
+  clinicId: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
+export type RemoveCustomFeaturesDto = {
+  doctor_id: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
+export type ReportServiceGroup = {
+  __typename?: 'ReportServiceGroup';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  order: Scalars['Float']['output'];
+  reportSettingsId: Scalars['String']['output'];
+  services: Array<ReportServiceGroupService>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ReportServiceGroupService = {
+  __typename?: 'ReportServiceGroupService';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  reportServiceGroupId: Scalars['String']['output'];
+  serviceName: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ReportSettings = {
+  __typename?: 'ReportSettings';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  serviceGroups: Array<ReportServiceGroup>;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type RevenueStats = {
@@ -1320,6 +1855,10 @@ export type ServiceDetailDto = {
   discount: Scalars['Float']['input'];
   metaData?: InputMaybe<Scalars['JSON']['input']>;
   name: Scalars['String']['input'];
+};
+
+export type ServiceGroupServiceInput = {
+  serviceName: Scalars['String']['input'];
 };
 
 export type ServicesDto = {
@@ -1388,6 +1927,27 @@ export enum StatusEnum {
   Og = 'OG'
 }
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  endDate: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  startDate: Scalars['DateTime']['output'];
+  status: SubscriptionStatus;
+  trialEndDate?: Maybe<Scalars['DateTime']['output']>;
+  trialStartDate?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum SubscriptionStatus {
+  Active = 'ACTIVE',
+  SubscriptionDone = 'SUBSCRIPTION_DONE',
+  Suspended = 'SUSPENDED',
+  Trial = 'TRIAL',
+  TrialEnded = 'TRIAL_ENDED'
+}
+
 export type Symptoms = {
   name: Scalars['String']['input'];
   properties?: InputMaybe<Scalars['JSON']['input']>;
@@ -1412,6 +1972,48 @@ export type TemplateDto = {
   name: Scalars['String']['input'];
   serviceDetails: Array<ServiceDetailDto>;
   templateId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateDoctorWorkingHoursDto = {
+  consultingMins?: InputMaybe<Scalars['Int']['input']>;
+  endTime?: InputMaybe<Scalars['String']['input']>;
+  startTime?: InputMaybe<Scalars['String']['input']>;
+  workingHoursId: Scalars['String']['input'];
+};
+
+export type UpdateInventoryItemDto = {
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateReportSettingsInput = {
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  serviceGroups?: InputMaybe<Array<CreateServiceGroupInput>>;
+};
+
+export type UpdateSubscriptionDto = {
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  subscriptionId: Scalars['String']['input'];
+  trialEndDate?: InputMaybe<Scalars['String']['input']>;
+  trialStartDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSubscriptionStatusDto = {
+  status: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
 };
 
 export type UpdatedCount = {
@@ -1440,6 +2042,24 @@ export type ValidateDoctorOtp = {
   phone_number: Scalars['String']['input'];
 };
 
+export type Vitals = {
+  date?: InputMaybe<Scalars['DateTime']['input']>;
+  name: Scalars['String']['input'];
+  unit: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type VitalsType = {
+  __typename?: 'VitalsType';
+  date: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  prescriptionDate?: Maybe<Scalars['DateTime']['output']>;
+  prescriptionId?: Maybe<Scalars['String']['output']>;
+  unit: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 export type CreateBusinessMutationVariables = Exact<{
   businessInput: BusinessDto;
 }>;
@@ -1454,6 +2074,34 @@ export type AddClinicMutationVariables = Exact<{
 
 
 export type AddClinicMutation = { __typename?: 'Mutation', addClinic: { __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, location: Array<string>, logoUrl?: string | null, name: string, openTime: string, workingDays: Array<boolean> } };
+
+export type AssignClinicFeaturesMutationVariables = Exact<{
+  input: AssignClinicFeaturesDto;
+}>;
+
+
+export type AssignClinicFeaturesMutation = { __typename?: 'Mutation', assignClinicFeatures: { __typename?: 'Clinic', id: string, name: string, customFeatures?: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> | null } };
+
+export type RemoveClinicFeaturesMutationVariables = Exact<{
+  input: RemoveClinicFeaturesDto;
+}>;
+
+
+export type RemoveClinicFeaturesMutation = { __typename?: 'Mutation', removeClinicFeatures: { __typename?: 'Clinic', id: string, name: string, customFeatures?: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> | null } };
+
+export type AssignCustomFeaturesToDoctorMutationVariables = Exact<{
+  input: AssignCustomFeaturesDto;
+}>;
+
+
+export type AssignCustomFeaturesToDoctorMutation = { __typename?: 'Mutation', assignCustomFeaturesToDoctor: { __typename?: 'Doctor', doctor_id: string, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', first_name: string, last_name: string } }, customFeatures?: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> | null } };
+
+export type RemoveCustomFeaturesFromDoctorMutationVariables = Exact<{
+  input: RemoveCustomFeaturesDto;
+}>;
+
+
+export type RemoveCustomFeaturesFromDoctorMutation = { __typename?: 'Mutation', removeCustomFeaturesFromDoctor: { __typename?: 'Doctor', doctor_id: string, customFeatures?: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> | null, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', first_name: string, last_name: string } } } };
 
 export type AddDoctorMutationVariables = Exact<{
   clinicIds: Scalars['String']['input'];
@@ -1471,10 +2119,34 @@ export type UpdateProfilePicUrlMutationVariables = Exact<{
 
 export type UpdateProfilePicUrlMutation = { __typename?: 'Mutation', updateProfilePicUrl: { __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any } };
 
+export type GetAllClinicFeaturesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllClinicFeaturesQuery = { __typename?: 'Query', getAllClinicFeatures: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> };
+
+export type GetClinicFeaturesQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicFeaturesQuery = { __typename?: 'Query', getClinicFeatures: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> };
+
 export type GetClinicsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetClinicsQuery = { __typename?: 'Query', getClinics: Array<{ __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, latitude?: number | null, location: Array<string>, logoUrl?: string | null, name: string, workingDays: Array<boolean>, longitude?: number | null, openTime: string, address: { __typename?: 'Address', city: string, country: string, line1: string, line2?: string | null, pin: string, state: string }, phone_number: Array<{ __typename?: 'PhoneNumber', n: string, name: string }>, speciality?: Array<{ __typename?: 'Speciality', name: string }> | null }> };
+
+export type GetCustomFeaturesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCustomFeaturesQuery = { __typename?: 'Query', getCustomFeatures: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> };
+
+export type GetDoctorQueryVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorQuery = { __typename?: 'Query', getDoctor: { __typename?: 'Doctor', doctor_id: string, customFeatures?: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> | null } };
 
 export type GetClinicDoctorsQueryVariables = Exact<{
   clinicId: Scalars['String']['input'];
@@ -1497,14 +2169,22 @@ export type ApproveOrRejectQueryVariables = Exact<{
 export type ApproveOrRejectQuery = { __typename?: 'Query', approveOrReject: string };
 
 
-export const CreateBusinessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateBusiness"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"businessInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BusinessDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBusiness"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"businessInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"businessInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateBusinessMutation, CreateBusinessMutationVariables>;
-export const AddClinicDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddClinic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"businessId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ClinicDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addClinic"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"businessId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"businessId"}}},{"kind":"Argument","name":{"kind":"Name","value":"clinicInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}},{"kind":"Field","name":{"kind":"Name","value":"city_name"}},{"kind":"Field","name":{"kind":"Name","value":"closeTime"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"openTime"}},{"kind":"Field","name":{"kind":"Name","value":"workingDays"}}]}}]}}]} as unknown as DocumentNode<AddClinicMutation, AddClinicMutationVariables>;
-export const AddDoctorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddDoctor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicIds"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctorInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DoctorDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addDoctor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctorInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctorInput"}}},{"kind":"Argument","name":{"kind":"Name","value":"clinicIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}}]}}]}}]} as unknown as DocumentNode<AddDoctorMutation, AddDoctorMutationVariables>;
-export const UpdateProfilePicUrlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateProfilePicUrl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"picture_url"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateProfilePicUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}},{"kind":"Argument","name":{"kind":"Name","value":"picture_url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"picture_url"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
-export const GetClinicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}},{"kind":"Field","name":{"kind":"Name","value":"city_name"}},{"kind":"Field","name":{"kind":"Name","value":"closeTime"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"line1"}},{"kind":"Field","name":{"kind":"Name","value":"line2"}},{"kind":"Field","name":{"kind":"Name","value":"pin"}},{"kind":"Field","name":{"kind":"Name","value":"state"}}]}},{"kind":"Field","name":{"kind":"Name","value":"phone_number"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"workingDays"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"openTime"}}]}}]}}]} as unknown as DocumentNode<GetClinicsQuery, GetClinicsQueryVariables>;
-export const GetClinicDoctorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicDoctors"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicDoctors"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"personal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"designation"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"phone_number"}},{"kind":"Field","name":{"kind":"Name","value":"profile_pic"}}]}},{"kind":"Field","name":{"kind":"Name","value":"professional"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"major_speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"degree"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"branch_name"}},{"kind":"Field","name":{"kind":"Name","value":"college_name"}},{"kind":"Field","name":{"kind":"Name","value":"end_year"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_year"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
-export const GetAllDraftsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllDrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllDrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clinicName"}},{"kind":"Field","name":{"kind":"Name","value":"doctorName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]} as unknown as DocumentNode<GetAllDraftsQuery, GetAllDraftsQueryVariables>;
-export const ApproveOrRejectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ApproveOrReject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"approveOrReject"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status"}}}]}]}}]} as unknown as DocumentNode<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
+export const CreateBusinessDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "CreateBusiness" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "businessInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "BusinessDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createBusiness" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "businessInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "businessInput" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }] } }] } as unknown as DocumentNode<CreateBusinessMutation, CreateBusinessMutationVariables>;
+export const AddClinicDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddClinic" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "businessId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ClinicDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addClinic" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "businessId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "businessId" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicInput" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "city_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "closeTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "location" } }, { "kind": "Field", "name": { "kind": "Name", "value": "logoUrl" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "openTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "workingDays" } }] } }] } }] } as unknown as DocumentNode<AddClinicMutation, AddClinicMutationVariables>;
+export const AssignClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignClinicFeatures" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AssignClinicFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignClinicFeatures" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>;
+export const RemoveClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveClinicFeatures" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "RemoveClinicFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeClinicFeatures" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>;
+export const AssignCustomFeaturesToDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignCustomFeaturesToDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AssignCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignCustomFeaturesToDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
+export const RemoveCustomFeaturesFromDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveCustomFeaturesFromDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "RemoveCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeCustomFeaturesFromDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }] } }] } }] } as unknown as DocumentNode<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
+export const AddDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "DoctorDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicIds" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }] } }] } }] } as unknown as DocumentNode<AddDoctorMutation, AddDoctorMutationVariables>;
+export const UpdateProfilePicUrlDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateProfilePicUrl" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateProfilePicUrl" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "picture_url" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
+export const GetAllClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetAllClinicFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getAllClinicFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>;
+export const GetClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicFeatures" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicFeatures" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>;
+export const GetClinicsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinics" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinics" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "city_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "closeTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "latitude" } }, { "kind": "Field", "name": { "kind": "Name", "value": "location" } }, { "kind": "Field", "name": { "kind": "Name", "value": "logoUrl" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "address" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "city" } }, { "kind": "Field", "name": { "kind": "Name", "value": "country" } }, { "kind": "Field", "name": { "kind": "Name", "value": "line1" } }, { "kind": "Field", "name": { "kind": "Name", "value": "line2" } }, { "kind": "Field", "name": { "kind": "Name", "value": "pin" } }, { "kind": "Field", "name": { "kind": "Name", "value": "state" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "phone_number" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "n" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "workingDays" } }, { "kind": "Field", "name": { "kind": "Name", "value": "longitude" } }, { "kind": "Field", "name": { "kind": "Name", "value": "openTime" } }] } }] } }] } as unknown as DocumentNode<GetClinicsQuery, GetClinicsQueryVariables>;
+export const GetCustomFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetCustomFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getCustomFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>;
+export const GetDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<GetDoctorQuery, GetDoctorQueryVariables>;
+export const GetClinicDoctorsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicDoctors" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicDoctors" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "designation" } }, { "kind": "Field", "name": { "kind": "Name", "value": "dob" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "gender" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "middle_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phone_number" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile_pic" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "professional" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "language" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "major_speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "degree" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "branch_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "college_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "end_year" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "start_year" } }] } }] } }] } }] } }] } }] } as unknown as DocumentNode<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
+export const GetAllDraftsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinicName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "type" } }] } }] } }] } as unknown as DocumentNode<GetAllDraftsQuery, GetAllDraftsQueryVariables>;
+export const ApproveOrRejectDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "ApproveOrReject" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "approveOrReject" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "status" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } } }] }] } }] } as unknown as DocumentNode<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -1516,6 +2196,15 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
   /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { input: any; output: any; }
+};
+
+export type AddStockDto = {
+  batchNumber?: InputMaybe<Scalars['String']['input']>;
+  expiryDate?: InputMaybe<Scalars['DateTime']['input']>;
+  itemId: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  purchasePrice?: InputMaybe<Scalars['Float']['input']>;
+  quantity: Scalars['Int']['input'];
 };
 
 export type Address = {
@@ -1583,6 +2272,16 @@ export type AppointmentStats = {
   percentageChange: Scalars['Float']['output'];
 };
 
+export type AssignClinicFeaturesDto = {
+  clinicId: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
+export type AssignCustomFeaturesDto = {
+  doctor_id: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
 export type Business = {
   __typename?: 'Business';
   id: Scalars['String']['output'];
@@ -1632,6 +2331,7 @@ export type Clinic = {
   business_id: Scalars['String']['output'];
   city_name: Scalars['String']['output'];
   closeTime: Scalars['String']['output'];
+  customFeatures?: Maybe<Array<ClinicFeature>>;
   doctors?: Maybe<Array<Doctor>>;
   email: Scalars['String']['output'];
   id: Scalars['String']['output'];
@@ -1675,6 +2375,12 @@ export type ClinicDetailDto = {
   stringValue?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type ClinicFeature = {
+  __typename?: 'ClinicFeature';
+  id?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
+};
+
 export type ClinicPatient = {
   __typename?: 'ClinicPatient';
   id: Scalars['String']['output'];
@@ -1709,12 +2415,80 @@ export type CpgDto = {
   size: Scalars['String']['input'];
 };
 
+export type CreateDoctorWorkingHoursDto = {
+  consultingMins?: InputMaybe<Scalars['Int']['input']>;
+  doctorId: Scalars['String']['input'];
+  endTime: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
+};
+
+export type CreateInventoryItemDto = {
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  clinicId: Scalars['String']['input'];
+  costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  type: Scalars['String']['input'];
+  unit: Scalars['String']['input'];
+};
+
+export type CreateInventoryTransactionDto = {
+  itemId: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  quantity: Scalars['Int']['input'];
+  referenceId?: InputMaybe<Scalars['String']['input']>;
+  type: Scalars['String']['input'];
+  unitPrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type CreatePatientPurchaseDto = {
+  clinicId: Scalars['String']['input'];
+  items: Array<PatientPurchaseItemDto>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  patientProfileId: Scalars['String']['input'];
+  paymentStatus?: InputMaybe<Scalars['String']['input']>;
+  paymentType?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateReportSettingsInput = {
+  clinicId: Scalars['String']['input'];
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  serviceGroups: Array<CreateServiceGroupInput>;
+};
+
+export type CreateServiceGroupInput = {
+  name: Scalars['String']['input'];
+  order: Scalars['Float']['input'];
+  services: Array<ServiceGroupServiceInput>;
+};
+
+export type CreateSubscriptionDto = {
+  doctorId: Scalars['String']['input'];
+  endDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  trialEndDate?: InputMaybe<Scalars['String']['input']>;
+  trialStartDate?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreditsUpdateDto = {
   call?: InputMaybe<Scalars['Float']['input']>;
   clinicId: Scalars['String']['input'];
   sms?: InputMaybe<Scalars['Float']['input']>;
   videoCall?: InputMaybe<Scalars['Float']['input']>;
   whatsapp?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type CustomFeature = {
+  __typename?: 'CustomFeature';
+  id?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
 };
 
 export type Degree = {
@@ -1748,14 +2522,36 @@ export type DiagnosisList = {
 export type Doctor = {
   __typename?: 'Doctor';
   createdAt: Scalars['DateTime']['output'];
+  customFeatures?: Maybe<Array<CustomFeature>>;
+  doctorSettings?: Maybe<DoctorSettings>;
   doctor_id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   profile: Profile;
   updatedAt: Scalars['DateTime']['output'];
+  workingHours?: Maybe<DoctorWorkingHours>;
 };
 
 export type DoctorDto = {
   profile: ProfileDto;
+};
+
+export type DoctorSettings = {
+  __typename?: 'DoctorSettings';
+  allowMultipleAppointments: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  doctor_id: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DoctorWorkingHours = {
+  __typename?: 'DoctorWorkingHours';
+  consultingMins?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  endTime: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  startTime: Scalars['DateTime']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type Draft = {
@@ -1803,6 +2599,13 @@ export type GenderGroup = {
   age_65_plus: AgeGroupStats;
 };
 
+export type GenerateReportDto = {
+  clinicId: Scalars['String']['input'];
+  doctorIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  endDate: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+};
+
 export type GraphData = {
   __typename?: 'GraphData';
   timestamp: Scalars['String']['output'];
@@ -1814,6 +2617,93 @@ export type GroupedPatients = {
   FEMALE: GenderGroup;
   MALE: GenderGroup;
 };
+
+export type InventoryFilterDto = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  lowStock?: InputMaybe<Scalars['Boolean']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type InventoryItem = {
+  __typename?: 'InventoryItem';
+  barcode?: Maybe<Scalars['String']['output']>;
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  costPerUnit?: Maybe<Scalars['Float']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  currentStock: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  lowStockThreshold: Scalars['Int']['output'];
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  reorderLevel?: Maybe<Scalars['Int']['output']>;
+  sellingPrice?: Maybe<Scalars['Float']['output']>;
+  stock?: Maybe<Array<InventoryStock>>;
+  transactions?: Maybe<Array<InventoryTransaction>>;
+  type: InventoryItemType;
+  unit: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum InventoryItemType {
+  Consumable = 'CONSUMABLE',
+  Equipment = 'EQUIPMENT',
+  MedicalSupply = 'MEDICAL_SUPPLY',
+  Medicine = 'MEDICINE',
+  Other = 'OTHER'
+}
+
+export type InventoryStats = {
+  __typename?: 'InventoryStats';
+  lowStockItems: Scalars['Int']['output'];
+  outOfStockItems: Scalars['Int']['output'];
+  totalInventoryValue: Scalars['Float']['output'];
+  totalItems: Scalars['Int']['output'];
+};
+
+export type InventoryStock = {
+  __typename?: 'InventoryStock';
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  itemId: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  purchaseDate: Scalars['DateTime']['output'];
+  purchasePrice?: Maybe<Scalars['Float']['output']>;
+  quantity: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type InventoryTransaction = {
+  __typename?: 'InventoryTransaction';
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  itemId: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  quantity: Scalars['Int']['output'];
+  referenceId?: Maybe<Scalars['String']['output']>;
+  totalAmount?: Maybe<Scalars['Float']['output']>;
+  type: InventoryTransactionType;
+  unitPrice?: Maybe<Scalars['Float']['output']>;
+};
+
+export enum InventoryTransactionType {
+  Adjustment = 'ADJUSTMENT',
+  Damaged = 'DAMAGED',
+  Expired = 'EXPIRED',
+  Purchase = 'PURCHASE',
+  Restock = 'RESTOCK',
+  Sale = 'SALE',
+  Usage = 'USAGE'
+}
 
 export type Language = {
   __typename?: 'Language';
@@ -1903,16 +2793,30 @@ export type Mutation = {
   addMedication: Medication;
   addMedicationViaPhoneNumber: Medication;
   addPatient: Patient;
+  addStock: InventoryStock;
+  assignClinicFeatures: Clinic;
+  assignCustomFeaturesToDoctor: Doctor;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
   createBusiness: Business;
+  createDoctorWorkingHours: DoctorWorkingHours;
   createDraft: Draft;
+  createInventoryItem: InventoryItem;
+  createInventoryTransaction: InventoryTransaction;
   createOrder: Scalars['String']['output'];
+  createPatientPurchase: PatientPurchase;
+  createReportSettings: ReportSettings;
   createService: ServicesModel;
+  createSubscription: Subscription;
   createTemplate: Template;
+  deleteBusiness: Scalars['Boolean']['output'];
   deleteDoctor: Scalars['Boolean']['output'];
+  deleteDoctorWorkingHours: Scalars['String']['output'];
+  deleteInventoryItem: Scalars['String']['output'];
+  deleteReportSettings: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
   editMedication: Medication;
+  generateReport: Scalars['String']['output'];
   getAppointmentGraph: Array<GraphData>;
   getAppointmentStats: AppointmentStats;
   getProductMetrics: Cpg;
@@ -1922,6 +2826,8 @@ export type Mutation = {
   refreshToken: Scalars['String']['output'];
   register: RegisterResponse;
   registerViaOTP: RegisterResponse;
+  removeClinicFeatures: Clinic;
+  removeCustomFeaturesFromDoctor: Doctor;
   savePrescription: Prescription;
   sendMessage: Scalars['String']['output'];
   sendOTP: OtpStatus;
@@ -1932,11 +2838,17 @@ export type Mutation = {
   updateCredits: UpdatedCount;
   updateDoctor: Doctor;
   updateDoctorActiveStatus: Scalars['Boolean']['output'];
+  updateDoctorSettings: Scalars['Boolean']['output'];
+  updateDoctorWorkingHours: DoctorWorkingHours;
+  updateInventoryItem: InventoryItem;
   updateMedicationStatus: MedicationStatus;
   updateNotifications: Notifications;
   updatePaymentDetails: Scalars['String']['output'];
   updateProfilePicUrl: Doctor;
+  updateReportSettings: ReportSettings;
   updateService: ServicesModel;
+  updateSubscription: Subscription;
+  updateSubscriptionStatus: Subscription;
   updateVideoDuration: Scalars['String']['output'];
   validateDoctorOTP: Doctor;
 };
@@ -1986,6 +2898,21 @@ export type MutationAddPatientArgs = {
 };
 
 
+export type MutationAddStockArgs = {
+  input: AddStockDto;
+};
+
+
+export type MutationAssignClinicFeaturesArgs = {
+  input: AssignClinicFeaturesDto;
+};
+
+
+export type MutationAssignCustomFeaturesToDoctorArgs = {
+  input: AssignCustomFeaturesDto;
+};
+
+
 export type MutationBookAppointmentArgs = {
   appointmentInput: AppointmentDetailsDto;
 };
@@ -2001,13 +2928,38 @@ export type MutationCreateBusinessArgs = {
 };
 
 
+export type MutationCreateDoctorWorkingHoursArgs = {
+  input: CreateDoctorWorkingHoursDto;
+};
+
+
 export type MutationCreateDraftArgs = {
   draftInput: DraftsDto;
 };
 
 
+export type MutationCreateInventoryItemArgs = {
+  input: CreateInventoryItemDto;
+};
+
+
+export type MutationCreateInventoryTransactionArgs = {
+  input: CreateInventoryTransactionDto;
+};
+
+
 export type MutationCreateOrderArgs = {
   paymentInput: PaymentOrderDto;
+};
+
+
+export type MutationCreatePatientPurchaseArgs = {
+  input: CreatePatientPurchaseDto;
+};
+
+
+export type MutationCreateReportSettingsArgs = {
+  input: CreateReportSettingsInput;
 };
 
 
@@ -2017,13 +2969,38 @@ export type MutationCreateServiceArgs = {
 };
 
 
+export type MutationCreateSubscriptionArgs = {
+  input: CreateSubscriptionDto;
+};
+
+
 export type MutationCreateTemplateArgs = {
   templateInput: TemplateDto;
 };
 
 
+export type MutationDeleteBusinessArgs = {
+  businessId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteDoctorArgs = {
   doctor_id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDoctorWorkingHoursArgs = {
+  workingHoursId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteInventoryItemArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteReportSettingsArgs = {
+  clinicId: Scalars['String']['input'];
 };
 
 
@@ -2035,6 +3012,11 @@ export type MutationDeleteScheduleArgs = {
 export type MutationEditMedicationArgs = {
   id: Scalars['String']['input'];
   medicationInput: MedicationDto;
+};
+
+
+export type MutationGenerateReportArgs = {
+  input: GenerateReportDto;
 };
 
 
@@ -2071,6 +3053,16 @@ export type MutationRegisterArgs = {
 
 export type MutationRegisterViaOtpArgs = {
   otpRegistrationInput: OtpRegistrationDto;
+};
+
+
+export type MutationRemoveClinicFeaturesArgs = {
+  input: RemoveClinicFeaturesDto;
+};
+
+
+export type MutationRemoveCustomFeaturesFromDoctorArgs = {
+  input: RemoveCustomFeaturesDto;
 };
 
 
@@ -2129,6 +3121,22 @@ export type MutationUpdateDoctorActiveStatusArgs = {
 };
 
 
+export type MutationUpdateDoctorSettingsArgs = {
+  allowMultipleAppointments: Scalars['Boolean']['input'];
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateDoctorWorkingHoursArgs = {
+  input: UpdateDoctorWorkingHoursDto;
+};
+
+
+export type MutationUpdateInventoryItemArgs = {
+  input: UpdateInventoryItemDto;
+};
+
+
 export type MutationUpdateMedicationStatusArgs = {
   medicationStatusInput: MedicationStatusDto;
 };
@@ -2152,9 +3160,25 @@ export type MutationUpdateProfilePicUrlArgs = {
 };
 
 
+export type MutationUpdateReportSettingsArgs = {
+  clinicId: Scalars['String']['input'];
+  input: UpdateReportSettingsInput;
+};
+
+
 export type MutationUpdateServiceArgs = {
   serviceId: Scalars['String']['input'];
   serviceInput: ServicesDto;
+};
+
+
+export type MutationUpdateSubscriptionArgs = {
+  input: UpdateSubscriptionDto;
+};
+
+
+export type MutationUpdateSubscriptionStatusArgs = {
+  input: UpdateSubscriptionStatusDto;
 };
 
 
@@ -2300,6 +3324,43 @@ export type PatientProfileLastVisited = {
   mobile: Scalars['String']['output'];
 };
 
+export type PatientPurchase = {
+  __typename?: 'PatientPurchase';
+  billNo?: Maybe<Scalars['String']['output']>;
+  billURL?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  finalAmount: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  items: Array<PatientPurchaseItem>;
+  notes?: Maybe<Scalars['String']['output']>;
+  patientProfileId: Scalars['String']['output'];
+  paymentStatus?: Maybe<Scalars['String']['output']>;
+  paymentType?: Maybe<Scalars['String']['output']>;
+  totalAmount: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PatientPurchaseItem = {
+  __typename?: 'PatientPurchaseItem';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  item?: Maybe<InventoryItem>;
+  itemId: Scalars['String']['output'];
+  purchaseId: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
+  totalPrice: Scalars['Float']['output'];
+  unitPrice: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PatientPurchaseItemDto = {
+  itemId: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+  unitPrice?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type PatientStatsResponse = {
   __typename?: 'PatientStatsResponse';
   groupedPatients: GroupedPatients;
@@ -2438,6 +3499,7 @@ export type Professional = {
   degree?: Maybe<Array<Degree>>;
   language: Array<Language>;
   major_speciality: MajorSpecaility;
+  medicalLicenseNumber?: Maybe<Scalars['String']['output']>;
   speciality: Array<Speciality>;
 };
 
@@ -2471,13 +3533,17 @@ export type Query = {
   createRazorPayOrder: RazorPayOrder;
   deleteService: Scalars['String']['output'];
   deleteTemplate: Array<Scalars['String']['output']>;
+  downloadReport: Scalars['String']['output'];
   getAClinic: Clinic;
+  getAccessToken?: Maybe<Scalars['String']['output']>;
+  getAllClinicFeatures: Array<ClinicFeature>;
   getAllClinicTemplates: Array<Template>;
   getAllDrafts: Array<DraftModel>;
   getAllMedication: Array<Medication>;
   getAllPatientProfiles: Array<PatientProfile>;
   getAllPatientsByStatus: Array<AppointmentDetails>;
   getAllTomorrowPatients: Array<AppointmentDetails>;
+  getAllVitalsByPatientId: Array<VitalsType>;
   getAppointmentChannelStats: Array<ChannelStats>;
   getAppointmentCount: Array<AppointmentCount>;
   getAppointmentStatus: AppointmentDetails;
@@ -2485,29 +3551,45 @@ export type Query = {
   getBusinessClinics: Array<Clinic>;
   getChannelCount: Array<ChannelCount>;
   getClinicDoctors: Array<Doctor>;
+  getClinicFeatures: Array<ClinicFeature>;
   getClinicNotification: Array<Notifications>;
   getClinicPatients: Array<ClinicPatient>;
   getClinicPatientsBasicInfo: ClinicPatientsResponse;
   getClinics: Array<Clinic>;
+  getCustomFeatures: Array<CustomFeature>;
   getDiagnosisList: Array<DiagnosisList>;
   getDoctor: Doctor;
+  getDoctorSubscription?: Maybe<Subscription>;
+  getDoctorWorkingHours?: Maybe<DoctorWorkingHours>;
   getDoctors: Array<Doctor>;
   getDrugList: Array<DrugList>;
+  getExpiringItems: Array<InventoryStock>;
+  getInventoryItem: InventoryItem;
+  getInventoryItems: Array<InventoryItem>;
+  getInventoryStats: InventoryStats;
+  getInventoryTransactions: Array<InventoryTransaction>;
+  getLowStockItems: Array<InventoryItem>;
   getMedicationRange: Array<Medication>;
   getNearestDoctors: Array<Doctor>;
   getNotificationCredits: NotificationCredits;
   getOnGoing: Array<Medication>;
   getPatientHistory: Array<AppointmentDetails>;
+  getPatientPurchase: PatientPurchase;
+  getPatientPurchases: Array<PatientPurchase>;
   getPatientsByAgeAndGender: PatientStatsResponse;
   getPatientsCount: Scalars['Float']['output'];
   getPatientsPaginated: PaginatedPatients;
   getPaymentAnalytics: Array<PaymentCount>;
   getProduct: Cpg;
   getProducts: PaginatedCpg;
+  getReportSettings?: Maybe<ReportSettings>;
+  getReportStatus: Scalars['String']['output'];
   getRooms: Scalars['String']['output'];
   getServices: Array<ServicesModel>;
   getSlots: Array<Scalars['String']['output']>;
   getStats: Stats;
+  getStock: Array<InventoryStock>;
+  getSubscription: Subscription;
   getSymptomsList: Array<SymptomsList>;
   getUserByPhoneNumber: User;
   getUsers: Array<User>;
@@ -2552,6 +3634,11 @@ export type QueryDeleteTemplateArgs = {
 };
 
 
+export type QueryDownloadReportArgs = {
+  jobId: Scalars['String']['input'];
+};
+
+
 export type QueryGetAllClinicTemplatesArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -2573,6 +3660,11 @@ export type QueryGetAllPatientsByStatusArgs = {
 export type QueryGetAllTomorrowPatientsArgs = {
   clinic_id: Scalars['String']['input'];
   doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetAllVitalsByPatientIdArgs = {
+  patientProfileId: Scalars['String']['input'];
 };
 
 
@@ -2618,6 +3710,11 @@ export type QueryGetClinicDoctorsArgs = {
 };
 
 
+export type QueryGetClinicFeaturesArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetClinicNotificationArgs = {
   clinic_id: Scalars['String']['input'];
 };
@@ -2643,8 +3740,52 @@ export type QueryGetDoctorArgs = {
 };
 
 
+export type QueryGetDoctorSubscriptionArgs = {
+  doctorId: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorWorkingHoursArgs = {
+  doctorId: Scalars['String']['input'];
+};
+
+
 export type QueryGetDrugListArgs = {
   query: Scalars['String']['input'];
+};
+
+
+export type QueryGetExpiringItemsArgs = {
+  clinicId: Scalars['String']['input'];
+  days?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetInventoryItemArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetInventoryItemsArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<InventoryFilterDto>;
+};
+
+
+export type QueryGetInventoryStatsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetInventoryTransactionsArgs = {
+  clinicId?: InputMaybe<Scalars['String']['input']>;
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetLowStockItemsArgs = {
+  clinicId: Scalars['String']['input'];
 };
 
 
@@ -2673,6 +3814,18 @@ export type QueryGetOnGoingArgs = {
 export type QueryGetPatientHistoryArgs = {
   includePayment?: InputMaybe<Scalars['Boolean']['input']>;
   patientProfileId: Scalars['String']['input'];
+};
+
+
+export type QueryGetPatientPurchaseArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPatientPurchasesArgs = {
+  clinicId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Float']['input']>;
+  patientProfileId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2711,6 +3864,16 @@ export type QueryGetProductsArgs = {
 };
 
 
+export type QueryGetReportSettingsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetReportStatusArgs = {
+  jobId: Scalars['String']['input'];
+};
+
+
 export type QueryGetServicesArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -2725,6 +3888,16 @@ export type QueryGetStatsArgs = {
   clinic_id: Scalars['String']['input'];
   endTime: Scalars['String']['input'];
   startTime: Scalars['String']['input'];
+};
+
+
+export type QueryGetStockArgs = {
+  itemId: Scalars['String']['input'];
+};
+
+
+export type QueryGetSubscriptionArgs = {
+  subscriptionId: Scalars['String']['input'];
 };
 
 
@@ -2752,6 +3925,7 @@ export type Rx_Entries = {
   diagnosis: Array<Diagnosis>;
   prescriptionMedication: Array<PrescriptionMedication>;
   symptoms: Array<Symptoms>;
+  vitals?: InputMaybe<Array<Vitals>>;
 };
 
 export type RazorPayOrder = {
@@ -2775,6 +3949,46 @@ export type RegisterResponse = {
   __typename?: 'RegisterResponse';
   error?: Maybe<ErrorType>;
   user?: Maybe<User>;
+};
+
+export type RemoveClinicFeaturesDto = {
+  clinicId: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
+export type RemoveCustomFeaturesDto = {
+  doctor_id: Scalars['String']['input'];
+  featureValues: Array<Scalars['String']['input']>;
+};
+
+export type ReportServiceGroup = {
+  __typename?: 'ReportServiceGroup';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  order: Scalars['Float']['output'];
+  reportSettingsId: Scalars['String']['output'];
+  services: Array<ReportServiceGroupService>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ReportServiceGroupService = {
+  __typename?: 'ReportServiceGroupService';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  reportServiceGroupId: Scalars['String']['output'];
+  serviceName: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ReportSettings = {
+  __typename?: 'ReportSettings';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  serviceGroups: Array<ReportServiceGroup>;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type RevenueStats = {
@@ -2815,6 +4029,10 @@ export type ServiceDetailDto = {
   discount: Scalars['Float']['input'];
   metaData?: InputMaybe<Scalars['JSON']['input']>;
   name: Scalars['String']['input'];
+};
+
+export type ServiceGroupServiceInput = {
+  serviceName: Scalars['String']['input'];
 };
 
 export type ServicesDto = {
@@ -2883,6 +4101,27 @@ export enum StatusEnum {
   Og = 'OG'
 }
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  endDate: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  startDate: Scalars['DateTime']['output'];
+  status: SubscriptionStatus;
+  trialEndDate?: Maybe<Scalars['DateTime']['output']>;
+  trialStartDate?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum SubscriptionStatus {
+  Active = 'ACTIVE',
+  SubscriptionDone = 'SUBSCRIPTION_DONE',
+  Suspended = 'SUSPENDED',
+  Trial = 'TRIAL',
+  TrialEnded = 'TRIAL_ENDED'
+}
+
 export type Symptoms = {
   name: Scalars['String']['input'];
   properties?: InputMaybe<Scalars['JSON']['input']>;
@@ -2907,6 +4146,48 @@ export type TemplateDto = {
   name: Scalars['String']['input'];
   serviceDetails: Array<ServiceDetailDto>;
   templateId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateDoctorWorkingHoursDto = {
+  consultingMins?: InputMaybe<Scalars['Int']['input']>;
+  endTime?: InputMaybe<Scalars['String']['input']>;
+  startTime?: InputMaybe<Scalars['String']['input']>;
+  workingHoursId: Scalars['String']['input'];
+};
+
+export type UpdateInventoryItemDto = {
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateReportSettingsInput = {
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  serviceGroups?: InputMaybe<Array<CreateServiceGroupInput>>;
+};
+
+export type UpdateSubscriptionDto = {
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  subscriptionId: Scalars['String']['input'];
+  trialEndDate?: InputMaybe<Scalars['String']['input']>;
+  trialStartDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSubscriptionStatusDto = {
+  status: Scalars['String']['input'];
+  subscriptionId: Scalars['String']['input'];
 };
 
 export type UpdatedCount = {
@@ -2935,6 +4216,24 @@ export type ValidateDoctorOtp = {
   phone_number: Scalars['String']['input'];
 };
 
+export type Vitals = {
+  date?: InputMaybe<Scalars['DateTime']['input']>;
+  name: Scalars['String']['input'];
+  unit: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type VitalsType = {
+  __typename?: 'VitalsType';
+  date: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  prescriptionDate?: Maybe<Scalars['DateTime']['output']>;
+  prescriptionId?: Maybe<Scalars['String']['output']>;
+  unit: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 export type CreateBusinessMutationVariables = Exact<{
   businessInput: BusinessDto;
 }>;
@@ -2949,6 +4248,34 @@ export type AddClinicMutationVariables = Exact<{
 
 
 export type AddClinicMutation = { __typename?: 'Mutation', addClinic: { __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, location: Array<string>, logoUrl?: string | null, name: string, openTime: string, workingDays: Array<boolean> } };
+
+export type AssignClinicFeaturesMutationVariables = Exact<{
+  input: AssignClinicFeaturesDto;
+}>;
+
+
+export type AssignClinicFeaturesMutation = { __typename?: 'Mutation', assignClinicFeatures: { __typename?: 'Clinic', id: string, name: string, customFeatures?: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> | null } };
+
+export type RemoveClinicFeaturesMutationVariables = Exact<{
+  input: RemoveClinicFeaturesDto;
+}>;
+
+
+export type RemoveClinicFeaturesMutation = { __typename?: 'Mutation', removeClinicFeatures: { __typename?: 'Clinic', id: string, name: string, customFeatures?: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> | null } };
+
+export type AssignCustomFeaturesToDoctorMutationVariables = Exact<{
+  input: AssignCustomFeaturesDto;
+}>;
+
+
+export type AssignCustomFeaturesToDoctorMutation = { __typename?: 'Mutation', assignCustomFeaturesToDoctor: { __typename?: 'Doctor', doctor_id: string, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', first_name: string, last_name: string } }, customFeatures?: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> | null } };
+
+export type RemoveCustomFeaturesFromDoctorMutationVariables = Exact<{
+  input: RemoveCustomFeaturesDto;
+}>;
+
+
+export type RemoveCustomFeaturesFromDoctorMutation = { __typename?: 'Mutation', removeCustomFeaturesFromDoctor: { __typename?: 'Doctor', doctor_id: string, customFeatures?: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> | null, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', first_name: string, last_name: string } } } };
 
 export type AddDoctorMutationVariables = Exact<{
   clinicIds: Scalars['String']['input'];
@@ -2966,10 +4293,34 @@ export type UpdateProfilePicUrlMutationVariables = Exact<{
 
 export type UpdateProfilePicUrlMutation = { __typename?: 'Mutation', updateProfilePicUrl: { __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any } };
 
+export type GetAllClinicFeaturesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllClinicFeaturesQuery = { __typename?: 'Query', getAllClinicFeatures: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> };
+
+export type GetClinicFeaturesQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicFeaturesQuery = { __typename?: 'Query', getClinicFeatures: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> };
+
 export type GetClinicsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetClinicsQuery = { __typename?: 'Query', getClinics: Array<{ __typename?: 'Clinic', about: string, business_id: string, city_name: string, closeTime: string, email: string, id: string, latitude?: number | null, location: Array<string>, logoUrl?: string | null, name: string, workingDays: Array<boolean>, longitude?: number | null, openTime: string, address: { __typename?: 'Address', city: string, country: string, line1: string, line2?: string | null, pin: string, state: string }, phone_number: Array<{ __typename?: 'PhoneNumber', n: string, name: string }>, speciality?: Array<{ __typename?: 'Speciality', name: string }> | null }> };
+
+export type GetCustomFeaturesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCustomFeaturesQuery = { __typename?: 'Query', getCustomFeatures: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> };
+
+export type GetDoctorQueryVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorQuery = { __typename?: 'Query', getDoctor: { __typename?: 'Doctor', doctor_id: string, customFeatures?: Array<{ __typename?: 'CustomFeature', id?: string | null, value: string }> | null } };
 
 export type GetClinicDoctorsQueryVariables = Exact<{
   clinicId: Scalars['String']['input'];
@@ -3020,9 +4371,9 @@ export type CreateBusinessMutationFn = Apollo.MutationFunction<CreateBusinessMut
  * });
  */
 export function useCreateBusinessMutation(baseOptions?: Apollo.MutationHookOptions<CreateBusinessMutation, CreateBusinessMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateBusinessMutation, CreateBusinessMutationVariables>(CreateBusinessDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateBusinessMutation, CreateBusinessMutationVariables>(CreateBusinessDocument, options);
+}
 export type CreateBusinessMutationHookResult = ReturnType<typeof useCreateBusinessMutation>;
 export type CreateBusinessMutationResult = Apollo.MutationResult<CreateBusinessMutation>;
 export type CreateBusinessMutationOptions = Apollo.BaseMutationOptions<CreateBusinessMutation, CreateBusinessMutationVariables>;
@@ -3064,12 +4415,174 @@ export type AddClinicMutationFn = Apollo.MutationFunction<AddClinicMutation, Add
  * });
  */
 export function useAddClinicMutation(baseOptions?: Apollo.MutationHookOptions<AddClinicMutation, AddClinicMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddClinicMutation, AddClinicMutationVariables>(AddClinicDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AddClinicMutation, AddClinicMutationVariables>(AddClinicDocument, options);
+}
 export type AddClinicMutationHookResult = ReturnType<typeof useAddClinicMutation>;
 export type AddClinicMutationResult = Apollo.MutationResult<AddClinicMutation>;
 export type AddClinicMutationOptions = Apollo.BaseMutationOptions<AddClinicMutation, AddClinicMutationVariables>;
+export const AssignClinicFeaturesDocument = gql`
+    mutation AssignClinicFeatures($input: AssignClinicFeaturesDTO!) {
+  assignClinicFeatures(input: $input) {
+    id
+    name
+    customFeatures {
+      id
+      value
+    }
+  }
+}
+    `;
+export type AssignClinicFeaturesMutationFn = Apollo.MutationFunction<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>;
+
+/**
+ * __useAssignClinicFeaturesMutation__
+ *
+ * To run a mutation, you first call `useAssignClinicFeaturesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignClinicFeaturesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignClinicFeaturesMutation, { data, loading, error }] = useAssignClinicFeaturesMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAssignClinicFeaturesMutation(baseOptions?: Apollo.MutationHookOptions<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>(AssignClinicFeaturesDocument, options);
+}
+export type AssignClinicFeaturesMutationHookResult = ReturnType<typeof useAssignClinicFeaturesMutation>;
+export type AssignClinicFeaturesMutationResult = Apollo.MutationResult<AssignClinicFeaturesMutation>;
+export type AssignClinicFeaturesMutationOptions = Apollo.BaseMutationOptions<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>;
+export const RemoveClinicFeaturesDocument = gql`
+    mutation RemoveClinicFeatures($input: RemoveClinicFeaturesDTO!) {
+  removeClinicFeatures(input: $input) {
+    id
+    name
+    customFeatures {
+      id
+      value
+    }
+  }
+}
+    `;
+export type RemoveClinicFeaturesMutationFn = Apollo.MutationFunction<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>;
+
+/**
+ * __useRemoveClinicFeaturesMutation__
+ *
+ * To run a mutation, you first call `useRemoveClinicFeaturesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveClinicFeaturesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeClinicFeaturesMutation, { data, loading, error }] = useRemoveClinicFeaturesMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRemoveClinicFeaturesMutation(baseOptions?: Apollo.MutationHookOptions<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>(RemoveClinicFeaturesDocument, options);
+}
+export type RemoveClinicFeaturesMutationHookResult = ReturnType<typeof useRemoveClinicFeaturesMutation>;
+export type RemoveClinicFeaturesMutationResult = Apollo.MutationResult<RemoveClinicFeaturesMutation>;
+export type RemoveClinicFeaturesMutationOptions = Apollo.BaseMutationOptions<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>;
+export const AssignCustomFeaturesToDoctorDocument = gql`
+    mutation AssignCustomFeaturesToDoctor($input: AssignCustomFeaturesDTO!) {
+  assignCustomFeaturesToDoctor(input: $input) {
+    doctor_id
+    profile {
+      personal {
+        first_name
+        last_name
+      }
+    }
+    customFeatures {
+      id
+      value
+    }
+  }
+}
+    `;
+export type AssignCustomFeaturesToDoctorMutationFn = Apollo.MutationFunction<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
+
+/**
+ * __useAssignCustomFeaturesToDoctorMutation__
+ *
+ * To run a mutation, you first call `useAssignCustomFeaturesToDoctorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAssignCustomFeaturesToDoctorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [assignCustomFeaturesToDoctorMutation, { data, loading, error }] = useAssignCustomFeaturesToDoctorMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAssignCustomFeaturesToDoctorMutation(baseOptions?: Apollo.MutationHookOptions<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>(AssignCustomFeaturesToDoctorDocument, options);
+}
+export type AssignCustomFeaturesToDoctorMutationHookResult = ReturnType<typeof useAssignCustomFeaturesToDoctorMutation>;
+export type AssignCustomFeaturesToDoctorMutationResult = Apollo.MutationResult<AssignCustomFeaturesToDoctorMutation>;
+export type AssignCustomFeaturesToDoctorMutationOptions = Apollo.BaseMutationOptions<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
+export const RemoveCustomFeaturesFromDoctorDocument = gql`
+    mutation RemoveCustomFeaturesFromDoctor($input: RemoveCustomFeaturesDTO!) {
+  removeCustomFeaturesFromDoctor(input: $input) {
+    doctor_id
+    customFeatures {
+      id
+      value
+    }
+    profile {
+      personal {
+        first_name
+        last_name
+      }
+    }
+  }
+}
+    `;
+export type RemoveCustomFeaturesFromDoctorMutationFn = Apollo.MutationFunction<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
+
+/**
+ * __useRemoveCustomFeaturesFromDoctorMutation__
+ *
+ * To run a mutation, you first call `useRemoveCustomFeaturesFromDoctorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveCustomFeaturesFromDoctorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeCustomFeaturesFromDoctorMutation, { data, loading, error }] = useRemoveCustomFeaturesFromDoctorMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRemoveCustomFeaturesFromDoctorMutation(baseOptions?: Apollo.MutationHookOptions<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>(RemoveCustomFeaturesFromDoctorDocument, options);
+}
+export type RemoveCustomFeaturesFromDoctorMutationHookResult = ReturnType<typeof useRemoveCustomFeaturesFromDoctorMutation>;
+export type RemoveCustomFeaturesFromDoctorMutationResult = Apollo.MutationResult<RemoveCustomFeaturesFromDoctorMutation>;
+export type RemoveCustomFeaturesFromDoctorMutationOptions = Apollo.BaseMutationOptions<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
 export const AddDoctorDocument = gql`
     mutation AddDoctor($clinicIds: String!, $doctorInput: DoctorDTO!) {
   addDoctor(doctorInput: $doctorInput, clinicIds: $clinicIds) {
@@ -3098,9 +4611,9 @@ export type AddDoctorMutationFn = Apollo.MutationFunction<AddDoctorMutation, Add
  * });
  */
 export function useAddDoctorMutation(baseOptions?: Apollo.MutationHookOptions<AddDoctorMutation, AddDoctorMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddDoctorMutation, AddDoctorMutationVariables>(AddDoctorDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AddDoctorMutation, AddDoctorMutationVariables>(AddDoctorDocument, options);
+}
 export type AddDoctorMutationHookResult = ReturnType<typeof useAddDoctorMutation>;
 export type AddDoctorMutationResult = Apollo.MutationResult<AddDoctorMutation>;
 export type AddDoctorMutationOptions = Apollo.BaseMutationOptions<AddDoctorMutation, AddDoctorMutationVariables>;
@@ -3134,12 +4647,93 @@ export type UpdateProfilePicUrlMutationFn = Apollo.MutationFunction<UpdateProfil
  * });
  */
 export function useUpdateProfilePicUrlMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>(UpdateProfilePicUrlDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>(UpdateProfilePicUrlDocument, options);
+}
 export type UpdateProfilePicUrlMutationHookResult = ReturnType<typeof useUpdateProfilePicUrlMutation>;
 export type UpdateProfilePicUrlMutationResult = Apollo.MutationResult<UpdateProfilePicUrlMutation>;
 export type UpdateProfilePicUrlMutationOptions = Apollo.BaseMutationOptions<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
+export const GetAllClinicFeaturesDocument = gql`
+    query GetAllClinicFeatures {
+  getAllClinicFeatures {
+    id
+    value
+  }
+}
+    `;
+
+/**
+ * __useGetAllClinicFeaturesQuery__
+ *
+ * To run a query within a React component, call `useGetAllClinicFeaturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllClinicFeaturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllClinicFeaturesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllClinicFeaturesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
+}
+export function useGetAllClinicFeaturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
+}
+export function useGetAllClinicFeaturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
+}
+export type GetAllClinicFeaturesQueryHookResult = ReturnType<typeof useGetAllClinicFeaturesQuery>;
+export type GetAllClinicFeaturesLazyQueryHookResult = ReturnType<typeof useGetAllClinicFeaturesLazyQuery>;
+export type GetAllClinicFeaturesSuspenseQueryHookResult = ReturnType<typeof useGetAllClinicFeaturesSuspenseQuery>;
+export type GetAllClinicFeaturesQueryResult = Apollo.QueryResult<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>;
+export const GetClinicFeaturesDocument = gql`
+    query GetClinicFeatures($clinicId: String!) {
+  getClinicFeatures(clinicId: $clinicId) {
+    id
+    value
+  }
+}
+    `;
+
+/**
+ * __useGetClinicFeaturesQuery__
+ *
+ * To run a query within a React component, call `useGetClinicFeaturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClinicFeaturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClinicFeaturesQuery({
+ *   variables: {
+ *      clinicId: // value for 'clinicId'
+ *   },
+ * });
+ */
+export function useGetClinicFeaturesQuery(baseOptions: Apollo.QueryHookOptions<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables> & ({ variables: GetClinicFeaturesQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
+}
+export function useGetClinicFeaturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
+}
+export function useGetClinicFeaturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
+}
+export type GetClinicFeaturesQueryHookResult = ReturnType<typeof useGetClinicFeaturesQuery>;
+export type GetClinicFeaturesLazyQueryHookResult = ReturnType<typeof useGetClinicFeaturesLazyQuery>;
+export type GetClinicFeaturesSuspenseQueryHookResult = ReturnType<typeof useGetClinicFeaturesSuspenseQuery>;
+export type GetClinicFeaturesQueryResult = Apollo.QueryResult<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>;
 export const GetClinicsDocument = gql`
     query GetClinics {
   getClinics {
@@ -3191,21 +4785,105 @@ export const GetClinicsDocument = gql`
  * });
  */
 export function useGetClinicsQuery(baseOptions?: Apollo.QueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+}
 export function useGetClinicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+}
 export function useGetClinicsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
-        }
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+}
 export type GetClinicsQueryHookResult = ReturnType<typeof useGetClinicsQuery>;
 export type GetClinicsLazyQueryHookResult = ReturnType<typeof useGetClinicsLazyQuery>;
 export type GetClinicsSuspenseQueryHookResult = ReturnType<typeof useGetClinicsSuspenseQuery>;
 export type GetClinicsQueryResult = Apollo.QueryResult<GetClinicsQuery, GetClinicsQueryVariables>;
+export const GetCustomFeaturesDocument = gql`
+    query GetCustomFeatures {
+  getCustomFeatures {
+    id
+    value
+  }
+}
+    `;
+
+/**
+ * __useGetCustomFeaturesQuery__
+ *
+ * To run a query within a React component, call `useGetCustomFeaturesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCustomFeaturesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCustomFeaturesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCustomFeaturesQuery(baseOptions?: Apollo.QueryHookOptions<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
+}
+export function useGetCustomFeaturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
+}
+export function useGetCustomFeaturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
+}
+export type GetCustomFeaturesQueryHookResult = ReturnType<typeof useGetCustomFeaturesQuery>;
+export type GetCustomFeaturesLazyQueryHookResult = ReturnType<typeof useGetCustomFeaturesLazyQuery>;
+export type GetCustomFeaturesSuspenseQueryHookResult = ReturnType<typeof useGetCustomFeaturesSuspenseQuery>;
+export type GetCustomFeaturesQueryResult = Apollo.QueryResult<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>;
+export const GetDoctorDocument = gql`
+    query GetDoctor($doctor_id: String!) {
+  getDoctor(doctor_id: $doctor_id) {
+    doctor_id
+    customFeatures {
+      id
+      value
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetDoctorQuery__
+ *
+ * To run a query within a React component, call `useGetDoctorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDoctorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDoctorQuery({
+ *   variables: {
+ *      doctor_id: // value for 'doctor_id'
+ *   },
+ * });
+ */
+export function useGetDoctorQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorQuery, GetDoctorQueryVariables> & ({ variables: GetDoctorQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
+}
+export function useGetDoctorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorQuery, GetDoctorQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
+}
+export function useGetDoctorSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorQuery, GetDoctorQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
+}
+export type GetDoctorQueryHookResult = ReturnType<typeof useGetDoctorQuery>;
+export type GetDoctorLazyQueryHookResult = ReturnType<typeof useGetDoctorLazyQuery>;
+export type GetDoctorSuspenseQueryHookResult = ReturnType<typeof useGetDoctorSuspenseQuery>;
+export type GetDoctorQueryResult = Apollo.QueryResult<GetDoctorQuery, GetDoctorQueryVariables>;
 export const GetClinicDoctorsDocument = gql`
     query GetClinicDoctors($clinicId: String!) {
   getClinicDoctors(clinicId: $clinicId) {
@@ -3266,18 +4944,18 @@ export const GetClinicDoctorsDocument = gql`
  *   },
  * });
  */
-export function useGetClinicDoctorsQuery(baseOptions: Apollo.QueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables> & ({ variables: GetClinicDoctorsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
-      }
+export function useGetClinicDoctorsQuery(baseOptions: Apollo.QueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables> & ({ variables: GetClinicDoctorsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+}
 export function useGetClinicDoctorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+}
 export function useGetClinicDoctorsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
-        }
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+}
 export type GetClinicDoctorsQueryHookResult = ReturnType<typeof useGetClinicDoctorsQuery>;
 export type GetClinicDoctorsLazyQueryHookResult = ReturnType<typeof useGetClinicDoctorsLazyQuery>;
 export type GetClinicDoctorsSuspenseQueryHookResult = ReturnType<typeof useGetClinicDoctorsSuspenseQuery>;
@@ -3310,17 +4988,17 @@ export const GetAllDraftsDocument = gql`
  * });
  */
 export function useGetAllDraftsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllDraftsQuery, GetAllDraftsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
+}
 export function useGetAllDraftsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllDraftsQuery, GetAllDraftsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
+}
 export function useGetAllDraftsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllDraftsQuery, GetAllDraftsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
-        }
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
+}
 export type GetAllDraftsQueryHookResult = ReturnType<typeof useGetAllDraftsQuery>;
 export type GetAllDraftsLazyQueryHookResult = ReturnType<typeof useGetAllDraftsLazyQuery>;
 export type GetAllDraftsSuspenseQueryHookResult = ReturnType<typeof useGetAllDraftsSuspenseQuery>;
@@ -3348,18 +5026,18 @@ export const ApproveOrRejectDocument = gql`
  *   },
  * });
  */
-export function useApproveOrRejectQuery(baseOptions: Apollo.QueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables> & ({ variables: ApproveOrRejectQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
-      }
+export function useApproveOrRejectQuery(baseOptions: Apollo.QueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables> & ({ variables: ApproveOrRejectQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
+}
 export function useApproveOrRejectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
+}
 export function useApproveOrRejectSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
-        }
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
+}
 export type ApproveOrRejectQueryHookResult = ReturnType<typeof useApproveOrRejectQuery>;
 export type ApproveOrRejectLazyQueryHookResult = ReturnType<typeof useApproveOrRejectLazyQuery>;
 export type ApproveOrRejectSuspenseQueryHookResult = ReturnType<typeof useApproveOrRejectSuspenseQuery>;
