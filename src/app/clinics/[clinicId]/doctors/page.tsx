@@ -17,6 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { gql } from "@apollo/client";
+import ConfigureDoctorModal from "@/app/components/clinics/ConfigureDoctorModal";
 
 type Doctor = {
   doctor_id: string;
@@ -160,6 +161,8 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const [step, setStep] = useState(0);
+  const [openConfigureModal, setOpenConfigureModal] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
 
   const { control, handleSubmit, setValue, getValues, watch } = useForm<FormValues>({
     defaultValues: {
@@ -256,13 +259,13 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
 
   async function onSave(formData: FormValues) {
     try {
-      const s3 = new S3Client({
-        region: process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_REGION || '',
-        credentials: {
-          accessKeyId: process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_ACCESS_KEY_ID || '',
-          secretAccessKey: process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_SECRET_KEY_ID || '',
-        },
-      });
+      // const s3 = new S3Client({
+      //   region: process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_REGION || '',
+      //   credentials: {
+      //     accessKeyId: process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_ACCESS_KEY_ID || '',
+      //     secretAccessKey: process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_SECRET_KEY_ID || '',
+      //   },
+      // });
       const doctorInput = {
         profile: {
           personal: {
@@ -292,40 +295,40 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
       });
 
       // Handle profile picture upload if exists
-      if (pictureBlob && response.data?.addDoctor?.doctor_id) {
-        try {
-          const fileName = response.data?.addDoctor?.doctor_id;
-          const newFile = renameFile(pictureBlob, fileName);
+      // if (pictureBlob && response.data?.addDoctor?.doctor_id) {
+      //   try {
+      //     const fileName = response.data?.addDoctor?.doctor_id;
+      //     const newFile = renameFile(pictureBlob, fileName);
 
-          // Convert File to ArrayBuffer first
-          const arrayBuffer = await newFile.arrayBuffer();
-          const uint8Array = new Uint8Array(arrayBuffer);
+      //     // Convert File to ArrayBuffer first
+      //     const arrayBuffer = await newFile.arrayBuffer();
+      //     const uint8Array = new Uint8Array(arrayBuffer);
 
-          const params = {
-            Bucket: `${process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_BUCKET}`,
-            Key: `clinic/${clinicId}/doctors/profile/picture/${newFile.name}`,
-            Body: uint8Array,
-            ContentType: newFile.type,
-          };
+      //     const params = {
+      //       Bucket: `${process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_BUCKET}`,
+      //       Key: `clinic/${clinicId}/doctors/profile/picture/${newFile.name}`,
+      //       Body: uint8Array,
+      //       ContentType: newFile.type,
+      //     };
 
-          const command = new PutObjectCommand(params);
-          await s3.send(command);
+      //     const command = new PutObjectCommand(params);
+      //     await s3.send(command);
 
-          const picture_url = `https://${process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_BUCKET}.s3.${process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_REGION}.amazonaws.com/clinic/${clinicId}/doctors/profile/picture/${fileName}`;
+      //     const picture_url = `https://${process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_BUCKET}.s3.${process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_REGION}.amazonaws.com/clinic/${clinicId}/doctors/profile/picture/${fileName}`;
 
-          const picUpdated = await updateProfilePicUrl({
-            variables: {
-              doctor_id: fileName,
-              picture_url,
-            },
-          });
+      //     const picUpdated = await updateProfilePicUrl({
+      //       variables: {
+      //         doctor_id: fileName,
+      //         picture_url,
+      //       },
+      //     });
 
-          console.log("PROFILE PIC UPDATED", picUpdated);
-        } catch (error) {
-          console.error("Error uploading profile picture:", error);
-          toast.error("Failed to upload profile picture");
-        }
-      }
+      //     console.log("PROFILE PIC UPDATED", picUpdated);
+      //   } catch (error) {
+      //     console.error("Error uploading profile picture:", error);
+      //     toast.error("Failed to upload profile picture");
+      //   }
+      // }
 
       toast.success("Doctor added successfully!");
       setOpen(false);
@@ -408,7 +411,7 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
             onPointerLeaveCapture={undefined}
             onClick={handleOpen}
           >
-            Add Doctor
+            Add new Doctor
           </Button>
         </CardHeader>
         <Dialog
@@ -843,7 +846,7 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                {["Name", "Speciality", "Languages", "Contact", "Status"].map((head) => (
+                {["Name", "Speciality", "Languages", "Contact", "Status", "Actions"].map((head) => (
                   <th
                     key={head}
                     className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
@@ -937,12 +940,31 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
                       </Typography>
                     </div>
                   </td>
+                  <td className="p-4">
+                    <button
+                      onClick={() => {
+                        setSelectedDoctor(doctor);
+                        setOpenConfigureModal(true);
+                      }}
+                      className="text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Configure
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </CardBody>
         <ToastContainer />
+        <ConfigureDoctorModal
+          doctor={selectedDoctor}
+          open={openConfigureModal}
+          onClose={() => {
+            setOpenConfigureModal(false);
+            setSelectedDoctor(null);
+          }}
+        />
       </Card>
     </ApolloProvider>
   );
@@ -961,7 +983,7 @@ function toRadians(degrees: number) {
   return degrees * (Math.PI / 180);
 }
 
-export async function canvasPreview(
+async function canvasPreview(
   image: HTMLImageElement,
   canvas: HTMLCanvasElement,
   crop: PixelCrop,
@@ -1002,7 +1024,7 @@ export async function canvasPreview(
   ctx.restore();
 }
 
-export function useDebounceEffect(
+function useDebounceEffect(
   fn: () => void,
   waitTime: number,
   deps?: React.DependencyList,
@@ -1023,4 +1045,4 @@ function renameFile(file: File, newName: string): File {
   return new File([file], `${newName}.${extension}`, { type: file.type });
 }
 
-export default ClinicDoctorsPage; 
+export default ClinicDoctorsPage;

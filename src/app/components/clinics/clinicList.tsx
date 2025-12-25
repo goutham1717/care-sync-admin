@@ -16,6 +16,7 @@ import {
 import ClinicDetailsDrawer from './ClinicDetailsDrawer';
 import Link from 'next/link';
 import AddClinicDrawer from './AddClinicDrawer';
+import ConfigureClinicModal from './ConfigureClinicModal';
 
 type Props = {}
 
@@ -24,6 +25,8 @@ const ClinicList = (props: Props) => {
   const [selectedClinic, setSelectedClinic] = React.useState<GetClinicsQuery['getClinics'][0] | null>(null);
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [openAddClinicDrawer, setOpenAddClinicDrawer] = React.useState(false);
+  const [openConfigureModal, setOpenConfigureModal] = React.useState(false);
+  const [configureClinic, setConfigureClinic] = React.useState<GetClinicsQuery['getClinics'][0] | null>(null);
   const [businessName, setBusinessName] = React.useState('');
   const [createdBusinessId, setCreatedBusinessId] = React.useState<string | null>(null);
   const [step, setStep] = React.useState<'business' | 'clinic'>('business');
@@ -81,6 +84,11 @@ const ClinicList = (props: Props) => {
   const handleClinicClick = (clinic: GetClinicsQuery['getClinics'][0]) => {
     setSelectedClinic(clinic);
     setOpenDrawer(true);
+  };
+
+  const handleConfigureClick = (clinic: GetClinicsQuery['getClinics'][0]) => {
+    setConfigureClinic(clinic);
+    setOpenConfigureModal(true);
   };
 
   return (
@@ -142,7 +150,7 @@ const ClinicList = (props: Props) => {
                 {["Name", "About", "City", "Timing", "Contact", "Actions"].map((head) => (
                   <th
                     key={head}
-                    className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                    className={`border-b border-blue-gray-100 bg-blue-gray-50 p-4 ${head === "About" ? "max-w-xs" : ""}`}
                   >
                     <Typography
                       variant="small"
@@ -174,11 +182,11 @@ const ClinicList = (props: Props) => {
                       {clinic.name}
                     </Typography>
                   </td>
-                  <td className="p-4">
+                  <td className="p-4 max-w-xs">
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal"
+                      className="font-normal break-words"
                       placeholder={undefined}
                       onPointerEnterCapture={undefined}
                       onPointerLeaveCapture={undefined}
@@ -223,12 +231,20 @@ const ClinicList = (props: Props) => {
                     </Typography>
                   </td>
                   <td className="p-4">
-                    <Link
-                      href={`/clinics/${clinic.id}/doctors`}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      View Doctors
-                    </Link>
+                    <div className="flex gap-3">
+                      <Link
+                        href={`/clinics/${clinic.id}/doctors`}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        View Doctors
+                      </Link>
+                      <button
+                        onClick={() => handleConfigureClick(clinic)}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        Configure
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -248,6 +264,12 @@ const ClinicList = (props: Props) => {
       <AddClinicDrawer
         open={openAddClinicDrawer}
         onClose={() => setOpenAddClinicDrawer(false)}
+      />
+
+      <ConfigureClinicModal
+        clinic={configureClinic}
+        open={openConfigureModal}
+        onClose={() => setOpenConfigureModal(false)}
       />
     </>
   );
