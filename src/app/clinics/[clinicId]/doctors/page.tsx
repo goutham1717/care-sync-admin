@@ -96,6 +96,14 @@ const SPECIALISATIONS = [
   { value: "Gastroenterology", label: "Gastroenterology" },
   { value: "Endocrinology", label: "Endocrinology" },
   { value: "Oncology", label: "Oncology" },
+  { value: "Dentist", label: "Dentist" },
+  { value: "Dermatologist", label: "Dermatologist" },
+  { value: "ENT Specialist", label: "ENT Specialist" },
+  { value: "Gynecologist", label: "Gynecologist" },
+  { value: "Pediatrician", label: "Pediatrician" },
+  { value: "Psychiatrist", label: "Psychiatrist" },
+  { value: "Radiologist", label: "Radiologist" },
+  { value: "Surgeon", label: "Surgeon" },
   { value: "Urology", label: "Urology" },
 ];
 
