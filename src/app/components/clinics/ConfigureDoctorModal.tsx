@@ -10,6 +10,8 @@ import { GET_CUSTOM_FEATURES, GET_DOCTOR } from '@/graphql/query/customFeatures'
 import { ASSIGN_CUSTOM_FEATURES_TO_DOCTOR, REMOVE_CUSTOM_FEATURES_FROM_DOCTOR } from '@/graphql/mutation/customFeatures';
 import { GET_DOCTOR_SUBSCRIPTION } from '@/graphql/query/subscription';
 import { CREATE_SUBSCRIPTION, UPDATE_SUBSCRIPTION, UPDATE_SUBSCRIPTION_STATUS } from '@/graphql/mutation/subscription';
+import { GET_DOCTOR_APPOINTMENT_LIMIT, GET_DOCTOR_SETTINGS } from '@/graphql/query/doctors';
+import { UPDATE_DOCTOR_APPOINTMENT_LIMIT, RECHARGE_APPOINTMENT_LIMIT } from '@/graphql/mutation/doctor';
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
@@ -67,7 +69,7 @@ const SUBSCRIPTION_STATUSES = [
 ];
 
 const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
-  const [activeTab, setActiveTab] = useState<'subscription' | 'customFeatures'>('subscription');
+  const [activeTab, setActiveTab] = useState<'subscription' | 'customFeatures' | 'appointmentLimit'>('subscription');
   const [selectedFeature, setSelectedFeature] = useState<{ value: string; label: string } | null>(null);
 
   // Subscription form state
@@ -229,6 +231,57 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
   const allFeatures: CustomFeature[] = allFeaturesData?.getCustomFeatures || [];
   const doctorFeatures: CustomFeature[] = doctorData?.getDoctor?.customFeatures || [];
 
+  // Appointment Limit
+  const [newLimit, setNewLimit] = useState('');
+  const [rechargeAmount, setRechargeAmount] = useState('');
+
+  const { data: doctorSettingsData, loading: loadingAppointmentLimit, refetch: refetchAppointmentLimit } = useQuery(
+    GET_DOCTOR_SETTINGS,
+    {
+      variables: { doctor_id: doctor?.doctor_id || '' },
+      skip: !open || !doctor || activeTab !== 'appointmentLimit',
+    }
+  );
+
+  const currentLimit: number | null = doctorSettingsData?.getDoctorSettings?.appointmentLimit ?? null;
+  const appointmentsUsed: number | null = doctorSettingsData?.getDoctorSettings?.appointmentsUsed ?? null;
+
+  const [updateAppointmentLimit, { loading: updatingLimit }] = useMutation(UPDATE_DOCTOR_APPOINTMENT_LIMIT, {
+    onCompleted: () => {
+      refetchAppointmentLimit();
+      setNewLimit('');
+    },
+    onError: (error) => {
+      console.error('Error updating appointment limit:', error);
+    },
+  });
+
+  const [rechargeLimit, { loading: recharging }] = useMutation(RECHARGE_APPOINTMENT_LIMIT, {
+    onCompleted: () => {
+      refetchAppointmentLimit();
+      setRechargeAmount('');
+    },
+    onError: (error) => {
+      console.error('Error recharging appointment limit:', error);
+    },
+  });
+
+  const handleUpdateLimit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!doctor || !newLimit) return;
+    updateAppointmentLimit({
+      variables: { doctor_id: doctor.doctor_id, appointmentLimit: parseInt(newLimit, 10) },
+    });
+  };
+
+  const handleRecharge = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!doctor || !rechargeAmount) return;
+    rechargeLimit({
+      variables: { doctor_id: doctor.doctor_id, amount: parseInt(rechargeAmount, 10) },
+    });
+  };
+
   // Get available features (not already assigned)
   const availableFeatures = allFeatures.filter(
     (feature) => !doctorFeatures.some((df) => df.value === feature.value)
@@ -329,6 +382,16 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
                   }`}
                 >
                   Custom Features
+                </button>
+                <button
+                  onClick={() => setActiveTab('appointmentLimit')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'appointmentLimit'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Appointment Limit
                 </button>
               </nav>
             </div>
@@ -483,6 +546,189 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
                     </form>
                   </>
                 )}
+              </div>
+            )}
+
+            {activeTab === 'appointmentLimit' && (
+              <div className="mt-6 space-y-6">
+                {/* Current Limit Display */}
+                {loadingAppointmentLimit ? (
+                  <div className="flex justify-center py-4">
+                    <Spinner className="h-6 w-6" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                  </div>
+                ) : (
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200 flex gap-8">
+                    <div>
+                      <Typography
+                        variant="small"
+                        color="gray"
+                        className="font-medium uppercase tracking-wide text-xs mb-1"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        Total Limit
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="blue-gray"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {currentLimit !== null ? currentLimit : '—'}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Typography
+                        variant="small"
+                        color="gray"
+                        className="font-medium uppercase tracking-wide text-xs mb-1"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        Consumed
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color="blue-gray"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {appointmentsUsed !== null ? appointmentsUsed : '—'}
+                      </Typography>
+                    </div>
+                    <div>
+                      <Typography
+                        variant="small"
+                        color="gray"
+                        className="font-medium uppercase tracking-wide text-xs mb-1"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        Remaining
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        color={
+                          currentLimit !== null && appointmentsUsed !== null && currentLimit - appointmentsUsed <= 10
+                            ? 'red'
+                            : 'green'
+                        }
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {currentLimit !== null && appointmentsUsed !== null
+                          ? currentLimit - appointmentsUsed
+                          : '—'}
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+
+                {/* Recharge (Top-up) */}
+                <form onSubmit={handleRecharge} className="space-y-3">
+                  <Typography
+                    variant="h6"
+                    color="blue-gray"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    Recharge (Top-up)
+                  </Typography>
+                  <Typography
+                    variant="small"
+                    color="gray"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    Add to the existing limit.
+                  </Typography>
+                  <div className="flex gap-3 items-end">
+                    <div className="flex-1">
+                      <label className="block mb-1 font-bold text-gray-900 text-sm">Amount to Add</label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={rechargeAmount}
+                        onChange={(e) => setRechargeAmount(e.target.value)}
+                        placeholder="e.g. 50"
+                        className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        required
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={recharging || !rechargeAmount}
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      {recharging ? (
+                        <Spinner className="h-4 w-4" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                      ) : (
+                        'Recharge'
+                      )}
+                    </Button>
+                  </div>
+                </form>
+
+                <hr className="border-gray-200" />
+
+                {/* Set Limit */}
+                <form onSubmit={handleUpdateLimit} className="space-y-3">
+                  <Typography
+                    variant="h6"
+                    color="blue-gray"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    Set Limit
+                  </Typography>
+                  <Typography
+                    variant="small"
+                    color="gray"
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    Override the appointment limit to a specific value.
+                  </Typography>
+                  <div className="flex gap-3 items-end">
+                    <div className="flex-1">
+                      <label className="block mb-1 font-bold text-gray-900 text-sm">New Limit</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={newLimit}
+                        onChange={(e) => setNewLimit(e.target.value)}
+                        placeholder="e.g. 100"
+                        className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        required
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={updatingLimit || !newLimit}
+                      placeholder={undefined}
+                      onPointerEnterCapture={undefined}
+                      onPointerLeaveCapture={undefined}
+                    >
+                      {updatingLimit ? (
+                        <Spinner className="h-4 w-4" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                      ) : (
+                        'Update'
+                      )}
+                    </Button>
+                  </div>
+                </form>
               </div>
             )}
 
