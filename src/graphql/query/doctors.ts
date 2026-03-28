@@ -42,3 +42,18 @@ query GetClinicDoctors($clinicId: String!) {
     }
 }
 `;
+
+export const GET_DOCTOR_APPOINTMENT_LIMIT = gql`
+  query GetDoctorAppointmentLimit($doctor_id: String!) {
+    getDoctorAppointmentLimit(doctor_id: $doctor_id)
+  }
+`;
+
+export const GET_DOCTOR_SETTINGS = gql`
+  query GetDoctorSettings($doctor_id: String!) {
+    getDoctorSettings(doctor_id: $doctor_id) {
+      appointmentLimit
+      appointmentsUsed
+    }
+  }
+`;
