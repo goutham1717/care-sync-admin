@@ -69,7 +69,9 @@ const ALL_PERMISSIONS = [
   "SETTINGS_UPDATE",
   "DOCUMENTS_VIEW",
   "DOCUMENTS_UPLOAD",
-  "DOCUMENTS_DELETE"
+  "DOCUMENTS_DELETE",
+  "CHECKIN_WRITE",
+  "CHECKIN_READ"
 ];
 
 const StaffList = ({ clinicId }: { clinicId: string }) => {
@@ -120,7 +122,7 @@ const StaffList = ({ clinicId }: { clinicId: string }) => {
           input: {
             firstName: formData.firstName,
             lastName: formData.lastName,
-            phoneNumber: `91${formData.phoneNumber}`,
+            phoneNumber: `${formData.phoneNumber}`,
             staffRole: formData.staffRole,
             clinicId,
             ...(selectedPermissions.length > 0 && { permissions: selectedPermissions }),
@@ -147,7 +149,7 @@ const StaffList = ({ clinicId }: { clinicId: string }) => {
             staffId: editingStaff.id,
             firstName: formData.firstName,
             lastName: formData.lastName,
-            phoneNumber: `91${formData.phoneNumber}`,
+            phoneNumber: `${formData.phoneNumber}`,
             permissions: editPermissions,
           },
         },

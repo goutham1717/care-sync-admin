@@ -21,15 +21,28 @@ type Documents = {
     "\n  mutation AssignCustomFeaturesToDoctor($input: AssignCustomFeaturesDTO!) {\n    assignCustomFeaturesToDoctor(input: $input) {\n      doctor_id\n      profile {\n        personal {\n          first_name\n          last_name\n        }\n      }\n      customFeatures {\n        id\n        value\n      }\n    }\n  }\n": typeof types.AssignCustomFeaturesToDoctorDocument,
     "\n  mutation RemoveCustomFeaturesFromDoctor($input: RemoveCustomFeaturesDTO!) {\n    removeCustomFeaturesFromDoctor(input: $input) {\n      doctor_id\n      customFeatures {\n        id\n        value\n      }\n      profile {\n        personal {\n          first_name\n          last_name\n        }\n      }\n    }\n  }\n": typeof types.RemoveCustomFeaturesFromDoctorDocument,
     "\n  mutation AddDoctor(\n    $clinicIds: String!\n    $doctorInput: DoctorDTO!\n  ){\n    addDoctor(\n      doctorInput: $doctorInput\n      clinicIds: $clinicIds\n    ){\n      doctor_id\n    }\n  }\n": typeof types.AddDoctorDocument,
+    "\n  mutation UpdateDoctorAppointmentLimit($doctor_id: String!, $appointmentLimit: Int!) {\n    updateDoctorAppointmentLimit(doctor_id: $doctor_id, appointmentLimit: $appointmentLimit)\n  }\n": typeof types.UpdateDoctorAppointmentLimitDocument,
+    "\n  mutation RechargeAppointmentLimit($doctor_id: String!, $amount: Int!) {\n    rechargeAppointmentLimit(doctor_id: $doctor_id, amount: $amount)\n  }\n": typeof types.RechargeAppointmentLimitDocument,
     "\nmutation UpdateProfilePicUrl($doctor_id: String!, $picture_url: String!) {\n    updateProfilePicUrl(doctor_id: $doctor_id, picture_url: $picture_url) {\n        createdAt\n        doctor_id\n        updatedAt\n    }\n}\n": typeof types.UpdateProfilePicUrlDocument,
+    "\n  mutation AddClinicStaff($input: AddClinicStaffInput!) {\n    addClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n": typeof types.AddClinicStaffDocument,
+    "\n  mutation UpdateClinicStaff($input: UpdateClinicStaffInput!) {\n    updateClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      isActive\n    }\n  }\n": typeof types.UpdateClinicStaffDocument,
+    "\n  mutation RemoveClinicStaff($staffId: String!) {\n    removeClinicStaff(staffId: $staffId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n    }\n  }\n": typeof types.RemoveClinicStaffDocument,
+    "\n  mutation CreateSubscription($input: CreateSubscriptionDTO!) {\n    createSubscription(input: $input) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n": typeof types.CreateSubscriptionDocument,
+    "\n  mutation UpdateSubscription($input: UpdateSubscriptionDTO!) {\n    updateSubscription(input: $input) {\n      id\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n": typeof types.UpdateSubscriptionDocument,
+    "\n  mutation UpdateSubscriptionStatus($input: UpdateSubscriptionStatusDTO!) {\n    updateSubscriptionStatus(input: $input) {\n      id\n      status\n      startDate\n      endDate\n    }\n  }\n": typeof types.UpdateSubscriptionStatusDocument,
     "\n  query GetAllClinicFeatures {\n    getAllClinicFeatures {\n      id\n      value\n    }\n  }\n": typeof types.GetAllClinicFeaturesDocument,
     "\n  query GetClinicFeatures($clinicId: String!) {\n    getClinicFeatures(clinicId: $clinicId) {\n      id\n      value\n    }\n  }\n": typeof types.GetClinicFeaturesDocument,
     "\nquery GetClinics {\n    getClinics {\n        about\n        business_id\n        city_name\n        closeTime\n        email\n        id\n        latitude\n        location\n        logoUrl\n        name\n        address {\n            city\n            country\n            line1\n            line2\n            pin\n            state\n        }\n        phone_number {\n            n\n            name\n        }\n        speciality {\n            name\n        }\n        workingDays\n        longitude\n        openTime\n    }\n}\n": typeof types.GetClinicsDocument,
     "\n  query GetCustomFeatures {\n    getCustomFeatures {\n      id\n      value\n    }\n  }\n": typeof types.GetCustomFeaturesDocument,
     "\n  query GetDoctor($doctor_id: String!) {\n    getDoctor(doctor_id: $doctor_id) {\n      doctor_id\n      customFeatures {\n        id\n        value\n      }\n    }\n  }\n": typeof types.GetDoctorDocument,
     "\nquery GetClinicDoctors($clinicId: String!) {\n    getClinicDoctors(clinicId: $clinicId) {\n        createdAt\n        doctor_id\n        updatedAt\n        isActive\n        profile {\n            personal {\n                designation\n                dob\n                email\n                first_name\n                gender\n                last_name\n                middle_name\n                phone_number\n                profile_pic\n            }\n            professional {\n                about\n                active\n                language {\n                    name\n                }\n                major_speciality {\n                    name\n                }\n                speciality {\n                    name\n                }\n                degree {\n                    branch_name\n                    college_name\n                    end_year\n                    name\n                    start_year\n                }\n            }\n        }\n    }\n}\n": typeof types.GetClinicDoctorsDocument,
+    "\n  query GetDoctorAppointmentLimit($doctor_id: String!) {\n    getDoctorAppointmentLimit(doctor_id: $doctor_id)\n  }\n": typeof types.GetDoctorAppointmentLimitDocument,
+    "\n  query GetDoctorSettings($doctor_id: String!) {\n    getDoctorSettings(doctor_id: $doctor_id) {\n      appointmentLimit\n      appointmentsUsed\n    }\n  }\n": typeof types.GetDoctorSettingsDocument,
     "\nquery GetAllDrafts {\n    getAllDrafts {\n        clinicName\n        doctorName\n        id\n        name\n        type\n    }\n}\n": typeof types.GetAllDraftsDocument,
     "\nquery ApproveOrReject($id: String!, $status: String!) {\n    approveOrReject(id: $id, status: $status)\n}\n\n": typeof types.ApproveOrRejectDocument,
+    "\n  query GetClinicStaff($clinicId: String!) {\n    getClinicStaff(clinicId: $clinicId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n": typeof types.GetClinicStaffDocument,
+    "\n  query GetSubscription($subscriptionId: String!) {\n    getSubscription(subscriptionId: $subscriptionId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.GetSubscriptionDocument,
+    "\n  query GetDoctorSubscription($doctorId: String!) {\n    getDoctorSubscription(doctorId: $doctorId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n": typeof types.GetDoctorSubscriptionDocument,
 };
 const documents: Documents = {
     "\n  mutation CreateBusiness($businessInput: BusinessDTO!) {\n    createBusiness(businessInput: $businessInput) {\n      id\n      name\n    }\n  }\n": types.CreateBusinessDocument,
@@ -39,15 +52,28 @@ const documents: Documents = {
     "\n  mutation AssignCustomFeaturesToDoctor($input: AssignCustomFeaturesDTO!) {\n    assignCustomFeaturesToDoctor(input: $input) {\n      doctor_id\n      profile {\n        personal {\n          first_name\n          last_name\n        }\n      }\n      customFeatures {\n        id\n        value\n      }\n    }\n  }\n": types.AssignCustomFeaturesToDoctorDocument,
     "\n  mutation RemoveCustomFeaturesFromDoctor($input: RemoveCustomFeaturesDTO!) {\n    removeCustomFeaturesFromDoctor(input: $input) {\n      doctor_id\n      customFeatures {\n        id\n        value\n      }\n      profile {\n        personal {\n          first_name\n          last_name\n        }\n      }\n    }\n  }\n": types.RemoveCustomFeaturesFromDoctorDocument,
     "\n  mutation AddDoctor(\n    $clinicIds: String!\n    $doctorInput: DoctorDTO!\n  ){\n    addDoctor(\n      doctorInput: $doctorInput\n      clinicIds: $clinicIds\n    ){\n      doctor_id\n    }\n  }\n": types.AddDoctorDocument,
+    "\n  mutation UpdateDoctorAppointmentLimit($doctor_id: String!, $appointmentLimit: Int!) {\n    updateDoctorAppointmentLimit(doctor_id: $doctor_id, appointmentLimit: $appointmentLimit)\n  }\n": types.UpdateDoctorAppointmentLimitDocument,
+    "\n  mutation RechargeAppointmentLimit($doctor_id: String!, $amount: Int!) {\n    rechargeAppointmentLimit(doctor_id: $doctor_id, amount: $amount)\n  }\n": types.RechargeAppointmentLimitDocument,
     "\nmutation UpdateProfilePicUrl($doctor_id: String!, $picture_url: String!) {\n    updateProfilePicUrl(doctor_id: $doctor_id, picture_url: $picture_url) {\n        createdAt\n        doctor_id\n        updatedAt\n    }\n}\n": types.UpdateProfilePicUrlDocument,
+    "\n  mutation AddClinicStaff($input: AddClinicStaffInput!) {\n    addClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n": types.AddClinicStaffDocument,
+    "\n  mutation UpdateClinicStaff($input: UpdateClinicStaffInput!) {\n    updateClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      isActive\n    }\n  }\n": types.UpdateClinicStaffDocument,
+    "\n  mutation RemoveClinicStaff($staffId: String!) {\n    removeClinicStaff(staffId: $staffId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n    }\n  }\n": types.RemoveClinicStaffDocument,
+    "\n  mutation CreateSubscription($input: CreateSubscriptionDTO!) {\n    createSubscription(input: $input) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n": types.CreateSubscriptionDocument,
+    "\n  mutation UpdateSubscription($input: UpdateSubscriptionDTO!) {\n    updateSubscription(input: $input) {\n      id\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n": types.UpdateSubscriptionDocument,
+    "\n  mutation UpdateSubscriptionStatus($input: UpdateSubscriptionStatusDTO!) {\n    updateSubscriptionStatus(input: $input) {\n      id\n      status\n      startDate\n      endDate\n    }\n  }\n": types.UpdateSubscriptionStatusDocument,
     "\n  query GetAllClinicFeatures {\n    getAllClinicFeatures {\n      id\n      value\n    }\n  }\n": types.GetAllClinicFeaturesDocument,
     "\n  query GetClinicFeatures($clinicId: String!) {\n    getClinicFeatures(clinicId: $clinicId) {\n      id\n      value\n    }\n  }\n": types.GetClinicFeaturesDocument,
     "\nquery GetClinics {\n    getClinics {\n        about\n        business_id\n        city_name\n        closeTime\n        email\n        id\n        latitude\n        location\n        logoUrl\n        name\n        address {\n            city\n            country\n            line1\n            line2\n            pin\n            state\n        }\n        phone_number {\n            n\n            name\n        }\n        speciality {\n            name\n        }\n        workingDays\n        longitude\n        openTime\n    }\n}\n": types.GetClinicsDocument,
     "\n  query GetCustomFeatures {\n    getCustomFeatures {\n      id\n      value\n    }\n  }\n": types.GetCustomFeaturesDocument,
     "\n  query GetDoctor($doctor_id: String!) {\n    getDoctor(doctor_id: $doctor_id) {\n      doctor_id\n      customFeatures {\n        id\n        value\n      }\n    }\n  }\n": types.GetDoctorDocument,
     "\nquery GetClinicDoctors($clinicId: String!) {\n    getClinicDoctors(clinicId: $clinicId) {\n        createdAt\n        doctor_id\n        updatedAt\n        isActive\n        profile {\n            personal {\n                designation\n                dob\n                email\n                first_name\n                gender\n                last_name\n                middle_name\n                phone_number\n                profile_pic\n            }\n            professional {\n                about\n                active\n                language {\n                    name\n                }\n                major_speciality {\n                    name\n                }\n                speciality {\n                    name\n                }\n                degree {\n                    branch_name\n                    college_name\n                    end_year\n                    name\n                    start_year\n                }\n            }\n        }\n    }\n}\n": types.GetClinicDoctorsDocument,
+    "\n  query GetDoctorAppointmentLimit($doctor_id: String!) {\n    getDoctorAppointmentLimit(doctor_id: $doctor_id)\n  }\n": types.GetDoctorAppointmentLimitDocument,
+    "\n  query GetDoctorSettings($doctor_id: String!) {\n    getDoctorSettings(doctor_id: $doctor_id) {\n      appointmentLimit\n      appointmentsUsed\n    }\n  }\n": types.GetDoctorSettingsDocument,
     "\nquery GetAllDrafts {\n    getAllDrafts {\n        clinicName\n        doctorName\n        id\n        name\n        type\n    }\n}\n": types.GetAllDraftsDocument,
     "\nquery ApproveOrReject($id: String!, $status: String!) {\n    approveOrReject(id: $id, status: $status)\n}\n\n": types.ApproveOrRejectDocument,
+    "\n  query GetClinicStaff($clinicId: String!) {\n    getClinicStaff(clinicId: $clinicId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n": types.GetClinicStaffDocument,
+    "\n  query GetSubscription($subscriptionId: String!) {\n    getSubscription(subscriptionId: $subscriptionId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetSubscriptionDocument,
+    "\n  query GetDoctorSubscription($doctorId: String!) {\n    getDoctorSubscription(doctorId: $doctorId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n": types.GetDoctorSubscriptionDocument,
 };
 
 /**
@@ -95,7 +121,39 @@ export function graphql(source: "\n  mutation AddDoctor(\n    $clinicIds: String
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation UpdateDoctorAppointmentLimit($doctor_id: String!, $appointmentLimit: Int!) {\n    updateDoctorAppointmentLimit(doctor_id: $doctor_id, appointmentLimit: $appointmentLimit)\n  }\n"): (typeof documents)["\n  mutation UpdateDoctorAppointmentLimit($doctor_id: String!, $appointmentLimit: Int!) {\n    updateDoctorAppointmentLimit(doctor_id: $doctor_id, appointmentLimit: $appointmentLimit)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RechargeAppointmentLimit($doctor_id: String!, $amount: Int!) {\n    rechargeAppointmentLimit(doctor_id: $doctor_id, amount: $amount)\n  }\n"): (typeof documents)["\n  mutation RechargeAppointmentLimit($doctor_id: String!, $amount: Int!) {\n    rechargeAppointmentLimit(doctor_id: $doctor_id, amount: $amount)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\nmutation UpdateProfilePicUrl($doctor_id: String!, $picture_url: String!) {\n    updateProfilePicUrl(doctor_id: $doctor_id, picture_url: $picture_url) {\n        createdAt\n        doctor_id\n        updatedAt\n    }\n}\n"): (typeof documents)["\nmutation UpdateProfilePicUrl($doctor_id: String!, $picture_url: String!) {\n    updateProfilePicUrl(doctor_id: $doctor_id, picture_url: $picture_url) {\n        createdAt\n        doctor_id\n        updatedAt\n    }\n}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation AddClinicStaff($input: AddClinicStaffInput!) {\n    addClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  mutation AddClinicStaff($input: AddClinicStaffInput!) {\n    addClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateClinicStaff($input: UpdateClinicStaffInput!) {\n    updateClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      isActive\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateClinicStaff($input: UpdateClinicStaffInput!) {\n    updateClinicStaff(input: $input) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      isActive\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation RemoveClinicStaff($staffId: String!) {\n    removeClinicStaff(staffId: $staffId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveClinicStaff($staffId: String!) {\n    removeClinicStaff(staffId: $staffId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateSubscription($input: CreateSubscriptionDTO!) {\n    createSubscription(input: $input) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n"): (typeof documents)["\n  mutation CreateSubscription($input: CreateSubscriptionDTO!) {\n    createSubscription(input: $input) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateSubscription($input: UpdateSubscriptionDTO!) {\n    updateSubscription(input: $input) {\n      id\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateSubscription($input: UpdateSubscriptionDTO!) {\n    updateSubscription(input: $input) {\n      id\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateSubscriptionStatus($input: UpdateSubscriptionStatusDTO!) {\n    updateSubscriptionStatus(input: $input) {\n      id\n      status\n      startDate\n      endDate\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateSubscriptionStatus($input: UpdateSubscriptionStatusDTO!) {\n    updateSubscriptionStatus(input: $input) {\n      id\n      status\n      startDate\n      endDate\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -123,11 +181,31 @@ export function graphql(source: "\nquery GetClinicDoctors($clinicId: String!) {\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  query GetDoctorAppointmentLimit($doctor_id: String!) {\n    getDoctorAppointmentLimit(doctor_id: $doctor_id)\n  }\n"): (typeof documents)["\n  query GetDoctorAppointmentLimit($doctor_id: String!) {\n    getDoctorAppointmentLimit(doctor_id: $doctor_id)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetDoctorSettings($doctor_id: String!) {\n    getDoctorSettings(doctor_id: $doctor_id) {\n      appointmentLimit\n      appointmentsUsed\n    }\n  }\n"): (typeof documents)["\n  query GetDoctorSettings($doctor_id: String!) {\n    getDoctorSettings(doctor_id: $doctor_id) {\n      appointmentLimit\n      appointmentsUsed\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\nquery GetAllDrafts {\n    getAllDrafts {\n        clinicName\n        doctorName\n        id\n        name\n        type\n    }\n}\n"): (typeof documents)["\nquery GetAllDrafts {\n    getAllDrafts {\n        clinicName\n        doctorName\n        id\n        name\n        type\n    }\n}\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\nquery ApproveOrReject($id: String!, $status: String!) {\n    approveOrReject(id: $id, status: $status)\n}\n\n"): (typeof documents)["\nquery ApproveOrReject($id: String!, $status: String!) {\n    approveOrReject(id: $id, status: $status)\n}\n\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetClinicStaff($clinicId: String!) {\n    getClinicStaff(clinicId: $clinicId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  query GetClinicStaff($clinicId: String!) {\n    getClinicStaff(clinicId: $clinicId) {\n      id\n      firstName\n      lastName\n      phoneNumber\n      staffRole\n      permissions\n      clinicId\n      isActive\n      createdAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetSubscription($subscriptionId: String!) {\n    getSubscription(subscriptionId: $subscriptionId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  query GetSubscription($subscriptionId: String!) {\n    getSubscription(subscriptionId: $subscriptionId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query GetDoctorSubscription($doctorId: String!) {\n    getDoctorSubscription(doctorId: $doctorId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n"): (typeof documents)["\n  query GetDoctorSubscription($doctorId: String!) {\n    getDoctorSubscription(doctorId: $doctorId) {\n      id\n      doctorId\n      status\n      startDate\n      endDate\n      trialStartDate\n      trialEndDate\n      createdAt\n      updatedAt\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

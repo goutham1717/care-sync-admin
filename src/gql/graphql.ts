@@ -24,6 +24,20 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type AddClinicStaffInput = {
+  clinicId: Scalars['String']['input'];
+  firstName: Scalars['String']['input'];
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  permissions?: InputMaybe<Array<Scalars['String']['input']>>;
+  phoneNumber: Scalars['String']['input'];
+  staffRole: Scalars['String']['input'];
+};
+
+export type AddFavouriteInput = {
+  doctorId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+};
+
 export type AddStockDto = {
   batchNumber?: InputMaybe<Scalars['String']['input']>;
   expiryDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -69,6 +83,8 @@ export type AppointmentDetails = {
   Prescription?: Maybe<PrescriptionDetails>;
   aid: Scalars['String']['output'];
   channel: Scalars['String']['output'];
+  clinic?: Maybe<Clinic>;
+  doctor?: Maybe<Doctor>;
   end_time: Scalars['String']['output'];
   patientProfile: PatientProfile;
   paymentDetails?: Maybe<PaymentDetails>;
@@ -106,6 +122,11 @@ export type AssignClinicFeaturesDto = {
 export type AssignCustomFeaturesDto = {
   doctor_id: Scalars['String']['input'];
   featureValues: Array<Scalars['String']['input']>;
+};
+
+export type AssignCustomFieldToDoctorsInput = {
+  customFieldId: Scalars['String']['input'];
+  doctorIds: Array<Scalars['String']['input']>;
 };
 
 export type Business = {
@@ -148,6 +169,22 @@ export type ChannelStats = {
   __typename?: 'ChannelStats';
   channel: Scalars['String']['output'];
   value: Scalars['Float']['output'];
+};
+
+export type CheckInDataModel = {
+  __typename?: 'CheckInDataModel';
+  appointmentId: Scalars['String']['output'];
+  checkInData?: Maybe<Scalars['JSON']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  updatedBy?: Maybe<Scalars['String']['output']>;
+};
+
+export type CheckInUpdatePayload = {
+  __typename?: 'CheckInUpdatePayload';
+  appointmentId: Scalars['String']['output'];
+  checkInData?: Maybe<Scalars['JSON']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  updatedBy?: Maybe<Scalars['String']['output']>;
 };
 
 export type Clinic = {
@@ -226,6 +263,19 @@ export type ClinicPatientsResponse = {
   patients: Array<ClinicPatientBasicInfo>;
 };
 
+export type ClinicStaffModel = {
+  __typename?: 'ClinicStaffModel';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  lastName?: Maybe<Scalars['String']['output']>;
+  permissions: Array<Scalars['String']['output']>;
+  phoneNumber: Scalars['String']['output'];
+  staffRole: Scalars['String']['output'];
+};
+
 export type ClinicWorkingHoursDto = {
   closeTime: Scalars['String']['input'];
   openTime: Scalars['String']['input'];
@@ -239,6 +289,15 @@ export type CpgDto = {
   nutritionalFacts: Scalars['String']['input'];
   productName: Scalars['String']['input'];
   size: Scalars['String']['input'];
+};
+
+export type CreateCustomFieldInput = {
+  childComponent?: InputMaybe<Scalars['String']['input']>;
+  clinicId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  options?: InputMaybe<Array<Scalars['String']['input']>>;
+  parentComponent: Scalars['String']['input'];
+  valueType: CustomFieldValueType;
 };
 
 export type CreateDoctorWorkingHoursDto = {
@@ -288,6 +347,13 @@ export type CreateReportSettingsInput = {
   serviceGroups: Array<CreateServiceGroupInput>;
 };
 
+export type CreateReviewInput = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  doctorId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+};
+
 export type CreateServiceGroupInput = {
   name: Scalars['String']['input'];
   order: Scalars['Float']['input'];
@@ -317,6 +383,27 @@ export type CustomFeature = {
   value: Scalars['String']['output'];
 };
 
+export type CustomField = {
+  __typename?: 'CustomField';
+  childComponent?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  options: Array<Scalars['String']['output']>;
+  parentComponent: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  valueType: CustomFieldValueType;
+};
+
+export enum CustomFieldValueType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
+  Number = 'NUMBER',
+  Picklist = 'PICKLIST',
+  Text = 'TEXT'
+}
+
 export type Degree = {
   __typename?: 'Degree';
   branch_name: Scalars['String']['output'];
@@ -332,6 +419,41 @@ export type DegreeDto = {
   end_year: Scalars['DateTime']['input'];
   name: Scalars['String']['input'];
   start_year: Scalars['DateTime']['input'];
+};
+
+export type DeleteDocumentInput = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+export type DeleteReviewInput = {
+  id: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+};
+
+export type DentalChart = {
+  __typename?: 'DentalChart';
+  createdAt: Scalars['DateTime']['output'];
+  data: Scalars['JSON']['output'];
+  id: Scalars['String']['output'];
+  isChild: Scalars['Boolean']['output'];
+  patientProfileId: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DentalChartCreateInput = {
+  data: Scalars['JSON']['input'];
+  isChild?: InputMaybe<Scalars['Boolean']['input']>;
+  patientProfileId: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type DentalChartUpdateInput = {
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  id: Scalars['String']['input'];
+  isChild?: InputMaybe<Scalars['Boolean']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Diagnosis = {
@@ -353,6 +475,7 @@ export type Doctor = {
   doctor_id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   profile: Profile;
+  ratingSummary?: Maybe<RatingSummary>;
   updatedAt: Scalars['DateTime']['output'];
   workingHours?: Maybe<DoctorWorkingHours>;
 };
@@ -364,9 +487,24 @@ export type DoctorDto = {
 export type DoctorSettings = {
   __typename?: 'DoctorSettings';
   allowMultipleAppointments: Scalars['Boolean']['output'];
+  appointmentLimit: Scalars['Int']['output'];
+  appointmentsUsed: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
   doctor_id: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DoctorSubscription = {
+  __typename?: 'DoctorSubscription';
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  endDate: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  startDate: Scalars['DateTime']['output'];
+  status: SubscriptionStatus;
+  trialEndDate?: Maybe<Scalars['DateTime']['output']>;
+  trialStartDate?: Maybe<Scalars['DateTime']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -409,10 +547,31 @@ export type DrugList = {
   name: Scalars['String']['output'];
 };
 
+export type EditBillingDto = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  amountPaid?: InputMaybe<Scalars['Float']['input']>;
+  billURL?: InputMaybe<Scalars['String']['input']>;
+  discount?: InputMaybe<Scalars['Float']['input']>;
+  paymentModes?: InputMaybe<Array<PaymentModeInput>>;
+  payment_status?: InputMaybe<Scalars['String']['input']>;
+  payment_type?: InputMaybe<Scalars['String']['input']>;
+  pid: Scalars['String']['input'];
+  services?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type ErrorType = {
   __typename?: 'ErrorType';
   code?: Maybe<Scalars['String']['output']>;
   message: Scalars['String']['output'];
+};
+
+export type Favourite = {
+  __typename?: 'Favourite';
+  createdAt: Scalars['DateTime']['output'];
+  doctor?: Maybe<Doctor>;
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
 };
 
 export type GenderGroup = {
@@ -430,6 +589,11 @@ export type GenerateReportDto = {
   doctorIds?: InputMaybe<Array<Scalars['String']['input']>>;
   endDate: Scalars['String']['input'];
   startDate: Scalars['String']['input'];
+};
+
+export type GetPatientDocumentsInput = {
+  clinicId: Scalars['String']['input'];
+  patientId: Scalars['String']['input'];
 };
 
 export type GraphData = {
@@ -554,6 +718,17 @@ export type MajorSpecailityDto = {
   name: Scalars['String']['input'];
 };
 
+export type MeResponse = {
+  __typename?: 'MeResponse';
+  businessId?: Maybe<Scalars['String']['output']>;
+  clinicId?: Maybe<Scalars['String']['output']>;
+  clinicIds?: Maybe<Array<Scalars['String']['output']>>;
+  permissions: Array<Scalars['String']['output']>;
+  role: Scalars['String']['output'];
+  staffId?: Maybe<Scalars['String']['output']>;
+  sub: Scalars['String']['output'];
+};
+
 export type Medication = {
   __typename?: 'Medication';
   comment?: Maybe<Scalars['String']['output']>;
@@ -614,17 +789,23 @@ export type Mutation = {
   DoctorLoginOTPRequest: OtpStatus;
   addBusinessHours: Clinic;
   addClinic: Clinic;
+  addClinicStaff: ClinicStaffModel;
   addCpgDetails: Cpg;
   addDoctor: Doctor;
+  addFavourite: Favourite;
   addMedication: Medication;
   addMedicationViaPhoneNumber: Medication;
   addPatient: Patient;
   addStock: InventoryStock;
   assignClinicFeatures: Clinic;
   assignCustomFeaturesToDoctor: Doctor;
+  assignCustomFieldToDoctors: CustomField;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
+  cancelAppointmentByPatient: Scalars['String']['output'];
   createBusiness: Business;
+  createCustomField: CustomField;
+  createDentalChart: DentalChart;
   createDoctorWorkingHours: DoctorWorkingHours;
   createDraft: Draft;
   createInventoryItem: InventoryItem;
@@ -632,38 +813,55 @@ export type Mutation = {
   createOrder: Scalars['String']['output'];
   createPatientPurchase: PatientPurchase;
   createReportSettings: ReportSettings;
+  createReview: Review;
   createService: ServicesModel;
-  createSubscription: Subscription;
+  createSubscription: DoctorSubscription;
   createTemplate: Template;
   deleteBusiness: Scalars['Boolean']['output'];
+  deleteCustomField: Scalars['Boolean']['output'];
+  deleteDentalChart: Scalars['Boolean']['output'];
   deleteDoctor: Scalars['Boolean']['output'];
   deleteDoctorWorkingHours: Scalars['String']['output'];
+  deleteDocument: Scalars['Boolean']['output'];
   deleteInventoryItem: Scalars['String']['output'];
   deleteReportSettings: Scalars['String']['output'];
+  deleteReview: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
+  editBilling: Scalars['String']['output'];
   editMedication: Medication;
   generateReport: Scalars['String']['output'];
   getAppointmentGraph: Array<GraphData>;
   getAppointmentStats: AppointmentStats;
   getProductMetrics: Cpg;
   getRevenue: RevenueStats;
+  loginOTPRequest: OtpRequestStatus;
   logout: Scalars['String']['output'];
   onboarding: RegisterResponse;
+  rechargeAppointmentLimit: Scalars['Int']['output'];
   refreshToken: Scalars['String']['output'];
   register: RegisterResponse;
   registerViaOTP: RegisterResponse;
   removeClinicFeatures: Clinic;
+  removeClinicStaff: ClinicStaffModel;
   removeCustomFeaturesFromDoctor: Doctor;
+  removeCustomFieldFromDoctors: CustomField;
+  removeFavourite: Scalars['String']['output'];
+  rescheduleAppointmentByPatient: AppointmentDetails;
   savePrescription: Prescription;
+  savePrescriptionTemplate: PrescriptionTemplate;
   sendMessage: Scalars['String']['output'];
   sendOTP: OtpStatus;
   sendVideoLink: Scalars['String']['output'];
   updateAppointmentStatus: AppointmentDetails;
   updateClinicCoordinates: Clinic;
   updateClinicDetail: Clinic;
+  updateClinicStaff: ClinicStaffModel;
   updateCredits: UpdatedCount;
+  updateCustomField: CustomField;
+  updateDentalChart: DentalChart;
   updateDoctor: Doctor;
   updateDoctorActiveStatus: Scalars['Boolean']['output'];
+  updateDoctorAppointmentLimit: Scalars['Int']['output'];
   updateDoctorSettings: Scalars['Boolean']['output'];
   updateDoctorWorkingHours: DoctorWorkingHours;
   updateInventoryItem: InventoryItem;
@@ -672,11 +870,14 @@ export type Mutation = {
   updatePaymentDetails: Scalars['String']['output'];
   updateProfilePicUrl: Doctor;
   updateReportSettings: ReportSettings;
+  updateReview: Review;
   updateService: ServicesModel;
-  updateSubscription: Subscription;
-  updateSubscriptionStatus: Subscription;
+  updateSubscription: DoctorSubscription;
+  updateSubscriptionStatus: DoctorSubscription;
   updateVideoDuration: Scalars['String']['output'];
+  upsertCheckInData: CheckInDataModel;
   validateDoctorOTP: Doctor;
+  validateLoginOTP: UnifiedLoginResponse;
 };
 
 
@@ -697,6 +898,11 @@ export type MutationAddClinicArgs = {
 };
 
 
+export type MutationAddClinicStaffArgs = {
+  input: AddClinicStaffInput;
+};
+
+
 export type MutationAddCpgDetailsArgs = {
   cpgInput: CpgDto;
 };
@@ -705,6 +911,11 @@ export type MutationAddCpgDetailsArgs = {
 export type MutationAddDoctorArgs = {
   clinicIds: Scalars['String']['input'];
   doctorInput: DoctorDto;
+};
+
+
+export type MutationAddFavouriteArgs = {
+  input: AddFavouriteInput;
 };
 
 
@@ -739,6 +950,11 @@ export type MutationAssignCustomFeaturesToDoctorArgs = {
 };
 
 
+export type MutationAssignCustomFieldToDoctorsArgs = {
+  input: AssignCustomFieldToDoctorsInput;
+};
+
+
 export type MutationBookAppointmentArgs = {
   appointmentInput: AppointmentDetailsDto;
 };
@@ -749,8 +965,23 @@ export type MutationBookAppointmentOnlineArgs = {
 };
 
 
+export type MutationCancelAppointmentByPatientArgs = {
+  input: PatientCancelAppointmentInput;
+};
+
+
 export type MutationCreateBusinessArgs = {
   businessInput: BusinessDto;
+};
+
+
+export type MutationCreateCustomFieldArgs = {
+  input: CreateCustomFieldInput;
+};
+
+
+export type MutationCreateDentalChartArgs = {
+  input: DentalChartCreateInput;
 };
 
 
@@ -789,6 +1020,11 @@ export type MutationCreateReportSettingsArgs = {
 };
 
 
+export type MutationCreateReviewArgs = {
+  input: CreateReviewInput;
+};
+
+
 export type MutationCreateServiceArgs = {
   clinicId: Scalars['String']['input'];
   serviceInput: ServicesDto;
@@ -810,6 +1046,16 @@ export type MutationDeleteBusinessArgs = {
 };
 
 
+export type MutationDeleteCustomFieldArgs = {
+  customFieldId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDentalChartArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteDoctorArgs = {
   doctor_id: Scalars['String']['input'];
 };
@@ -817,6 +1063,11 @@ export type MutationDeleteDoctorArgs = {
 
 export type MutationDeleteDoctorWorkingHoursArgs = {
   workingHoursId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDocumentArgs = {
+  input: DeleteDocumentInput;
 };
 
 
@@ -830,8 +1081,18 @@ export type MutationDeleteReportSettingsArgs = {
 };
 
 
+export type MutationDeleteReviewArgs = {
+  input: DeleteReviewInput;
+};
+
+
 export type MutationDeleteScheduleArgs = {
   id: Scalars['Float']['input'];
+};
+
+
+export type MutationEditBillingArgs = {
+  input: EditBillingDto;
 };
 
 
@@ -867,8 +1128,19 @@ export type MutationGetRevenueArgs = {
 };
 
 
+export type MutationLoginOtpRequestArgs = {
+  phoneInput: PhoneNumberDto;
+};
+
+
 export type MutationOnboardingArgs = {
   onboardingInput: OnBoaringDto;
+};
+
+
+export type MutationRechargeAppointmentLimitArgs = {
+  amount: Scalars['Int']['input'];
+  doctor_id: Scalars['String']['input'];
 };
 
 
@@ -887,13 +1159,39 @@ export type MutationRemoveClinicFeaturesArgs = {
 };
 
 
+export type MutationRemoveClinicStaffArgs = {
+  staffId: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveCustomFeaturesFromDoctorArgs = {
   input: RemoveCustomFeaturesDto;
 };
 
 
+export type MutationRemoveCustomFieldFromDoctorsArgs = {
+  input: RemoveCustomFieldFromDoctorsInput;
+};
+
+
+export type MutationRemoveFavouriteArgs = {
+  input: RemoveFavouriteInput;
+};
+
+
+export type MutationRescheduleAppointmentByPatientArgs = {
+  input: PatientRescheduleAppointmentInput;
+};
+
+
 export type MutationSavePrescriptionArgs = {
   prescriptionInput: PrescriptionDto;
+};
+
+
+export type MutationSavePrescriptionTemplateArgs = {
+  doctor_id: Scalars['String']['input'];
+  templateConfig: Scalars['String']['input'];
 };
 
 
@@ -930,8 +1228,23 @@ export type MutationUpdateClinicDetailArgs = {
 };
 
 
+export type MutationUpdateClinicStaffArgs = {
+  input: UpdateClinicStaffInput;
+};
+
+
 export type MutationUpdateCreditsArgs = {
   updateCreditsPayload: CreditsUpdateDto;
+};
+
+
+export type MutationUpdateCustomFieldArgs = {
+  input: UpdateCustomFieldInput;
+};
+
+
+export type MutationUpdateDentalChartArgs = {
+  input: DentalChartUpdateInput;
 };
 
 
@@ -944,6 +1257,12 @@ export type MutationUpdateDoctorArgs = {
 export type MutationUpdateDoctorActiveStatusArgs = {
   doctor_id: Scalars['String']['input'];
   isActive: Scalars['Boolean']['input'];
+};
+
+
+export type MutationUpdateDoctorAppointmentLimitArgs = {
+  appointmentLimit: Scalars['Int']['input'];
+  doctor_id: Scalars['String']['input'];
 };
 
 
@@ -992,6 +1311,11 @@ export type MutationUpdateReportSettingsArgs = {
 };
 
 
+export type MutationUpdateReviewArgs = {
+  input: UpdateReviewInput;
+};
+
+
 export type MutationUpdateServiceArgs = {
   serviceId: Scalars['String']['input'];
   serviceInput: ServicesDto;
@@ -1015,7 +1339,17 @@ export type MutationUpdateVideoDurationArgs = {
 };
 
 
+export type MutationUpsertCheckInDataArgs = {
+  input: UpsertCheckInInput;
+};
+
+
 export type MutationValidateDoctorOtpArgs = {
+  otpInput: ValidateDoctorOtp;
+};
+
+
+export type MutationValidateLoginOtpArgs = {
   otpInput: ValidateDoctorOtp;
 };
 
@@ -1041,6 +1375,12 @@ export type OtpRegistrationDto = {
   code: Scalars['String']['input'];
   phoneNumber: Scalars['String']['input'];
   role?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OtpRequestStatus = {
+  __typename?: 'OTPRequestStatus';
+  accountType: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type OtpStatus = {
@@ -1078,6 +1418,18 @@ export type OnlineAppointmentDetailsDto = {
   status: Scalars['String']['input'];
 };
 
+export type OutstandingDue = {
+  __typename?: 'OutstandingDue';
+  aid: Scalars['String']['output'];
+  amountPaid: Scalars['Float']['output'];
+  billDate: Scalars['DateTime']['output'];
+  billNo: Scalars['String']['output'];
+  due: Scalars['Float']['output'];
+  patientMobile: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  totalAmount: Scalars['Float']['output'];
+};
+
 export type PaginatedCpg = {
   __typename?: 'PaginatedCPG';
   edges?: Maybe<Array<CpgEdge>>;
@@ -1099,8 +1451,48 @@ export type Patient = {
   profiles: PatientProfile;
 };
 
+export type PatientBillEntry = {
+  __typename?: 'PatientBillEntry';
+  aid: Scalars['String']['output'];
+  amountPaid: Scalars['Float']['output'];
+  billDate: Scalars['DateTime']['output'];
+  billNo: Scalars['String']['output'];
+  due: Scalars['Float']['output'];
+  totalAmount: Scalars['Float']['output'];
+};
+
+export type PatientCancelAppointmentInput = {
+  aid: Scalars['String']['input'];
+  mobile: Scalars['String']['input'];
+};
+
 export type PatientDto = {
   profile: PatientProfileDto;
+};
+
+export type PatientDocumentModel = {
+  __typename?: 'PatientDocumentModel';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  documentType?: Maybe<Scalars['String']['output']>;
+  fileName: Scalars['String']['output'];
+  fileType: Scalars['String']['output'];
+  fileUrl: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  patientId: Scalars['String']['output'];
+  uploadedBy: Scalars['String']['output'];
+  uploaderRole: Scalars['String']['output'];
+};
+
+export type PatientDuesSummary = {
+  __typename?: 'PatientDuesSummary';
+  appointments: Array<PatientBillEntry>;
+  netDue: Scalars['Float']['output'];
+  patientMobile: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  totalBilled: Scalars['Float']['output'];
+  totalPaid: Scalars['Float']['output'];
 };
 
 export type PatientProfile = {
@@ -1187,6 +1579,13 @@ export type PatientPurchaseItemDto = {
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type PatientRescheduleAppointmentInput = {
+  aid: Scalars['String']['input'];
+  duration?: InputMaybe<Scalars['Float']['input']>;
+  mobile: Scalars['String']['input'];
+  newStartTime: Scalars['String']['input'];
+};
+
 export type PatientStatsResponse = {
   __typename?: 'PatientStatsResponse';
   groupedPatients: GroupedPatients;
@@ -1219,10 +1618,13 @@ export type PaymentCount = {
 export type PaymentDetails = {
   __typename?: 'PaymentDetails';
   amount: Scalars['Float']['output'];
+  amountPaid?: Maybe<Scalars['Float']['output']>;
   billURL?: Maybe<Scalars['String']['output']>;
   discount?: Maybe<Scalars['Float']['output']>;
+  due?: Maybe<Scalars['Float']['output']>;
+  paymentModes?: Maybe<Array<PaymentModeDetail>>;
   payment_status: Scalars['String']['output'];
-  payment_type: Scalars['String']['output'];
+  payment_type?: Maybe<Scalars['String']['output']>;
   pid: Scalars['String']['output'];
   services?: Maybe<Array<Scalars['String']['output']>>;
 };
@@ -1230,11 +1632,30 @@ export type PaymentDetails = {
 export type PaymentDto = {
   aid: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
+  amountPaid?: InputMaybe<Scalars['Float']['input']>;
   billURL?: InputMaybe<Scalars['String']['input']>;
-  discount: Scalars['Float']['input'];
+  discount?: InputMaybe<Scalars['Float']['input']>;
+  paymentModes?: InputMaybe<Array<PaymentModeInput>>;
   payment_status: Scalars['String']['input'];
-  payment_type: Scalars['String']['input'];
+  payment_type?: InputMaybe<Scalars['String']['input']>;
   services: Array<Scalars['String']['input']>;
+};
+
+export type PaymentModeBreakdown = {
+  __typename?: 'PaymentModeBreakdown';
+  mode: Scalars['String']['output'];
+  totalAmount: Scalars['Float']['output'];
+};
+
+export type PaymentModeDetail = {
+  __typename?: 'PaymentModeDetail';
+  amount: Scalars['Float']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type PaymentModeInput = {
+  amount: Scalars['Float']['input'];
+  type: Scalars['String']['input'];
 };
 
 export type PaymentOrderDto = {
@@ -1317,6 +1738,15 @@ export type PrescriptionMedication = {
   timing: Scalars['String']['input'];
 };
 
+export type PrescriptionTemplate = {
+  __typename?: 'PrescriptionTemplate';
+  createdAt: Scalars['DateTime']['output'];
+  doctor_id: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  templateConfig: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export type Professional = {
   __typename?: 'Professional';
   about?: Maybe<Scalars['String']['output']>;
@@ -1370,26 +1800,36 @@ export type Query = {
   getAllPatientsByStatus: Array<AppointmentDetails>;
   getAllTomorrowPatients: Array<AppointmentDetails>;
   getAllVitalsByPatientId: Array<VitalsType>;
+  getAppointmentById: AppointmentDetails;
   getAppointmentChannelStats: Array<ChannelStats>;
   getAppointmentCount: Array<AppointmentCount>;
   getAppointmentStatus: AppointmentDetails;
   getAppointments: Array<AppointmentDetails>;
   getBusinessClinics: Array<Clinic>;
   getChannelCount: Array<ChannelCount>;
+  getCheckInData?: Maybe<CheckInDataModel>;
+  getClinicCustomFields: Array<CustomField>;
   getClinicDoctors: Array<Doctor>;
   getClinicFeatures: Array<ClinicFeature>;
   getClinicNotification: Array<Notifications>;
   getClinicPatients: Array<ClinicPatient>;
   getClinicPatientsBasicInfo: ClinicPatientsResponse;
+  getClinicStaff: Array<ClinicStaffModel>;
   getClinics: Array<Clinic>;
   getCustomFeatures: Array<CustomFeature>;
+  getDentalChart?: Maybe<DentalChart>;
+  getDentalCharts: Array<DentalChart>;
   getDiagnosisList: Array<DiagnosisList>;
   getDoctor: Doctor;
-  getDoctorSubscription?: Maybe<Subscription>;
+  getDoctorAppointmentLimit: Scalars['Int']['output'];
+  getDoctorCustomFields: Array<CustomField>;
+  getDoctorSettings: DoctorSettings;
+  getDoctorSubscription?: Maybe<DoctorSubscription>;
   getDoctorWorkingHours?: Maybe<DoctorWorkingHours>;
   getDoctors: Array<Doctor>;
   getDrugList: Array<DrugList>;
   getExpiringItems: Array<InventoryStock>;
+  getFavourites: Array<Favourite>;
   getInventoryItem: InventoryItem;
   getInventoryItems: Array<InventoryItem>;
   getInventoryStats: InventoryStats;
@@ -1399,6 +1839,10 @@ export type Query = {
   getNearestDoctors: Array<Doctor>;
   getNotificationCredits: NotificationCredits;
   getOnGoing: Array<Medication>;
+  getOutstandingDues: Array<OutstandingDue>;
+  getPatientAppointments: Array<AppointmentDetails>;
+  getPatientDocuments: Array<PatientDocumentModel>;
+  getPatientDuesSummary: PatientDuesSummary;
   getPatientHistory: Array<AppointmentDetails>;
   getPatientPurchase: PatientPurchase;
   getPatientPurchases: Array<PatientPurchase>;
@@ -1406,20 +1850,25 @@ export type Query = {
   getPatientsCount: Scalars['Float']['output'];
   getPatientsPaginated: PaginatedPatients;
   getPaymentAnalytics: Array<PaymentCount>;
+  getPaymentModeBreakdown: Array<PaymentModeBreakdown>;
+  getPrescriptionTemplate: PrescriptionTemplate;
   getProduct: Cpg;
   getProducts: PaginatedCpg;
   getReportSettings?: Maybe<ReportSettings>;
   getReportStatus: Scalars['String']['output'];
+  getReviewsByDoctor: Array<Review>;
   getRooms: Scalars['String']['output'];
   getServices: Array<ServicesModel>;
   getSlots: Array<Scalars['String']['output']>;
   getStats: Stats;
   getStock: Array<InventoryStock>;
-  getSubscription: Subscription;
+  getSubscription: DoctorSubscription;
   getSymptomsList: Array<SymptomsList>;
   getUserByPhoneNumber: User;
   getUsers: Array<User>;
   getWeeklyRevenue: Array<GraphData>;
+  me: MeResponse;
+  search: SearchResult;
   todayMedication: Array<Medication>;
 };
 
@@ -1494,6 +1943,11 @@ export type QueryGetAllVitalsByPatientIdArgs = {
 };
 
 
+export type QueryGetAppointmentByIdArgs = {
+  aid: Scalars['String']['input'];
+};
+
+
 export type QueryGetAppointmentChannelStatsArgs = {
   clinic_id: Scalars['String']['input'];
 };
@@ -1531,6 +1985,16 @@ export type QueryGetChannelCountArgs = {
 };
 
 
+export type QueryGetCheckInDataArgs = {
+  appointmentId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicCustomFieldsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetClinicDoctorsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -1556,12 +2020,43 @@ export type QueryGetClinicPatientsBasicInfoArgs = {
 };
 
 
+export type QueryGetClinicStaffArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetDentalChartArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDentalChartsArgs = {
+  patientProfileId: Scalars['String']['input'];
+};
+
+
 export type QueryGetDiagnosisListArgs = {
   query: Scalars['String']['input'];
 };
 
 
 export type QueryGetDoctorArgs = {
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorAppointmentLimitArgs = {
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorCustomFieldsArgs = {
+  clinicId: Scalars['String']['input'];
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorSettingsArgs = {
   doctor_id: Scalars['String']['input'];
 };
 
@@ -1584,6 +2079,11 @@ export type QueryGetDrugListArgs = {
 export type QueryGetExpiringItemsArgs = {
   clinicId: Scalars['String']['input'];
   days?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetFavouritesArgs = {
+  patientProfileId: Scalars['String']['input'];
 };
 
 
@@ -1637,6 +2137,29 @@ export type QueryGetOnGoingArgs = {
 };
 
 
+export type QueryGetOutstandingDuesArgs = {
+  clinic_id: Scalars['String']['input'];
+  endTime?: InputMaybe<Scalars['String']['input']>;
+  startTime?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetPatientAppointmentsArgs = {
+  mobile: Scalars['String']['input'];
+};
+
+
+export type QueryGetPatientDocumentsArgs = {
+  input: GetPatientDocumentsInput;
+};
+
+
+export type QueryGetPatientDuesSummaryArgs = {
+  businessId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+};
+
+
 export type QueryGetPatientHistoryArgs = {
   includePayment?: InputMaybe<Scalars['Boolean']['input']>;
   patientProfileId: Scalars['String']['input'];
@@ -1680,6 +2203,18 @@ export type QueryGetPaymentAnalyticsArgs = {
 };
 
 
+export type QueryGetPaymentModeBreakdownArgs = {
+  clinic_id: Scalars['String']['input'];
+  endTime: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
+};
+
+
+export type QueryGetPrescriptionTemplateArgs = {
+  doctor_id: Scalars['String']['input'];
+};
+
+
 export type QueryGetProductArgs = {
   barcode: Scalars['String']['input'];
 };
@@ -1697,6 +2232,11 @@ export type QueryGetReportSettingsArgs = {
 
 export type QueryGetReportStatusArgs = {
   jobId: Scalars['String']['input'];
+};
+
+
+export type QueryGetReviewsByDoctorArgs = {
+  doctorId: Scalars['String']['input'];
 };
 
 
@@ -1742,6 +2282,14 @@ export type QueryGetWeeklyRevenueArgs = {
 };
 
 
+export type QuerySearchArgs = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  query: Scalars['String']['input'];
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryTodayMedicationArgs = {
   userId: Scalars['String']['input'];
 };
@@ -1752,6 +2300,12 @@ export type Rx_Entries = {
   prescriptionMedication: Array<PrescriptionMedication>;
   symptoms: Array<Symptoms>;
   vitals?: InputMaybe<Array<Vitals>>;
+};
+
+export type RatingSummary = {
+  __typename?: 'RatingSummary';
+  averageRating: Scalars['Float']['output'];
+  totalReviews: Scalars['Int']['output'];
 };
 
 export type RazorPayOrder = {
@@ -1785,6 +2339,16 @@ export type RemoveClinicFeaturesDto = {
 export type RemoveCustomFeaturesDto = {
   doctor_id: Scalars['String']['input'];
   featureValues: Array<Scalars['String']['input']>;
+};
+
+export type RemoveCustomFieldFromDoctorsInput = {
+  customFieldId: Scalars['String']['input'];
+  doctorIds: Array<Scalars['String']['input']>;
+};
+
+export type RemoveFavouriteInput = {
+  doctorId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
 };
 
 export type ReportServiceGroup = {
@@ -1823,6 +2387,17 @@ export type RevenueStats = {
   revenue: Scalars['Float']['output'];
 };
 
+export type Review = {
+  __typename?: 'Review';
+  comment?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
+  rating: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export type Schedule = {
   __typename?: 'Schedule';
   createdAt: Scalars['DateTime']['output'];
@@ -1839,6 +2414,13 @@ export type ScheduleDto = {
   dose: Scalars['Float']['input'];
   name: Scalars['String']['input'];
   time: Scalars['String']['input'];
+};
+
+export type SearchResult = {
+  __typename?: 'SearchResult';
+  doctors: Array<Doctor>;
+  hasMore: Scalars['Boolean']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export type ServiceDetail = {
@@ -1892,6 +2474,17 @@ export type Speciality = {
   name: Scalars['String']['output'];
 };
 
+export type StaffLoginResponse = {
+  __typename?: 'StaffLoginResponse';
+  clinicId: Scalars['String']['output'];
+  clinicName: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  lastName?: Maybe<Scalars['String']['output']>;
+  phoneNumber: Scalars['String']['output'];
+  staffRole: Scalars['String']['output'];
+};
+
 export type Stats = {
   __typename?: 'Stats';
   appointments: Scalars['Float']['output'];
@@ -1929,15 +2522,12 @@ export enum StatusEnum {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  createdAt: Scalars['DateTime']['output'];
-  doctorId: Scalars['String']['output'];
-  endDate: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  startDate: Scalars['DateTime']['output'];
-  status: SubscriptionStatus;
-  trialEndDate?: Maybe<Scalars['DateTime']['output']>;
-  trialStartDate?: Maybe<Scalars['DateTime']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
+  checkInDataUpdated: CheckInUpdatePayload;
+};
+
+
+export type SubscriptionCheckInDataUpdatedArgs = {
+  appointmentId: Scalars['String']['input'];
 };
 
 export enum SubscriptionStatus {
@@ -1974,6 +2564,31 @@ export type TemplateDto = {
   templateId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UnifiedLoginResponse = {
+  __typename?: 'UnifiedLoginResponse';
+  doctor?: Maybe<Doctor>;
+  permissions: Array<Scalars['String']['output']>;
+  staff?: Maybe<StaffLoginResponse>;
+  type: Scalars['String']['output'];
+};
+
+export type UpdateClinicStaffInput = {
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  permissions?: InputMaybe<Array<Scalars['String']['input']>>;
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  staffId: Scalars['String']['input'];
+};
+
+export type UpdateCustomFieldInput = {
+  childComponent?: InputMaybe<Scalars['String']['input']>;
+  customFieldId: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  options?: InputMaybe<Array<Scalars['String']['input']>>;
+  parentComponent?: InputMaybe<Scalars['String']['input']>;
+  valueType?: InputMaybe<CustomFieldValueType>;
+};
+
 export type UpdateDoctorWorkingHoursDto = {
   consultingMins?: InputMaybe<Scalars['Int']['input']>;
   endTime?: InputMaybe<Scalars['String']['input']>;
@@ -2002,6 +2617,13 @@ export type UpdateReportSettingsInput = {
   serviceGroups?: InputMaybe<Array<CreateServiceGroupInput>>;
 };
 
+export type UpdateReviewInput = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+  rating?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type UpdateSubscriptionDto = {
   endDate?: InputMaybe<Scalars['String']['input']>;
   startDate?: InputMaybe<Scalars['String']['input']>;
@@ -2019,6 +2641,11 @@ export type UpdateSubscriptionStatusDto = {
 export type UpdatedCount = {
   __typename?: 'UpdatedCount';
   count: Scalars['Float']['output'];
+};
+
+export type UpsertCheckInInput = {
+  appointmentId: Scalars['String']['input'];
+  checkInData: Scalars['JSON']['input'];
 };
 
 export type User = {
@@ -2111,6 +2738,22 @@ export type AddDoctorMutationVariables = Exact<{
 
 export type AddDoctorMutation = { __typename?: 'Mutation', addDoctor: { __typename?: 'Doctor', doctor_id: string } };
 
+export type UpdateDoctorAppointmentLimitMutationVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+  appointmentLimit: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateDoctorAppointmentLimitMutation = { __typename?: 'Mutation', updateDoctorAppointmentLimit: number };
+
+export type RechargeAppointmentLimitMutationVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+  amount: Scalars['Int']['input'];
+}>;
+
+
+export type RechargeAppointmentLimitMutation = { __typename?: 'Mutation', rechargeAppointmentLimit: number };
+
 export type UpdateProfilePicUrlMutationVariables = Exact<{
   doctor_id: Scalars['String']['input'];
   picture_url: Scalars['String']['input'];
@@ -2118,6 +2761,48 @@ export type UpdateProfilePicUrlMutationVariables = Exact<{
 
 
 export type UpdateProfilePicUrlMutation = { __typename?: 'Mutation', updateProfilePicUrl: { __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any } };
+
+export type AddClinicStaffMutationVariables = Exact<{
+  input: AddClinicStaffInput;
+}>;
+
+
+export type AddClinicStaffMutation = { __typename?: 'Mutation', addClinicStaff: { __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string, staffRole: string, permissions: Array<string>, clinicId: string, isActive: boolean, createdAt: any } };
+
+export type UpdateClinicStaffMutationVariables = Exact<{
+  input: UpdateClinicStaffInput;
+}>;
+
+
+export type UpdateClinicStaffMutation = { __typename?: 'Mutation', updateClinicStaff: { __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string, staffRole: string, permissions: Array<string>, isActive: boolean } };
+
+export type RemoveClinicStaffMutationVariables = Exact<{
+  staffId: Scalars['String']['input'];
+}>;
+
+
+export type RemoveClinicStaffMutation = { __typename?: 'Mutation', removeClinicStaff: { __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string } };
+
+export type CreateSubscriptionMutationVariables = Exact<{
+  input: CreateSubscriptionDto;
+}>;
+
+
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription: { __typename?: 'DoctorSubscription', id: string, doctorId: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null } };
+
+export type UpdateSubscriptionMutationVariables = Exact<{
+  input: UpdateSubscriptionDto;
+}>;
+
+
+export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription: { __typename?: 'DoctorSubscription', id: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null } };
+
+export type UpdateSubscriptionStatusMutationVariables = Exact<{
+  input: UpdateSubscriptionStatusDto;
+}>;
+
+
+export type UpdateSubscriptionStatusMutation = { __typename?: 'Mutation', updateSubscriptionStatus: { __typename?: 'DoctorSubscription', id: string, status: SubscriptionStatus, startDate: any, endDate: any } };
 
 export type GetAllClinicFeaturesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2155,6 +2840,20 @@ export type GetClinicDoctorsQueryVariables = Exact<{
 
 export type GetClinicDoctorsQuery = { __typename?: 'Query', getClinicDoctors: Array<{ __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any, isActive: boolean, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', designation: string, dob: any, email: string, first_name: string, gender: string, last_name: string, middle_name?: string | null, phone_number?: string | null, profile_pic?: string | null }, professional: { __typename?: 'Professional', about?: string | null, active: boolean, language: Array<{ __typename?: 'Language', name: string }>, major_speciality: { __typename?: 'MajorSpecaility', name: string }, speciality: Array<{ __typename?: 'Speciality', name: string }>, degree?: Array<{ __typename?: 'Degree', branch_name: string, college_name: string, end_year: any, name: string, start_year: any }> | null } } }> };
 
+export type GetDoctorAppointmentLimitQueryVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorAppointmentLimitQuery = { __typename?: 'Query', getDoctorAppointmentLimit: number };
+
+export type GetDoctorSettingsQueryVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorSettingsQuery = { __typename?: 'Query', getDoctorSettings: { __typename?: 'DoctorSettings', appointmentLimit: number, appointmentsUsed: number } };
+
 export type GetAllDraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2168,6 +2867,27 @@ export type ApproveOrRejectQueryVariables = Exact<{
 
 export type ApproveOrRejectQuery = { __typename?: 'Query', approveOrReject: string };
 
+export type GetClinicStaffQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicStaffQuery = { __typename?: 'Query', getClinicStaff: Array<{ __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string, staffRole: string, permissions: Array<string>, clinicId: string, isActive: boolean, createdAt: any }> };
+
+export type GetSubscriptionQueryVariables = Exact<{
+  subscriptionId: Scalars['String']['input'];
+}>;
+
+
+export type GetSubscriptionQuery = { __typename?: 'Query', getSubscription: { __typename?: 'DoctorSubscription', id: string, doctorId: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null, createdAt: any, updatedAt: any } };
+
+export type GetDoctorSubscriptionQueryVariables = Exact<{
+  doctorId: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorSubscriptionQuery = { __typename?: 'Query', getDoctorSubscription?: { __typename?: 'DoctorSubscription', id: string, doctorId: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null, createdAt: any, updatedAt: any } | null };
+
 
 export const CreateBusinessDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "CreateBusiness" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "businessInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "BusinessDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createBusiness" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "businessInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "businessInput" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }] } }] } as unknown as DocumentNode<CreateBusinessMutation, CreateBusinessMutationVariables>;
 export const AddClinicDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddClinic" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "businessId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ClinicDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addClinic" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "businessId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "businessId" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicInput" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "city_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "closeTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "location" } }, { "kind": "Field", "name": { "kind": "Name", "value": "logoUrl" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "openTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "workingDays" } }] } }] } }] } as unknown as DocumentNode<AddClinicMutation, AddClinicMutationVariables>;
@@ -2176,15 +2896,28 @@ export const RemoveClinicFeaturesDocument = { "kind": "Document", "definitions":
 export const AssignCustomFeaturesToDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignCustomFeaturesToDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AssignCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignCustomFeaturesToDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
 export const RemoveCustomFeaturesFromDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveCustomFeaturesFromDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "RemoveCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeCustomFeaturesFromDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }] } }] } }] } as unknown as DocumentNode<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
 export const AddDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "DoctorDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicIds" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }] } }] } }] } as unknown as DocumentNode<AddDoctorMutation, AddDoctorMutationVariables>;
+export const UpdateDoctorAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateDoctorAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "appointmentLimit" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Int" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateDoctorAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "appointmentLimit" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "appointmentLimit" } } }] }] } }] } as unknown as DocumentNode<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>;
+export const RechargeAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RechargeAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "amount" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Int" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "rechargeAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "amount" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "amount" } } }] }] } }] } as unknown as DocumentNode<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>;
 export const UpdateProfilePicUrlDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateProfilePicUrl" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateProfilePicUrl" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "picture_url" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
+export const AddClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AddClinicStaffInput" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<AddClinicStaffMutation, AddClinicStaffMutationVariables>;
+export const UpdateClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateClinicStaffInput" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }] } }] } }] } as unknown as DocumentNode<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>;
+export const RemoveClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "staffId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "staffId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "staffId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }] } }] } }] } as unknown as DocumentNode<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>;
+export const CreateSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "CreateSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "CreateSubscriptionDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
+export const UpdateSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateSubscriptionDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
+export const UpdateSubscriptionStatusDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateSubscriptionStatus" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateSubscriptionStatusDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateSubscriptionStatus" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }] } }] } }] } as unknown as DocumentNode<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>;
 export const GetAllClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetAllClinicFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getAllClinicFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>;
 export const GetClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicFeatures" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicFeatures" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>;
 export const GetClinicsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinics" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinics" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "city_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "closeTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "latitude" } }, { "kind": "Field", "name": { "kind": "Name", "value": "location" } }, { "kind": "Field", "name": { "kind": "Name", "value": "logoUrl" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "address" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "city" } }, { "kind": "Field", "name": { "kind": "Name", "value": "country" } }, { "kind": "Field", "name": { "kind": "Name", "value": "line1" } }, { "kind": "Field", "name": { "kind": "Name", "value": "line2" } }, { "kind": "Field", "name": { "kind": "Name", "value": "pin" } }, { "kind": "Field", "name": { "kind": "Name", "value": "state" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "phone_number" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "n" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "workingDays" } }, { "kind": "Field", "name": { "kind": "Name", "value": "longitude" } }, { "kind": "Field", "name": { "kind": "Name", "value": "openTime" } }] } }] } }] } as unknown as DocumentNode<GetClinicsQuery, GetClinicsQueryVariables>;
 export const GetCustomFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetCustomFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getCustomFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>;
 export const GetDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<GetDoctorQuery, GetDoctorQueryVariables>;
 export const GetClinicDoctorsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicDoctors" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicDoctors" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "designation" } }, { "kind": "Field", "name": { "kind": "Name", "value": "dob" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "gender" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "middle_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phone_number" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile_pic" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "professional" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "language" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "major_speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "degree" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "branch_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "college_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "end_year" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "start_year" } }] } }] } }] } }] } }] } }] } as unknown as DocumentNode<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
+export const GetDoctorAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctorAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }] }] } }] } as unknown as DocumentNode<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>;
+export const GetDoctorSettingsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorSettings" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctorSettings" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "appointmentLimit" } }, { "kind": "Field", "name": { "kind": "Name", "value": "appointmentsUsed" } }] } }] } }] } as unknown as DocumentNode<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>;
 export const GetAllDraftsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinicName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "type" } }] } }] } }] } as unknown as DocumentNode<GetAllDraftsQuery, GetAllDraftsQueryVariables>;
 export const ApproveOrRejectDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "ApproveOrReject" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "approveOrReject" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "status" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } } }] }] } }] } as unknown as DocumentNode<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
+export const GetClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<GetClinicStaffQuery, GetClinicStaffQueryVariables>;
+export const GetSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "subscriptionId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "subscriptionId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "subscriptionId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetSubscriptionQuery, GetSubscriptionQueryVariables>;
+export const GetDoctorSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctorSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -2198,6 +2931,20 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type AddClinicStaffInput = {
+  clinicId: Scalars['String']['input'];
+  firstName: Scalars['String']['input'];
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  permissions?: InputMaybe<Array<Scalars['String']['input']>>;
+  phoneNumber: Scalars['String']['input'];
+  staffRole: Scalars['String']['input'];
+};
+
+export type AddFavouriteInput = {
+  doctorId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+};
+
 export type AddStockDto = {
   batchNumber?: InputMaybe<Scalars['String']['input']>;
   expiryDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -2243,6 +2990,8 @@ export type AppointmentDetails = {
   Prescription?: Maybe<PrescriptionDetails>;
   aid: Scalars['String']['output'];
   channel: Scalars['String']['output'];
+  clinic?: Maybe<Clinic>;
+  doctor?: Maybe<Doctor>;
   end_time: Scalars['String']['output'];
   patientProfile: PatientProfile;
   paymentDetails?: Maybe<PaymentDetails>;
@@ -2280,6 +3029,11 @@ export type AssignClinicFeaturesDto = {
 export type AssignCustomFeaturesDto = {
   doctor_id: Scalars['String']['input'];
   featureValues: Array<Scalars['String']['input']>;
+};
+
+export type AssignCustomFieldToDoctorsInput = {
+  customFieldId: Scalars['String']['input'];
+  doctorIds: Array<Scalars['String']['input']>;
 };
 
 export type Business = {
@@ -2322,6 +3076,22 @@ export type ChannelStats = {
   __typename?: 'ChannelStats';
   channel: Scalars['String']['output'];
   value: Scalars['Float']['output'];
+};
+
+export type CheckInDataModel = {
+  __typename?: 'CheckInDataModel';
+  appointmentId: Scalars['String']['output'];
+  checkInData?: Maybe<Scalars['JSON']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  updatedBy?: Maybe<Scalars['String']['output']>;
+};
+
+export type CheckInUpdatePayload = {
+  __typename?: 'CheckInUpdatePayload';
+  appointmentId: Scalars['String']['output'];
+  checkInData?: Maybe<Scalars['JSON']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  updatedBy?: Maybe<Scalars['String']['output']>;
 };
 
 export type Clinic = {
@@ -2400,6 +3170,19 @@ export type ClinicPatientsResponse = {
   patients: Array<ClinicPatientBasicInfo>;
 };
 
+export type ClinicStaffModel = {
+  __typename?: 'ClinicStaffModel';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  lastName?: Maybe<Scalars['String']['output']>;
+  permissions: Array<Scalars['String']['output']>;
+  phoneNumber: Scalars['String']['output'];
+  staffRole: Scalars['String']['output'];
+};
+
 export type ClinicWorkingHoursDto = {
   closeTime: Scalars['String']['input'];
   openTime: Scalars['String']['input'];
@@ -2413,6 +3196,15 @@ export type CpgDto = {
   nutritionalFacts: Scalars['String']['input'];
   productName: Scalars['String']['input'];
   size: Scalars['String']['input'];
+};
+
+export type CreateCustomFieldInput = {
+  childComponent?: InputMaybe<Scalars['String']['input']>;
+  clinicId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  options?: InputMaybe<Array<Scalars['String']['input']>>;
+  parentComponent: Scalars['String']['input'];
+  valueType: CustomFieldValueType;
 };
 
 export type CreateDoctorWorkingHoursDto = {
@@ -2462,6 +3254,13 @@ export type CreateReportSettingsInput = {
   serviceGroups: Array<CreateServiceGroupInput>;
 };
 
+export type CreateReviewInput = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  doctorId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+};
+
 export type CreateServiceGroupInput = {
   name: Scalars['String']['input'];
   order: Scalars['Float']['input'];
@@ -2491,6 +3290,27 @@ export type CustomFeature = {
   value: Scalars['String']['output'];
 };
 
+export type CustomField = {
+  __typename?: 'CustomField';
+  childComponent?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  options: Array<Scalars['String']['output']>;
+  parentComponent: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  valueType: CustomFieldValueType;
+};
+
+export enum CustomFieldValueType {
+  Boolean = 'BOOLEAN',
+  Date = 'DATE',
+  Number = 'NUMBER',
+  Picklist = 'PICKLIST',
+  Text = 'TEXT'
+}
+
 export type Degree = {
   __typename?: 'Degree';
   branch_name: Scalars['String']['output'];
@@ -2506,6 +3326,41 @@ export type DegreeDto = {
   end_year: Scalars['DateTime']['input'];
   name: Scalars['String']['input'];
   start_year: Scalars['DateTime']['input'];
+};
+
+export type DeleteDocumentInput = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+export type DeleteReviewInput = {
+  id: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+};
+
+export type DentalChart = {
+  __typename?: 'DentalChart';
+  createdAt: Scalars['DateTime']['output'];
+  data: Scalars['JSON']['output'];
+  id: Scalars['String']['output'];
+  isChild: Scalars['Boolean']['output'];
+  patientProfileId: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DentalChartCreateInput = {
+  data: Scalars['JSON']['input'];
+  isChild?: InputMaybe<Scalars['Boolean']['input']>;
+  patientProfileId: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type DentalChartUpdateInput = {
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  id: Scalars['String']['input'];
+  isChild?: InputMaybe<Scalars['Boolean']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Diagnosis = {
@@ -2527,6 +3382,7 @@ export type Doctor = {
   doctor_id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   profile: Profile;
+  ratingSummary?: Maybe<RatingSummary>;
   updatedAt: Scalars['DateTime']['output'];
   workingHours?: Maybe<DoctorWorkingHours>;
 };
@@ -2538,9 +3394,24 @@ export type DoctorDto = {
 export type DoctorSettings = {
   __typename?: 'DoctorSettings';
   allowMultipleAppointments: Scalars['Boolean']['output'];
+  appointmentLimit: Scalars['Int']['output'];
+  appointmentsUsed: Scalars['Int']['output'];
   createdAt: Scalars['DateTime']['output'];
   doctor_id: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DoctorSubscription = {
+  __typename?: 'DoctorSubscription';
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  endDate: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  startDate: Scalars['DateTime']['output'];
+  status: SubscriptionStatus;
+  trialEndDate?: Maybe<Scalars['DateTime']['output']>;
+  trialStartDate?: Maybe<Scalars['DateTime']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -2583,10 +3454,31 @@ export type DrugList = {
   name: Scalars['String']['output'];
 };
 
+export type EditBillingDto = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  amountPaid?: InputMaybe<Scalars['Float']['input']>;
+  billURL?: InputMaybe<Scalars['String']['input']>;
+  discount?: InputMaybe<Scalars['Float']['input']>;
+  paymentModes?: InputMaybe<Array<PaymentModeInput>>;
+  payment_status?: InputMaybe<Scalars['String']['input']>;
+  payment_type?: InputMaybe<Scalars['String']['input']>;
+  pid: Scalars['String']['input'];
+  services?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type ErrorType = {
   __typename?: 'ErrorType';
   code?: Maybe<Scalars['String']['output']>;
   message: Scalars['String']['output'];
+};
+
+export type Favourite = {
+  __typename?: 'Favourite';
+  createdAt: Scalars['DateTime']['output'];
+  doctor?: Maybe<Doctor>;
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
 };
 
 export type GenderGroup = {
@@ -2604,6 +3496,11 @@ export type GenerateReportDto = {
   doctorIds?: InputMaybe<Array<Scalars['String']['input']>>;
   endDate: Scalars['String']['input'];
   startDate: Scalars['String']['input'];
+};
+
+export type GetPatientDocumentsInput = {
+  clinicId: Scalars['String']['input'];
+  patientId: Scalars['String']['input'];
 };
 
 export type GraphData = {
@@ -2728,6 +3625,17 @@ export type MajorSpecailityDto = {
   name: Scalars['String']['input'];
 };
 
+export type MeResponse = {
+  __typename?: 'MeResponse';
+  businessId?: Maybe<Scalars['String']['output']>;
+  clinicId?: Maybe<Scalars['String']['output']>;
+  clinicIds?: Maybe<Array<Scalars['String']['output']>>;
+  permissions: Array<Scalars['String']['output']>;
+  role: Scalars['String']['output'];
+  staffId?: Maybe<Scalars['String']['output']>;
+  sub: Scalars['String']['output'];
+};
+
 export type Medication = {
   __typename?: 'Medication';
   comment?: Maybe<Scalars['String']['output']>;
@@ -2788,17 +3696,23 @@ export type Mutation = {
   DoctorLoginOTPRequest: OtpStatus;
   addBusinessHours: Clinic;
   addClinic: Clinic;
+  addClinicStaff: ClinicStaffModel;
   addCpgDetails: Cpg;
   addDoctor: Doctor;
+  addFavourite: Favourite;
   addMedication: Medication;
   addMedicationViaPhoneNumber: Medication;
   addPatient: Patient;
   addStock: InventoryStock;
   assignClinicFeatures: Clinic;
   assignCustomFeaturesToDoctor: Doctor;
+  assignCustomFieldToDoctors: CustomField;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
+  cancelAppointmentByPatient: Scalars['String']['output'];
   createBusiness: Business;
+  createCustomField: CustomField;
+  createDentalChart: DentalChart;
   createDoctorWorkingHours: DoctorWorkingHours;
   createDraft: Draft;
   createInventoryItem: InventoryItem;
@@ -2806,38 +3720,55 @@ export type Mutation = {
   createOrder: Scalars['String']['output'];
   createPatientPurchase: PatientPurchase;
   createReportSettings: ReportSettings;
+  createReview: Review;
   createService: ServicesModel;
-  createSubscription: Subscription;
+  createSubscription: DoctorSubscription;
   createTemplate: Template;
   deleteBusiness: Scalars['Boolean']['output'];
+  deleteCustomField: Scalars['Boolean']['output'];
+  deleteDentalChart: Scalars['Boolean']['output'];
   deleteDoctor: Scalars['Boolean']['output'];
   deleteDoctorWorkingHours: Scalars['String']['output'];
+  deleteDocument: Scalars['Boolean']['output'];
   deleteInventoryItem: Scalars['String']['output'];
   deleteReportSettings: Scalars['String']['output'];
+  deleteReview: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
+  editBilling: Scalars['String']['output'];
   editMedication: Medication;
   generateReport: Scalars['String']['output'];
   getAppointmentGraph: Array<GraphData>;
   getAppointmentStats: AppointmentStats;
   getProductMetrics: Cpg;
   getRevenue: RevenueStats;
+  loginOTPRequest: OtpRequestStatus;
   logout: Scalars['String']['output'];
   onboarding: RegisterResponse;
+  rechargeAppointmentLimit: Scalars['Int']['output'];
   refreshToken: Scalars['String']['output'];
   register: RegisterResponse;
   registerViaOTP: RegisterResponse;
   removeClinicFeatures: Clinic;
+  removeClinicStaff: ClinicStaffModel;
   removeCustomFeaturesFromDoctor: Doctor;
+  removeCustomFieldFromDoctors: CustomField;
+  removeFavourite: Scalars['String']['output'];
+  rescheduleAppointmentByPatient: AppointmentDetails;
   savePrescription: Prescription;
+  savePrescriptionTemplate: PrescriptionTemplate;
   sendMessage: Scalars['String']['output'];
   sendOTP: OtpStatus;
   sendVideoLink: Scalars['String']['output'];
   updateAppointmentStatus: AppointmentDetails;
   updateClinicCoordinates: Clinic;
   updateClinicDetail: Clinic;
+  updateClinicStaff: ClinicStaffModel;
   updateCredits: UpdatedCount;
+  updateCustomField: CustomField;
+  updateDentalChart: DentalChart;
   updateDoctor: Doctor;
   updateDoctorActiveStatus: Scalars['Boolean']['output'];
+  updateDoctorAppointmentLimit: Scalars['Int']['output'];
   updateDoctorSettings: Scalars['Boolean']['output'];
   updateDoctorWorkingHours: DoctorWorkingHours;
   updateInventoryItem: InventoryItem;
@@ -2846,11 +3777,14 @@ export type Mutation = {
   updatePaymentDetails: Scalars['String']['output'];
   updateProfilePicUrl: Doctor;
   updateReportSettings: ReportSettings;
+  updateReview: Review;
   updateService: ServicesModel;
-  updateSubscription: Subscription;
-  updateSubscriptionStatus: Subscription;
+  updateSubscription: DoctorSubscription;
+  updateSubscriptionStatus: DoctorSubscription;
   updateVideoDuration: Scalars['String']['output'];
+  upsertCheckInData: CheckInDataModel;
   validateDoctorOTP: Doctor;
+  validateLoginOTP: UnifiedLoginResponse;
 };
 
 
@@ -2871,6 +3805,11 @@ export type MutationAddClinicArgs = {
 };
 
 
+export type MutationAddClinicStaffArgs = {
+  input: AddClinicStaffInput;
+};
+
+
 export type MutationAddCpgDetailsArgs = {
   cpgInput: CpgDto;
 };
@@ -2879,6 +3818,11 @@ export type MutationAddCpgDetailsArgs = {
 export type MutationAddDoctorArgs = {
   clinicIds: Scalars['String']['input'];
   doctorInput: DoctorDto;
+};
+
+
+export type MutationAddFavouriteArgs = {
+  input: AddFavouriteInput;
 };
 
 
@@ -2913,6 +3857,11 @@ export type MutationAssignCustomFeaturesToDoctorArgs = {
 };
 
 
+export type MutationAssignCustomFieldToDoctorsArgs = {
+  input: AssignCustomFieldToDoctorsInput;
+};
+
+
 export type MutationBookAppointmentArgs = {
   appointmentInput: AppointmentDetailsDto;
 };
@@ -2923,8 +3872,23 @@ export type MutationBookAppointmentOnlineArgs = {
 };
 
 
+export type MutationCancelAppointmentByPatientArgs = {
+  input: PatientCancelAppointmentInput;
+};
+
+
 export type MutationCreateBusinessArgs = {
   businessInput: BusinessDto;
+};
+
+
+export type MutationCreateCustomFieldArgs = {
+  input: CreateCustomFieldInput;
+};
+
+
+export type MutationCreateDentalChartArgs = {
+  input: DentalChartCreateInput;
 };
 
 
@@ -2963,6 +3927,11 @@ export type MutationCreateReportSettingsArgs = {
 };
 
 
+export type MutationCreateReviewArgs = {
+  input: CreateReviewInput;
+};
+
+
 export type MutationCreateServiceArgs = {
   clinicId: Scalars['String']['input'];
   serviceInput: ServicesDto;
@@ -2984,6 +3953,16 @@ export type MutationDeleteBusinessArgs = {
 };
 
 
+export type MutationDeleteCustomFieldArgs = {
+  customFieldId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDentalChartArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteDoctorArgs = {
   doctor_id: Scalars['String']['input'];
 };
@@ -2991,6 +3970,11 @@ export type MutationDeleteDoctorArgs = {
 
 export type MutationDeleteDoctorWorkingHoursArgs = {
   workingHoursId: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDocumentArgs = {
+  input: DeleteDocumentInput;
 };
 
 
@@ -3004,8 +3988,18 @@ export type MutationDeleteReportSettingsArgs = {
 };
 
 
+export type MutationDeleteReviewArgs = {
+  input: DeleteReviewInput;
+};
+
+
 export type MutationDeleteScheduleArgs = {
   id: Scalars['Float']['input'];
+};
+
+
+export type MutationEditBillingArgs = {
+  input: EditBillingDto;
 };
 
 
@@ -3041,8 +4035,19 @@ export type MutationGetRevenueArgs = {
 };
 
 
+export type MutationLoginOtpRequestArgs = {
+  phoneInput: PhoneNumberDto;
+};
+
+
 export type MutationOnboardingArgs = {
   onboardingInput: OnBoaringDto;
+};
+
+
+export type MutationRechargeAppointmentLimitArgs = {
+  amount: Scalars['Int']['input'];
+  doctor_id: Scalars['String']['input'];
 };
 
 
@@ -3061,13 +4066,39 @@ export type MutationRemoveClinicFeaturesArgs = {
 };
 
 
+export type MutationRemoveClinicStaffArgs = {
+  staffId: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveCustomFeaturesFromDoctorArgs = {
   input: RemoveCustomFeaturesDto;
 };
 
 
+export type MutationRemoveCustomFieldFromDoctorsArgs = {
+  input: RemoveCustomFieldFromDoctorsInput;
+};
+
+
+export type MutationRemoveFavouriteArgs = {
+  input: RemoveFavouriteInput;
+};
+
+
+export type MutationRescheduleAppointmentByPatientArgs = {
+  input: PatientRescheduleAppointmentInput;
+};
+
+
 export type MutationSavePrescriptionArgs = {
   prescriptionInput: PrescriptionDto;
+};
+
+
+export type MutationSavePrescriptionTemplateArgs = {
+  doctor_id: Scalars['String']['input'];
+  templateConfig: Scalars['String']['input'];
 };
 
 
@@ -3104,8 +4135,23 @@ export type MutationUpdateClinicDetailArgs = {
 };
 
 
+export type MutationUpdateClinicStaffArgs = {
+  input: UpdateClinicStaffInput;
+};
+
+
 export type MutationUpdateCreditsArgs = {
   updateCreditsPayload: CreditsUpdateDto;
+};
+
+
+export type MutationUpdateCustomFieldArgs = {
+  input: UpdateCustomFieldInput;
+};
+
+
+export type MutationUpdateDentalChartArgs = {
+  input: DentalChartUpdateInput;
 };
 
 
@@ -3118,6 +4164,12 @@ export type MutationUpdateDoctorArgs = {
 export type MutationUpdateDoctorActiveStatusArgs = {
   doctor_id: Scalars['String']['input'];
   isActive: Scalars['Boolean']['input'];
+};
+
+
+export type MutationUpdateDoctorAppointmentLimitArgs = {
+  appointmentLimit: Scalars['Int']['input'];
+  doctor_id: Scalars['String']['input'];
 };
 
 
@@ -3166,6 +4218,11 @@ export type MutationUpdateReportSettingsArgs = {
 };
 
 
+export type MutationUpdateReviewArgs = {
+  input: UpdateReviewInput;
+};
+
+
 export type MutationUpdateServiceArgs = {
   serviceId: Scalars['String']['input'];
   serviceInput: ServicesDto;
@@ -3189,7 +4246,17 @@ export type MutationUpdateVideoDurationArgs = {
 };
 
 
+export type MutationUpsertCheckInDataArgs = {
+  input: UpsertCheckInInput;
+};
+
+
 export type MutationValidateDoctorOtpArgs = {
+  otpInput: ValidateDoctorOtp;
+};
+
+
+export type MutationValidateLoginOtpArgs = {
   otpInput: ValidateDoctorOtp;
 };
 
@@ -3215,6 +4282,12 @@ export type OtpRegistrationDto = {
   code: Scalars['String']['input'];
   phoneNumber: Scalars['String']['input'];
   role?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OtpRequestStatus = {
+  __typename?: 'OTPRequestStatus';
+  accountType: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type OtpStatus = {
@@ -3252,6 +4325,18 @@ export type OnlineAppointmentDetailsDto = {
   status: Scalars['String']['input'];
 };
 
+export type OutstandingDue = {
+  __typename?: 'OutstandingDue';
+  aid: Scalars['String']['output'];
+  amountPaid: Scalars['Float']['output'];
+  billDate: Scalars['DateTime']['output'];
+  billNo: Scalars['String']['output'];
+  due: Scalars['Float']['output'];
+  patientMobile: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  totalAmount: Scalars['Float']['output'];
+};
+
 export type PaginatedCpg = {
   __typename?: 'PaginatedCPG';
   edges?: Maybe<Array<CpgEdge>>;
@@ -3273,8 +4358,48 @@ export type Patient = {
   profiles: PatientProfile;
 };
 
+export type PatientBillEntry = {
+  __typename?: 'PatientBillEntry';
+  aid: Scalars['String']['output'];
+  amountPaid: Scalars['Float']['output'];
+  billDate: Scalars['DateTime']['output'];
+  billNo: Scalars['String']['output'];
+  due: Scalars['Float']['output'];
+  totalAmount: Scalars['Float']['output'];
+};
+
+export type PatientCancelAppointmentInput = {
+  aid: Scalars['String']['input'];
+  mobile: Scalars['String']['input'];
+};
+
 export type PatientDto = {
   profile: PatientProfileDto;
+};
+
+export type PatientDocumentModel = {
+  __typename?: 'PatientDocumentModel';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  documentType?: Maybe<Scalars['String']['output']>;
+  fileName: Scalars['String']['output'];
+  fileType: Scalars['String']['output'];
+  fileUrl: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  patientId: Scalars['String']['output'];
+  uploadedBy: Scalars['String']['output'];
+  uploaderRole: Scalars['String']['output'];
+};
+
+export type PatientDuesSummary = {
+  __typename?: 'PatientDuesSummary';
+  appointments: Array<PatientBillEntry>;
+  netDue: Scalars['Float']['output'];
+  patientMobile: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  totalBilled: Scalars['Float']['output'];
+  totalPaid: Scalars['Float']['output'];
 };
 
 export type PatientProfile = {
@@ -3361,6 +4486,13 @@ export type PatientPurchaseItemDto = {
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type PatientRescheduleAppointmentInput = {
+  aid: Scalars['String']['input'];
+  duration?: InputMaybe<Scalars['Float']['input']>;
+  mobile: Scalars['String']['input'];
+  newStartTime: Scalars['String']['input'];
+};
+
 export type PatientStatsResponse = {
   __typename?: 'PatientStatsResponse';
   groupedPatients: GroupedPatients;
@@ -3393,10 +4525,13 @@ export type PaymentCount = {
 export type PaymentDetails = {
   __typename?: 'PaymentDetails';
   amount: Scalars['Float']['output'];
+  amountPaid?: Maybe<Scalars['Float']['output']>;
   billURL?: Maybe<Scalars['String']['output']>;
   discount?: Maybe<Scalars['Float']['output']>;
+  due?: Maybe<Scalars['Float']['output']>;
+  paymentModes?: Maybe<Array<PaymentModeDetail>>;
   payment_status: Scalars['String']['output'];
-  payment_type: Scalars['String']['output'];
+  payment_type?: Maybe<Scalars['String']['output']>;
   pid: Scalars['String']['output'];
   services?: Maybe<Array<Scalars['String']['output']>>;
 };
@@ -3404,11 +4539,30 @@ export type PaymentDetails = {
 export type PaymentDto = {
   aid: Scalars['String']['input'];
   amount: Scalars['Float']['input'];
+  amountPaid?: InputMaybe<Scalars['Float']['input']>;
   billURL?: InputMaybe<Scalars['String']['input']>;
-  discount: Scalars['Float']['input'];
+  discount?: InputMaybe<Scalars['Float']['input']>;
+  paymentModes?: InputMaybe<Array<PaymentModeInput>>;
   payment_status: Scalars['String']['input'];
-  payment_type: Scalars['String']['input'];
+  payment_type?: InputMaybe<Scalars['String']['input']>;
   services: Array<Scalars['String']['input']>;
+};
+
+export type PaymentModeBreakdown = {
+  __typename?: 'PaymentModeBreakdown';
+  mode: Scalars['String']['output'];
+  totalAmount: Scalars['Float']['output'];
+};
+
+export type PaymentModeDetail = {
+  __typename?: 'PaymentModeDetail';
+  amount: Scalars['Float']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type PaymentModeInput = {
+  amount: Scalars['Float']['input'];
+  type: Scalars['String']['input'];
 };
 
 export type PaymentOrderDto = {
@@ -3491,6 +4645,15 @@ export type PrescriptionMedication = {
   timing: Scalars['String']['input'];
 };
 
+export type PrescriptionTemplate = {
+  __typename?: 'PrescriptionTemplate';
+  createdAt: Scalars['DateTime']['output'];
+  doctor_id: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  templateConfig: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export type Professional = {
   __typename?: 'Professional';
   about?: Maybe<Scalars['String']['output']>;
@@ -3544,26 +4707,36 @@ export type Query = {
   getAllPatientsByStatus: Array<AppointmentDetails>;
   getAllTomorrowPatients: Array<AppointmentDetails>;
   getAllVitalsByPatientId: Array<VitalsType>;
+  getAppointmentById: AppointmentDetails;
   getAppointmentChannelStats: Array<ChannelStats>;
   getAppointmentCount: Array<AppointmentCount>;
   getAppointmentStatus: AppointmentDetails;
   getAppointments: Array<AppointmentDetails>;
   getBusinessClinics: Array<Clinic>;
   getChannelCount: Array<ChannelCount>;
+  getCheckInData?: Maybe<CheckInDataModel>;
+  getClinicCustomFields: Array<CustomField>;
   getClinicDoctors: Array<Doctor>;
   getClinicFeatures: Array<ClinicFeature>;
   getClinicNotification: Array<Notifications>;
   getClinicPatients: Array<ClinicPatient>;
   getClinicPatientsBasicInfo: ClinicPatientsResponse;
+  getClinicStaff: Array<ClinicStaffModel>;
   getClinics: Array<Clinic>;
   getCustomFeatures: Array<CustomFeature>;
+  getDentalChart?: Maybe<DentalChart>;
+  getDentalCharts: Array<DentalChart>;
   getDiagnosisList: Array<DiagnosisList>;
   getDoctor: Doctor;
-  getDoctorSubscription?: Maybe<Subscription>;
+  getDoctorAppointmentLimit: Scalars['Int']['output'];
+  getDoctorCustomFields: Array<CustomField>;
+  getDoctorSettings: DoctorSettings;
+  getDoctorSubscription?: Maybe<DoctorSubscription>;
   getDoctorWorkingHours?: Maybe<DoctorWorkingHours>;
   getDoctors: Array<Doctor>;
   getDrugList: Array<DrugList>;
   getExpiringItems: Array<InventoryStock>;
+  getFavourites: Array<Favourite>;
   getInventoryItem: InventoryItem;
   getInventoryItems: Array<InventoryItem>;
   getInventoryStats: InventoryStats;
@@ -3573,6 +4746,10 @@ export type Query = {
   getNearestDoctors: Array<Doctor>;
   getNotificationCredits: NotificationCredits;
   getOnGoing: Array<Medication>;
+  getOutstandingDues: Array<OutstandingDue>;
+  getPatientAppointments: Array<AppointmentDetails>;
+  getPatientDocuments: Array<PatientDocumentModel>;
+  getPatientDuesSummary: PatientDuesSummary;
   getPatientHistory: Array<AppointmentDetails>;
   getPatientPurchase: PatientPurchase;
   getPatientPurchases: Array<PatientPurchase>;
@@ -3580,20 +4757,25 @@ export type Query = {
   getPatientsCount: Scalars['Float']['output'];
   getPatientsPaginated: PaginatedPatients;
   getPaymentAnalytics: Array<PaymentCount>;
+  getPaymentModeBreakdown: Array<PaymentModeBreakdown>;
+  getPrescriptionTemplate: PrescriptionTemplate;
   getProduct: Cpg;
   getProducts: PaginatedCpg;
   getReportSettings?: Maybe<ReportSettings>;
   getReportStatus: Scalars['String']['output'];
+  getReviewsByDoctor: Array<Review>;
   getRooms: Scalars['String']['output'];
   getServices: Array<ServicesModel>;
   getSlots: Array<Scalars['String']['output']>;
   getStats: Stats;
   getStock: Array<InventoryStock>;
-  getSubscription: Subscription;
+  getSubscription: DoctorSubscription;
   getSymptomsList: Array<SymptomsList>;
   getUserByPhoneNumber: User;
   getUsers: Array<User>;
   getWeeklyRevenue: Array<GraphData>;
+  me: MeResponse;
+  search: SearchResult;
   todayMedication: Array<Medication>;
 };
 
@@ -3668,6 +4850,11 @@ export type QueryGetAllVitalsByPatientIdArgs = {
 };
 
 
+export type QueryGetAppointmentByIdArgs = {
+  aid: Scalars['String']['input'];
+};
+
+
 export type QueryGetAppointmentChannelStatsArgs = {
   clinic_id: Scalars['String']['input'];
 };
@@ -3705,6 +4892,16 @@ export type QueryGetChannelCountArgs = {
 };
 
 
+export type QueryGetCheckInDataArgs = {
+  appointmentId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicCustomFieldsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetClinicDoctorsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -3730,12 +4927,43 @@ export type QueryGetClinicPatientsBasicInfoArgs = {
 };
 
 
+export type QueryGetClinicStaffArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetDentalChartArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDentalChartsArgs = {
+  patientProfileId: Scalars['String']['input'];
+};
+
+
 export type QueryGetDiagnosisListArgs = {
   query: Scalars['String']['input'];
 };
 
 
 export type QueryGetDoctorArgs = {
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorAppointmentLimitArgs = {
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorCustomFieldsArgs = {
+  clinicId: Scalars['String']['input'];
+  doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorSettingsArgs = {
   doctor_id: Scalars['String']['input'];
 };
 
@@ -3758,6 +4986,11 @@ export type QueryGetDrugListArgs = {
 export type QueryGetExpiringItemsArgs = {
   clinicId: Scalars['String']['input'];
   days?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryGetFavouritesArgs = {
+  patientProfileId: Scalars['String']['input'];
 };
 
 
@@ -3811,6 +5044,29 @@ export type QueryGetOnGoingArgs = {
 };
 
 
+export type QueryGetOutstandingDuesArgs = {
+  clinic_id: Scalars['String']['input'];
+  endTime?: InputMaybe<Scalars['String']['input']>;
+  startTime?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetPatientAppointmentsArgs = {
+  mobile: Scalars['String']['input'];
+};
+
+
+export type QueryGetPatientDocumentsArgs = {
+  input: GetPatientDocumentsInput;
+};
+
+
+export type QueryGetPatientDuesSummaryArgs = {
+  businessId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+};
+
+
 export type QueryGetPatientHistoryArgs = {
   includePayment?: InputMaybe<Scalars['Boolean']['input']>;
   patientProfileId: Scalars['String']['input'];
@@ -3854,6 +5110,18 @@ export type QueryGetPaymentAnalyticsArgs = {
 };
 
 
+export type QueryGetPaymentModeBreakdownArgs = {
+  clinic_id: Scalars['String']['input'];
+  endTime: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
+};
+
+
+export type QueryGetPrescriptionTemplateArgs = {
+  doctor_id: Scalars['String']['input'];
+};
+
+
 export type QueryGetProductArgs = {
   barcode: Scalars['String']['input'];
 };
@@ -3871,6 +5139,11 @@ export type QueryGetReportSettingsArgs = {
 
 export type QueryGetReportStatusArgs = {
   jobId: Scalars['String']['input'];
+};
+
+
+export type QueryGetReviewsByDoctorArgs = {
+  doctorId: Scalars['String']['input'];
 };
 
 
@@ -3916,6 +5189,14 @@ export type QueryGetWeeklyRevenueArgs = {
 };
 
 
+export type QuerySearchArgs = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  query: Scalars['String']['input'];
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryTodayMedicationArgs = {
   userId: Scalars['String']['input'];
 };
@@ -3926,6 +5207,12 @@ export type Rx_Entries = {
   prescriptionMedication: Array<PrescriptionMedication>;
   symptoms: Array<Symptoms>;
   vitals?: InputMaybe<Array<Vitals>>;
+};
+
+export type RatingSummary = {
+  __typename?: 'RatingSummary';
+  averageRating: Scalars['Float']['output'];
+  totalReviews: Scalars['Int']['output'];
 };
 
 export type RazorPayOrder = {
@@ -3959,6 +5246,16 @@ export type RemoveClinicFeaturesDto = {
 export type RemoveCustomFeaturesDto = {
   doctor_id: Scalars['String']['input'];
   featureValues: Array<Scalars['String']['input']>;
+};
+
+export type RemoveCustomFieldFromDoctorsInput = {
+  customFieldId: Scalars['String']['input'];
+  doctorIds: Array<Scalars['String']['input']>;
+};
+
+export type RemoveFavouriteInput = {
+  doctorId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
 };
 
 export type ReportServiceGroup = {
@@ -3997,6 +5294,17 @@ export type RevenueStats = {
   revenue: Scalars['Float']['output'];
 };
 
+export type Review = {
+  __typename?: 'Review';
+  comment?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
+  rating: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export type Schedule = {
   __typename?: 'Schedule';
   createdAt: Scalars['DateTime']['output'];
@@ -4013,6 +5321,13 @@ export type ScheduleDto = {
   dose: Scalars['Float']['input'];
   name: Scalars['String']['input'];
   time: Scalars['String']['input'];
+};
+
+export type SearchResult = {
+  __typename?: 'SearchResult';
+  doctors: Array<Doctor>;
+  hasMore: Scalars['Boolean']['output'];
+  total: Scalars['Int']['output'];
 };
 
 export type ServiceDetail = {
@@ -4066,6 +5381,17 @@ export type Speciality = {
   name: Scalars['String']['output'];
 };
 
+export type StaffLoginResponse = {
+  __typename?: 'StaffLoginResponse';
+  clinicId: Scalars['String']['output'];
+  clinicName: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  lastName?: Maybe<Scalars['String']['output']>;
+  phoneNumber: Scalars['String']['output'];
+  staffRole: Scalars['String']['output'];
+};
+
 export type Stats = {
   __typename?: 'Stats';
   appointments: Scalars['Float']['output'];
@@ -4103,15 +5429,12 @@ export enum StatusEnum {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  createdAt: Scalars['DateTime']['output'];
-  doctorId: Scalars['String']['output'];
-  endDate: Scalars['DateTime']['output'];
-  id: Scalars['String']['output'];
-  startDate: Scalars['DateTime']['output'];
-  status: SubscriptionStatus;
-  trialEndDate?: Maybe<Scalars['DateTime']['output']>;
-  trialStartDate?: Maybe<Scalars['DateTime']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
+  checkInDataUpdated: CheckInUpdatePayload;
+};
+
+
+export type SubscriptionCheckInDataUpdatedArgs = {
+  appointmentId: Scalars['String']['input'];
 };
 
 export enum SubscriptionStatus {
@@ -4148,6 +5471,31 @@ export type TemplateDto = {
   templateId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UnifiedLoginResponse = {
+  __typename?: 'UnifiedLoginResponse';
+  doctor?: Maybe<Doctor>;
+  permissions: Array<Scalars['String']['output']>;
+  staff?: Maybe<StaffLoginResponse>;
+  type: Scalars['String']['output'];
+};
+
+export type UpdateClinicStaffInput = {
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  permissions?: InputMaybe<Array<Scalars['String']['input']>>;
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  staffId: Scalars['String']['input'];
+};
+
+export type UpdateCustomFieldInput = {
+  childComponent?: InputMaybe<Scalars['String']['input']>;
+  customFieldId: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+  options?: InputMaybe<Array<Scalars['String']['input']>>;
+  parentComponent?: InputMaybe<Scalars['String']['input']>;
+  valueType?: InputMaybe<CustomFieldValueType>;
+};
+
 export type UpdateDoctorWorkingHoursDto = {
   consultingMins?: InputMaybe<Scalars['Int']['input']>;
   endTime?: InputMaybe<Scalars['String']['input']>;
@@ -4176,6 +5524,13 @@ export type UpdateReportSettingsInput = {
   serviceGroups?: InputMaybe<Array<CreateServiceGroupInput>>;
 };
 
+export type UpdateReviewInput = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+  rating?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type UpdateSubscriptionDto = {
   endDate?: InputMaybe<Scalars['String']['input']>;
   startDate?: InputMaybe<Scalars['String']['input']>;
@@ -4193,6 +5548,11 @@ export type UpdateSubscriptionStatusDto = {
 export type UpdatedCount = {
   __typename?: 'UpdatedCount';
   count: Scalars['Float']['output'];
+};
+
+export type UpsertCheckInInput = {
+  appointmentId: Scalars['String']['input'];
+  checkInData: Scalars['JSON']['input'];
 };
 
 export type User = {
@@ -4285,6 +5645,22 @@ export type AddDoctorMutationVariables = Exact<{
 
 export type AddDoctorMutation = { __typename?: 'Mutation', addDoctor: { __typename?: 'Doctor', doctor_id: string } };
 
+export type UpdateDoctorAppointmentLimitMutationVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+  appointmentLimit: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateDoctorAppointmentLimitMutation = { __typename?: 'Mutation', updateDoctorAppointmentLimit: number };
+
+export type RechargeAppointmentLimitMutationVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+  amount: Scalars['Int']['input'];
+}>;
+
+
+export type RechargeAppointmentLimitMutation = { __typename?: 'Mutation', rechargeAppointmentLimit: number };
+
 export type UpdateProfilePicUrlMutationVariables = Exact<{
   doctor_id: Scalars['String']['input'];
   picture_url: Scalars['String']['input'];
@@ -4292,6 +5668,48 @@ export type UpdateProfilePicUrlMutationVariables = Exact<{
 
 
 export type UpdateProfilePicUrlMutation = { __typename?: 'Mutation', updateProfilePicUrl: { __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any } };
+
+export type AddClinicStaffMutationVariables = Exact<{
+  input: AddClinicStaffInput;
+}>;
+
+
+export type AddClinicStaffMutation = { __typename?: 'Mutation', addClinicStaff: { __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string, staffRole: string, permissions: Array<string>, clinicId: string, isActive: boolean, createdAt: any } };
+
+export type UpdateClinicStaffMutationVariables = Exact<{
+  input: UpdateClinicStaffInput;
+}>;
+
+
+export type UpdateClinicStaffMutation = { __typename?: 'Mutation', updateClinicStaff: { __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string, staffRole: string, permissions: Array<string>, isActive: boolean } };
+
+export type RemoveClinicStaffMutationVariables = Exact<{
+  staffId: Scalars['String']['input'];
+}>;
+
+
+export type RemoveClinicStaffMutation = { __typename?: 'Mutation', removeClinicStaff: { __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string } };
+
+export type CreateSubscriptionMutationVariables = Exact<{
+  input: CreateSubscriptionDto;
+}>;
+
+
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription: { __typename?: 'DoctorSubscription', id: string, doctorId: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null } };
+
+export type UpdateSubscriptionMutationVariables = Exact<{
+  input: UpdateSubscriptionDto;
+}>;
+
+
+export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription: { __typename?: 'DoctorSubscription', id: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null } };
+
+export type UpdateSubscriptionStatusMutationVariables = Exact<{
+  input: UpdateSubscriptionStatusDto;
+}>;
+
+
+export type UpdateSubscriptionStatusMutation = { __typename?: 'Mutation', updateSubscriptionStatus: { __typename?: 'DoctorSubscription', id: string, status: SubscriptionStatus, startDate: any, endDate: any } };
 
 export type GetAllClinicFeaturesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4329,6 +5747,20 @@ export type GetClinicDoctorsQueryVariables = Exact<{
 
 export type GetClinicDoctorsQuery = { __typename?: 'Query', getClinicDoctors: Array<{ __typename?: 'Doctor', createdAt: any, doctor_id: string, updatedAt: any, isActive: boolean, profile: { __typename?: 'Profile', personal: { __typename?: 'Personal', designation: string, dob: any, email: string, first_name: string, gender: string, last_name: string, middle_name?: string | null, phone_number?: string | null, profile_pic?: string | null }, professional: { __typename?: 'Professional', about?: string | null, active: boolean, language: Array<{ __typename?: 'Language', name: string }>, major_speciality: { __typename?: 'MajorSpecaility', name: string }, speciality: Array<{ __typename?: 'Speciality', name: string }>, degree?: Array<{ __typename?: 'Degree', branch_name: string, college_name: string, end_year: any, name: string, start_year: any }> | null } } }> };
 
+export type GetDoctorAppointmentLimitQueryVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorAppointmentLimitQuery = { __typename?: 'Query', getDoctorAppointmentLimit: number };
+
+export type GetDoctorSettingsQueryVariables = Exact<{
+  doctor_id: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorSettingsQuery = { __typename?: 'Query', getDoctorSettings: { __typename?: 'DoctorSettings', appointmentLimit: number, appointmentsUsed: number } };
+
 export type GetAllDraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -4341,6 +5773,27 @@ export type ApproveOrRejectQueryVariables = Exact<{
 
 
 export type ApproveOrRejectQuery = { __typename?: 'Query', approveOrReject: string };
+
+export type GetClinicStaffQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicStaffQuery = { __typename?: 'Query', getClinicStaff: Array<{ __typename?: 'ClinicStaffModel', id: string, firstName: string, lastName?: string | null, phoneNumber: string, staffRole: string, permissions: Array<string>, clinicId: string, isActive: boolean, createdAt: any }> };
+
+export type GetSubscriptionQueryVariables = Exact<{
+  subscriptionId: Scalars['String']['input'];
+}>;
+
+
+export type GetSubscriptionQuery = { __typename?: 'Query', getSubscription: { __typename?: 'DoctorSubscription', id: string, doctorId: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null, createdAt: any, updatedAt: any } };
+
+export type GetDoctorSubscriptionQueryVariables = Exact<{
+  doctorId: Scalars['String']['input'];
+}>;
+
+
+export type GetDoctorSubscriptionQuery = { __typename?: 'Query', getDoctorSubscription?: { __typename?: 'DoctorSubscription', id: string, doctorId: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null, createdAt: any, updatedAt: any } | null };
 
 
 export const CreateBusinessDocument = gql`
@@ -4617,6 +6070,73 @@ export function useAddDoctorMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddDoctorMutationHookResult = ReturnType<typeof useAddDoctorMutation>;
 export type AddDoctorMutationResult = Apollo.MutationResult<AddDoctorMutation>;
 export type AddDoctorMutationOptions = Apollo.BaseMutationOptions<AddDoctorMutation, AddDoctorMutationVariables>;
+export const UpdateDoctorAppointmentLimitDocument = gql`
+    mutation UpdateDoctorAppointmentLimit($doctor_id: String!, $appointmentLimit: Int!) {
+  updateDoctorAppointmentLimit(
+    doctor_id: $doctor_id
+    appointmentLimit: $appointmentLimit
+  )
+}
+    `;
+export type UpdateDoctorAppointmentLimitMutationFn = Apollo.MutationFunction<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>;
+
+/**
+ * __useUpdateDoctorAppointmentLimitMutation__
+ *
+ * To run a mutation, you first call `useUpdateDoctorAppointmentLimitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDoctorAppointmentLimitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateDoctorAppointmentLimitMutation, { data, loading, error }] = useUpdateDoctorAppointmentLimitMutation({
+ *   variables: {
+ *      doctor_id: // value for 'doctor_id'
+ *      appointmentLimit: // value for 'appointmentLimit'
+ *   },
+ * });
+ */
+export function useUpdateDoctorAppointmentLimitMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>(UpdateDoctorAppointmentLimitDocument, options);
+}
+export type UpdateDoctorAppointmentLimitMutationHookResult = ReturnType<typeof useUpdateDoctorAppointmentLimitMutation>;
+export type UpdateDoctorAppointmentLimitMutationResult = Apollo.MutationResult<UpdateDoctorAppointmentLimitMutation>;
+export type UpdateDoctorAppointmentLimitMutationOptions = Apollo.BaseMutationOptions<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>;
+export const RechargeAppointmentLimitDocument = gql`
+    mutation RechargeAppointmentLimit($doctor_id: String!, $amount: Int!) {
+  rechargeAppointmentLimit(doctor_id: $doctor_id, amount: $amount)
+}
+    `;
+export type RechargeAppointmentLimitMutationFn = Apollo.MutationFunction<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>;
+
+/**
+ * __useRechargeAppointmentLimitMutation__
+ *
+ * To run a mutation, you first call `useRechargeAppointmentLimitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRechargeAppointmentLimitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [rechargeAppointmentLimitMutation, { data, loading, error }] = useRechargeAppointmentLimitMutation({
+ *   variables: {
+ *      doctor_id: // value for 'doctor_id'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useRechargeAppointmentLimitMutation(baseOptions?: Apollo.MutationHookOptions<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>(RechargeAppointmentLimitDocument, options);
+}
+export type RechargeAppointmentLimitMutationHookResult = ReturnType<typeof useRechargeAppointmentLimitMutation>;
+export type RechargeAppointmentLimitMutationResult = Apollo.MutationResult<RechargeAppointmentLimitMutation>;
+export type RechargeAppointmentLimitMutationOptions = Apollo.BaseMutationOptions<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>;
 export const UpdateProfilePicUrlDocument = gql`
     mutation UpdateProfilePicUrl($doctor_id: String!, $picture_url: String!) {
   updateProfilePicUrl(doctor_id: $doctor_id, picture_url: $picture_url) {
@@ -4653,6 +6173,235 @@ export function useUpdateProfilePicUrlMutation(baseOptions?: Apollo.MutationHook
 export type UpdateProfilePicUrlMutationHookResult = ReturnType<typeof useUpdateProfilePicUrlMutation>;
 export type UpdateProfilePicUrlMutationResult = Apollo.MutationResult<UpdateProfilePicUrlMutation>;
 export type UpdateProfilePicUrlMutationOptions = Apollo.BaseMutationOptions<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
+export const AddClinicStaffDocument = gql`
+    mutation AddClinicStaff($input: AddClinicStaffInput!) {
+  addClinicStaff(input: $input) {
+    id
+    firstName
+    lastName
+    phoneNumber
+    staffRole
+    permissions
+    clinicId
+    isActive
+    createdAt
+  }
+}
+    `;
+export type AddClinicStaffMutationFn = Apollo.MutationFunction<AddClinicStaffMutation, AddClinicStaffMutationVariables>;
+
+/**
+ * __useAddClinicStaffMutation__
+ *
+ * To run a mutation, you first call `useAddClinicStaffMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddClinicStaffMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addClinicStaffMutation, { data, loading, error }] = useAddClinicStaffMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddClinicStaffMutation(baseOptions?: Apollo.MutationHookOptions<AddClinicStaffMutation, AddClinicStaffMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<AddClinicStaffMutation, AddClinicStaffMutationVariables>(AddClinicStaffDocument, options);
+}
+export type AddClinicStaffMutationHookResult = ReturnType<typeof useAddClinicStaffMutation>;
+export type AddClinicStaffMutationResult = Apollo.MutationResult<AddClinicStaffMutation>;
+export type AddClinicStaffMutationOptions = Apollo.BaseMutationOptions<AddClinicStaffMutation, AddClinicStaffMutationVariables>;
+export const UpdateClinicStaffDocument = gql`
+    mutation UpdateClinicStaff($input: UpdateClinicStaffInput!) {
+  updateClinicStaff(input: $input) {
+    id
+    firstName
+    lastName
+    phoneNumber
+    staffRole
+    permissions
+    isActive
+  }
+}
+    `;
+export type UpdateClinicStaffMutationFn = Apollo.MutationFunction<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>;
+
+/**
+ * __useUpdateClinicStaffMutation__
+ *
+ * To run a mutation, you first call `useUpdateClinicStaffMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClinicStaffMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClinicStaffMutation, { data, loading, error }] = useUpdateClinicStaffMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateClinicStaffMutation(baseOptions?: Apollo.MutationHookOptions<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>(UpdateClinicStaffDocument, options);
+}
+export type UpdateClinicStaffMutationHookResult = ReturnType<typeof useUpdateClinicStaffMutation>;
+export type UpdateClinicStaffMutationResult = Apollo.MutationResult<UpdateClinicStaffMutation>;
+export type UpdateClinicStaffMutationOptions = Apollo.BaseMutationOptions<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>;
+export const RemoveClinicStaffDocument = gql`
+    mutation RemoveClinicStaff($staffId: String!) {
+  removeClinicStaff(staffId: $staffId) {
+    id
+    firstName
+    lastName
+    phoneNumber
+  }
+}
+    `;
+export type RemoveClinicStaffMutationFn = Apollo.MutationFunction<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>;
+
+/**
+ * __useRemoveClinicStaffMutation__
+ *
+ * To run a mutation, you first call `useRemoveClinicStaffMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveClinicStaffMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeClinicStaffMutation, { data, loading, error }] = useRemoveClinicStaffMutation({
+ *   variables: {
+ *      staffId: // value for 'staffId'
+ *   },
+ * });
+ */
+export function useRemoveClinicStaffMutation(baseOptions?: Apollo.MutationHookOptions<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>(RemoveClinicStaffDocument, options);
+}
+export type RemoveClinicStaffMutationHookResult = ReturnType<typeof useRemoveClinicStaffMutation>;
+export type RemoveClinicStaffMutationResult = Apollo.MutationResult<RemoveClinicStaffMutation>;
+export type RemoveClinicStaffMutationOptions = Apollo.BaseMutationOptions<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>;
+export const CreateSubscriptionDocument = gql`
+    mutation CreateSubscription($input: CreateSubscriptionDTO!) {
+  createSubscription(input: $input) {
+    id
+    doctorId
+    status
+    startDate
+    endDate
+    trialStartDate
+    trialEndDate
+  }
+}
+    `;
+export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
+
+/**
+ * __useCreateSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useCreateSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSubscriptionMutation, { data, loading, error }] = useCreateSubscriptionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>(CreateSubscriptionDocument, options);
+}
+export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSubscriptionMutation>;
+export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
+export type CreateSubscriptionMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
+export const UpdateSubscriptionDocument = gql`
+    mutation UpdateSubscription($input: UpdateSubscriptionDTO!) {
+  updateSubscription(input: $input) {
+    id
+    status
+    startDate
+    endDate
+    trialStartDate
+    trialEndDate
+  }
+}
+    `;
+export type UpdateSubscriptionMutationFn = Apollo.MutationFunction<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
+
+/**
+ * __useUpdateSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionMutation, { data, loading, error }] = useUpdateSubscriptionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>(UpdateSubscriptionDocument, options);
+}
+export type UpdateSubscriptionMutationHookResult = ReturnType<typeof useUpdateSubscriptionMutation>;
+export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubscriptionMutation>;
+export type UpdateSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
+export const UpdateSubscriptionStatusDocument = gql`
+    mutation UpdateSubscriptionStatus($input: UpdateSubscriptionStatusDTO!) {
+  updateSubscriptionStatus(input: $input) {
+    id
+    status
+    startDate
+    endDate
+  }
+}
+    `;
+export type UpdateSubscriptionStatusMutationFn = Apollo.MutationFunction<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>;
+
+/**
+ * __useUpdateSubscriptionStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateSubscriptionStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSubscriptionStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSubscriptionStatusMutation, { data, loading, error }] = useUpdateSubscriptionStatusMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSubscriptionStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>(UpdateSubscriptionStatusDocument, options);
+}
+export type UpdateSubscriptionStatusMutationHookResult = ReturnType<typeof useUpdateSubscriptionStatusMutation>;
+export type UpdateSubscriptionStatusMutationResult = Apollo.MutationResult<UpdateSubscriptionStatusMutation>;
+export type UpdateSubscriptionStatusMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>;
 export const GetAllClinicFeaturesDocument = gql`
     query GetAllClinicFeatures {
   getAllClinicFeatures {
@@ -4960,6 +6709,85 @@ export type GetClinicDoctorsQueryHookResult = ReturnType<typeof useGetClinicDoct
 export type GetClinicDoctorsLazyQueryHookResult = ReturnType<typeof useGetClinicDoctorsLazyQuery>;
 export type GetClinicDoctorsSuspenseQueryHookResult = ReturnType<typeof useGetClinicDoctorsSuspenseQuery>;
 export type GetClinicDoctorsQueryResult = Apollo.QueryResult<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
+export const GetDoctorAppointmentLimitDocument = gql`
+    query GetDoctorAppointmentLimit($doctor_id: String!) {
+  getDoctorAppointmentLimit(doctor_id: $doctor_id)
+}
+    `;
+
+/**
+ * __useGetDoctorAppointmentLimitQuery__
+ *
+ * To run a query within a React component, call `useGetDoctorAppointmentLimitQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDoctorAppointmentLimitQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDoctorAppointmentLimitQuery({
+ *   variables: {
+ *      doctor_id: // value for 'doctor_id'
+ *   },
+ * });
+ */
+export function useGetDoctorAppointmentLimitQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables> & ({ variables: GetDoctorAppointmentLimitQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
+}
+export function useGetDoctorAppointmentLimitLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
+}
+export function useGetDoctorAppointmentLimitSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
+}
+export type GetDoctorAppointmentLimitQueryHookResult = ReturnType<typeof useGetDoctorAppointmentLimitQuery>;
+export type GetDoctorAppointmentLimitLazyQueryHookResult = ReturnType<typeof useGetDoctorAppointmentLimitLazyQuery>;
+export type GetDoctorAppointmentLimitSuspenseQueryHookResult = ReturnType<typeof useGetDoctorAppointmentLimitSuspenseQuery>;
+export type GetDoctorAppointmentLimitQueryResult = Apollo.QueryResult<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>;
+export const GetDoctorSettingsDocument = gql`
+    query GetDoctorSettings($doctor_id: String!) {
+  getDoctorSettings(doctor_id: $doctor_id) {
+    appointmentLimit
+    appointmentsUsed
+  }
+}
+    `;
+
+/**
+ * __useGetDoctorSettingsQuery__
+ *
+ * To run a query within a React component, call `useGetDoctorSettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDoctorSettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDoctorSettingsQuery({
+ *   variables: {
+ *      doctor_id: // value for 'doctor_id'
+ *   },
+ * });
+ */
+export function useGetDoctorSettingsQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables> & ({ variables: GetDoctorSettingsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
+}
+export function useGetDoctorSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
+}
+export function useGetDoctorSettingsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
+}
+export type GetDoctorSettingsQueryHookResult = ReturnType<typeof useGetDoctorSettingsQuery>;
+export type GetDoctorSettingsLazyQueryHookResult = ReturnType<typeof useGetDoctorSettingsLazyQuery>;
+export type GetDoctorSettingsSuspenseQueryHookResult = ReturnType<typeof useGetDoctorSettingsSuspenseQuery>;
+export type GetDoctorSettingsQueryResult = Apollo.QueryResult<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>;
 export const GetAllDraftsDocument = gql`
     query GetAllDrafts {
   getAllDrafts {
@@ -5042,3 +6870,147 @@ export type ApproveOrRejectQueryHookResult = ReturnType<typeof useApproveOrRejec
 export type ApproveOrRejectLazyQueryHookResult = ReturnType<typeof useApproveOrRejectLazyQuery>;
 export type ApproveOrRejectSuspenseQueryHookResult = ReturnType<typeof useApproveOrRejectSuspenseQuery>;
 export type ApproveOrRejectQueryResult = Apollo.QueryResult<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
+export const GetClinicStaffDocument = gql`
+    query GetClinicStaff($clinicId: String!) {
+  getClinicStaff(clinicId: $clinicId) {
+    id
+    firstName
+    lastName
+    phoneNumber
+    staffRole
+    permissions
+    clinicId
+    isActive
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetClinicStaffQuery__
+ *
+ * To run a query within a React component, call `useGetClinicStaffQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClinicStaffQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClinicStaffQuery({
+ *   variables: {
+ *      clinicId: // value for 'clinicId'
+ *   },
+ * });
+ */
+export function useGetClinicStaffQuery(baseOptions: Apollo.QueryHookOptions<GetClinicStaffQuery, GetClinicStaffQueryVariables> & ({ variables: GetClinicStaffQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
+}
+export function useGetClinicStaffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicStaffQuery, GetClinicStaffQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
+}
+export function useGetClinicStaffSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicStaffQuery, GetClinicStaffQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
+}
+export type GetClinicStaffQueryHookResult = ReturnType<typeof useGetClinicStaffQuery>;
+export type GetClinicStaffLazyQueryHookResult = ReturnType<typeof useGetClinicStaffLazyQuery>;
+export type GetClinicStaffSuspenseQueryHookResult = ReturnType<typeof useGetClinicStaffSuspenseQuery>;
+export type GetClinicStaffQueryResult = Apollo.QueryResult<GetClinicStaffQuery, GetClinicStaffQueryVariables>;
+export const GetSubscriptionDocument = gql`
+    query GetSubscription($subscriptionId: String!) {
+  getSubscription(subscriptionId: $subscriptionId) {
+    id
+    doctorId
+    status
+    startDate
+    endDate
+    trialStartDate
+    trialEndDate
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetSubscriptionQuery__
+ *
+ * To run a query within a React component, call `useGetSubscriptionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSubscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSubscriptionQuery({
+ *   variables: {
+ *      subscriptionId: // value for 'subscriptionId'
+ *   },
+ * });
+ */
+export function useGetSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetSubscriptionQuery, GetSubscriptionQueryVariables> & ({ variables: GetSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
+}
+export function useGetSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSubscriptionQuery, GetSubscriptionQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
+}
+export function useGetSubscriptionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSubscriptionQuery, GetSubscriptionQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
+}
+export type GetSubscriptionQueryHookResult = ReturnType<typeof useGetSubscriptionQuery>;
+export type GetSubscriptionLazyQueryHookResult = ReturnType<typeof useGetSubscriptionLazyQuery>;
+export type GetSubscriptionSuspenseQueryHookResult = ReturnType<typeof useGetSubscriptionSuspenseQuery>;
+export type GetSubscriptionQueryResult = Apollo.QueryResult<GetSubscriptionQuery, GetSubscriptionQueryVariables>;
+export const GetDoctorSubscriptionDocument = gql`
+    query GetDoctorSubscription($doctorId: String!) {
+  getDoctorSubscription(doctorId: $doctorId) {
+    id
+    doctorId
+    status
+    startDate
+    endDate
+    trialStartDate
+    trialEndDate
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetDoctorSubscriptionQuery__
+ *
+ * To run a query within a React component, call `useGetDoctorSubscriptionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDoctorSubscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDoctorSubscriptionQuery({
+ *   variables: {
+ *      doctorId: // value for 'doctorId'
+ *   },
+ * });
+ */
+export function useGetDoctorSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables> & ({ variables: GetDoctorSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
+}
+export function useGetDoctorSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
+}
+export function useGetDoctorSubscriptionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
+}
+export type GetDoctorSubscriptionQueryHookResult = ReturnType<typeof useGetDoctorSubscriptionQuery>;
+export type GetDoctorSubscriptionLazyQueryHookResult = ReturnType<typeof useGetDoctorSubscriptionLazyQuery>;
+export type GetDoctorSubscriptionSuspenseQueryHookResult = ReturnType<typeof useGetDoctorSubscriptionSuspenseQuery>;
+export type GetDoctorSubscriptionQueryResult = Apollo.QueryResult<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>;
