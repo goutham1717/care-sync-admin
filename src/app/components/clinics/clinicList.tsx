@@ -2,7 +2,7 @@ import { GetClinicsQuery } from '@/gql/graphql';
 import { GET_CLINICS } from '@/graphql/query/clinics';
 import { CREATE_BUSINESS } from '@/graphql/mutation/business';
 import { useQuery, useMutation } from '@apollo/client';
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -27,6 +27,18 @@ const ClinicList = (props: Props) => {
   const [openAddClinicDrawer, setOpenAddClinicDrawer] = React.useState(false);
   const [openConfigureModal, setOpenConfigureModal] = React.useState(false);
   const [configureClinic, setConfigureClinic] = React.useState<GetClinicsQuery['getClinics'][0] | null>(null);
+  const [openMenuId, setOpenMenuId] = React.useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   const [businessName, setBusinessName] = React.useState('');
   const [createdBusinessId, setCreatedBusinessId] = React.useState<string | null>(null);
   const [step, setStep] = React.useState<'business' | 'clinic'>('business');
@@ -231,19 +243,41 @@ const ClinicList = (props: Props) => {
                     </Typography>
                   </td>
                   <td className="p-4">
-                    <div className="flex gap-3">
-                      <Link
-                        href={`/clinics/${clinic.id}/doctors`}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
-                      >
-                        View Doctors
-                      </Link>
+                    <div className="relative" ref={openMenuId === clinic.id ? menuRef : null}>
                       <button
-                        onClick={() => handleConfigureClick(clinic)}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        onClick={() => setOpenMenuId(openMenuId === clinic.id ? null : clinic.id)}
+                        className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-800"
                       >
-                        Configure
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                        </svg>
                       </button>
+                      {openMenuId === clinic.id && (
+                        <div className="absolute right-0 z-10 mt-1 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                          <div className="py-1">
+                            <Link
+                              href={`/clinics/${clinic.id}/doctors`}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => setOpenMenuId(null)}
+                            >
+                              View Doctors
+                            </Link>
+                            <Link
+                              href={`/clinics/${clinic.id}/staff`}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => setOpenMenuId(null)}
+                            >
+                              View Staff
+                            </Link>
+                            <button
+                              onClick={() => { handleConfigureClick(clinic); setOpenMenuId(null); }}
+                              className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Configure
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </td>
                 </tr>
