@@ -10,6 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/src/ReactCrop.scss';
 import { ADD_DOCTOR_TO_CLINIC, UPDATE_PROFILE_PICTURE_URL } from "@/graphql/mutation/doctor";
@@ -115,6 +116,51 @@ const TypeaheadMultiSelect = ({ options, label, handleChange, value }: any) => (
       onChange={handleChange}
       options={options}
       isMulti
+      styles={{
+        control: (base: any) => ({
+          ...base,
+          borderRadius: 8,
+          backgroundColor: '#f9fafb',
+          minHeight: 42,
+          borderColor: '#d1d5db',
+          '&:hover': { borderColor: '#d1d5db' },
+        }),
+      }}
+    />
+  </div>
+);
+
+const CreatableMultiSelect = ({ options, label, handleChange, value }: any) => (
+  <div>
+    <CreatableSelect
+      id="creatable"
+      value={value}
+      onChange={handleChange}
+      options={options}
+      isMulti
+      isClearable
+      styles={{
+        control: (base: any) => ({
+          ...base,
+          borderRadius: 8,
+          backgroundColor: '#f9fafb',
+          minHeight: 42,
+          borderColor: '#d1d5db',
+          '&:hover': { borderColor: '#d1d5db' },
+        }),
+      }}
+    />
+  </div>
+);
+
+const CreatableSingleSelect = ({ options, label, handleChange, value }: any) => (
+  <div>
+    <CreatableSelect
+      id="creatable-single"
+      value={value}
+      onChange={handleChange}
+      options={options}
+      isClearable
       styles={{
         control: (base: any) => ({
           ...base,
@@ -626,13 +672,20 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
                       name="majorSpeciality"
                       control={control}
                       rules={{ required: true }}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                          placeholder="Major Speciality"
-                        />
-                      )}
+                      render={({ field: { onChange, value } }) => {
+                        const majorSpecialityOptions = SPECIALISATIONS;
+                        const selectedOption = value ? { value, label: value } : null;
+                        return (
+                          <CreatableSingleSelect
+                            options={majorSpecialityOptions}
+                            label="Select or Add Major Speciality"
+                            handleChange={(selected: any) => {
+                              onChange(selected?.value || '');
+                            }}
+                            value={selectedOption}
+                          />
+                        );
+                      }}
                     />
                   </div>
                   <div>
@@ -645,9 +698,9 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
                         const specialityOptions =
                           Array.isArray(value) ? value.map((spec: string) => ({ value: spec, label: spec })) : [];
                         return (
-                          <TypeaheadMultiSelect
+                          <CreatableMultiSelect
                             options={SPECIALISATIONS}
-                            label="Select Specialities"
+                            label="Select or Add Specialities"
                             handleChange={(selected: any) => {
                               const selectedSpecialities = selected.map((item: any) => item.value);
                               onChange(selectedSpecialities);
