@@ -57,3 +57,47 @@ export const GET_DOCTOR_SETTINGS = gql`
     }
   }
 `;
+
+export const GET_DOCTOR_CLINIC_ACCESS = gql`
+  query GetDoctorClinicAccess($doctor_id: String!) {
+    getDoctor(doctor_id: $doctor_id) {
+      doctor_id
+      profile {
+        professional {
+          clinic {
+            id
+            name
+            business_id
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_DOCTORS_WITH_CLINICS = gql`
+  query GetDoctorsWithClinics {
+    getDoctors {
+      doctor_id
+      isActive
+      profile {
+        personal {
+          designation
+          first_name
+          last_name
+          phone_number
+        }
+        professional {
+          clinic {
+            id
+            name
+            business_id
+          }
+          major_speciality {
+            name
+          }
+        }
+      }
+    }
+  }
+`;

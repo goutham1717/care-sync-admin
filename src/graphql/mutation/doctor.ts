@@ -27,6 +27,23 @@ export const RECHARGE_APPOINTMENT_LIMIT = gql`
   }
 `;
 
+export const ASSIGN_DOCTOR_TO_CLINICS = gql`
+  mutation AssignDoctorToClinics($doctorId: String!, $clinicIds: [String!]!) {
+    assignDoctorToClinics(doctorId: $doctorId, clinicIds: $clinicIds) {
+      doctor_id
+      profile {
+        professional {
+          clinic {
+            id
+            name
+            business_id
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const UPDATE_PROFILE_PICTURE_URL = gql`
 mutation UpdateProfilePicUrl($doctor_id: String!, $picture_url: String!) {
     updateProfilePicUrl(doctor_id: $doctor_id, picture_url: $picture_url) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { GET_CLINIC_DOCTORS } from "@/graphql/query/doctors";
+import { GET_CLINIC_DOCTORS, GET_DOCTORS_WITH_CLINICS } from "@/graphql/query/doctors";
 import { useQuery, useMutation } from "@apollo/client";
 import { Typography, Card, CardHeader, CardBody, Spinner, Button, Dialog, Option, Switch } from "@material-tailwind/react";
 import { ApolloProvider } from "@apollo/client";
@@ -13,12 +13,13 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/src/ReactCrop.scss';
-import { ADD_DOCTOR_TO_CLINIC, UPDATE_PROFILE_PICTURE_URL } from "@/graphql/mutation/doctor";
+import { ASSIGN_DOCTOR_TO_CLINICS, ADD_DOCTOR_TO_CLINIC, UPDATE_PROFILE_PICTURE_URL } from "@/graphql/mutation/doctor";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { gql } from "@apollo/client";
 import ConfigureDoctorModal from "@/app/components/clinics/ConfigureDoctorModal";
+import { GET_CLINICS } from "@/graphql/query/clinics";
 
 type Doctor = {
   doctor_id: string;
@@ -211,9 +212,13 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
   const { data, loading, error, refetch } = useQuery(GET_CLINIC_DOCTORS, {
     variables: { clinicId },
   });
+  const { data: clinicsData } = useQuery(GET_CLINICS);
+  const { data: allDoctorsData, refetch: refetchAllDoctors } = useQuery(GET_DOCTORS_WITH_CLINICS);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const [openExistingDoctorDialog, setOpenExistingDoctorDialog] = useState(false);
+  const [selectedExistingDoctor, setSelectedExistingDoctor] = useState<any>(null);
   const [step, setStep] = useState(0);
   const [openConfigureModal, setOpenConfigureModal] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
@@ -254,6 +259,27 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
   const [pictureBlob, setPictureBlob] = useState<File | null>(null);
 
   const [updateDoctorStatus] = useMutation(UPDATE_DOCTOR_ACTIVE_STATUS);
+  const [assignDoctorToClinics, { loading: assigningExistingDoctor }] = useMutation(ASSIGN_DOCTOR_TO_CLINICS);
+
+  const currentClinic = clinicsData?.getClinics?.find((clinic: any) => clinic.id === clinicId);
+  const currentBusinessId = currentClinic?.business_id;
+  const currentDoctorIds = new Set((data?.getClinicDoctors || []).map((doctor: Doctor) => doctor.doctor_id));
+  const reusableDoctors = (allDoctorsData?.getDoctors || []).filter((doctor: any) => {
+    const assignedClinics = doctor.profile?.professional?.clinic || [];
+    const belongsToSameBusiness = assignedClinics.some((clinic: any) => clinic.business_id === currentBusinessId);
+    return currentBusinessId && belongsToSameBusiness && !currentDoctorIds.has(doctor.doctor_id);
+  });
+  const reusableDoctorOptions = reusableDoctors.map((doctor: any) => {
+    const personal = doctor.profile?.personal || {};
+    const assignedClinics = doctor.profile?.professional?.clinic || [];
+    return {
+      value: doctor.doctor_id,
+      label: `${personal.designation || 'Dr'} ${personal.first_name || ''} ${personal.last_name || ''}`.trim(),
+      phoneNumber: personal.phone_number,
+      assignedClinics,
+      doctor,
+    };
+  });
 
   function handleAddOrUpdateDegree() {
     const currentDegrees = getValues('degree') || [];
@@ -308,6 +334,30 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
     } catch (error) {
       console.error("Error updating doctor status:", error);
       toast.error("Failed to update doctor status");
+    }
+  };
+
+  const handleAttachExistingDoctor = async () => {
+    if (!selectedExistingDoctor) return;
+
+    const existingClinicIds = selectedExistingDoctor.assignedClinics.map((clinic: any) => clinic.id);
+    const nextClinicIds = Array.from(new Set([...existingClinicIds, clinicId]));
+
+    try {
+      await assignDoctorToClinics({
+        variables: {
+          doctorId: selectedExistingDoctor.value,
+          clinicIds: nextClinicIds,
+        },
+      });
+      toast.success("Doctor added to clinic successfully");
+      setSelectedExistingDoctor(null);
+      setOpenExistingDoctorDialog(false);
+      await refetch();
+      await refetchAllDoctors();
+    } catch (err) {
+      console.error("Error attaching existing doctor:", err);
+      toast.error("Failed to add doctor to clinic");
     }
   };
 
@@ -457,17 +507,122 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
               List of all doctors in this clinic
             </Typography>
           </div>
-          <Button
-            color="black"
-            size="sm"
-            placeholder={undefined}
-            onPointerEnterCapture={undefined}
-            onPointerLeaveCapture={undefined}
-            onClick={handleOpen}
-          >
-            Add new Doctor
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              color="black"
+              size="sm"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+              onClick={handleOpen}
+            >
+              Add new Doctor
+            </Button>
+            <Button
+              color="blue"
+              size="sm"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+              onClick={() => setOpenExistingDoctorDialog(true)}
+            >
+              Add Existing Doctor
+            </Button>
+          </div>
         </CardHeader>
+        <Dialog
+          open={openExistingDoctorDialog}
+          handler={() => setOpenExistingDoctorDialog(false)}
+          size="sm"
+          placeholder={undefined}
+          onPointerEnterCapture={undefined}
+          onPointerLeaveCapture={undefined}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <Typography
+                variant="h5"
+                color="blue-gray"
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                Add Existing Doctor
+              </Typography>
+              <button
+                className="text-gray-400 hover:text-gray-600 text-2xl"
+                onClick={() => setOpenExistingDoctorDialog(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+
+            {!currentBusinessId ? (
+              <Typography
+                color="red"
+                variant="small"
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                This clinic is not attached to a business, so existing doctors cannot be filtered safely.
+              </Typography>
+            ) : reusableDoctorOptions.length === 0 ? (
+              <Typography
+                color="gray"
+                variant="small"
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                No reusable doctors found under this business. Create a new doctor instead.
+              </Typography>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <label className="block mb-1 font-bold text-gray-900 text-sm">Doctor</label>
+                  <Select
+                    value={selectedExistingDoctor}
+                    onChange={setSelectedExistingDoctor}
+                    options={reusableDoctorOptions}
+                    placeholder="Search doctor"
+                    formatOptionLabel={(option: any) => (
+                      <div>
+                        <div className="font-medium">{option.label}</div>
+                        <div className="text-xs text-gray-500">
+                          {option.phoneNumber || 'No phone'} · {option.assignedClinics.map((clinic: any) => clinic.name).join(', ')}
+                        </div>
+                      </div>
+                    )}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="text"
+                    color="gray"
+                    onClick={() => setOpenExistingDoctorDialog(false)}
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    color="blue"
+                    disabled={!selectedExistingDoctor || assigningExistingDoctor}
+                    onClick={handleAttachExistingDoctor}
+                    placeholder={undefined}
+                    onPointerEnterCapture={undefined}
+                    onPointerLeaveCapture={undefined}
+                  >
+                    {assigningExistingDoctor ? "Adding..." : "Add to Clinic"}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </Dialog>
         <Dialog
           open={open}
           handler={handleOpen}
@@ -1020,7 +1175,9 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
         <ToastContainer />
         <ConfigureDoctorModal
           doctor={selectedDoctor}
+          currentClinicId={clinicId}
           open={openConfigureModal}
+          onClinicAccessSaved={refetch}
           onClose={() => {
             setOpenConfigureModal(false);
             setSelectedDoctor(null);

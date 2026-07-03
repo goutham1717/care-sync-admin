@@ -2,6 +2,7 @@
 
 import { GET_CLINIC_STAFF } from "@/graphql/query/staff";
 import { ADD_CLINIC_STAFF, UPDATE_CLINIC_STAFF, REMOVE_CLINIC_STAFF } from "@/graphql/mutation/staff";
+import { GET_CLINIC_MODULE_ACCESS } from "@/graphql/query/clinicModuleSubscriptions";
 import { useQuery, useMutation } from "@apollo/client";
 import { Typography, Card, CardHeader, CardBody, Spinner, Button, Dialog, Switch } from "@material-tailwind/react";
 import { ApolloProvider } from "@apollo/client";
@@ -71,13 +72,76 @@ const ALL_PERMISSIONS = [
   "DOCUMENTS_UPLOAD",
   "DOCUMENTS_DELETE",
   "CHECKIN_WRITE",
-  "CHECKIN_READ"
+  "CHECKIN_READ",
+  "INPATIENT_VIEW",
+  "INPATIENT_ADMIT",
+  "INPATIENT_BEDS_MANAGE",
+  "INPATIENT_CLINICAL_WRITE",
+  "INPATIENT_ORDERS_MANAGE",
+  "INPATIENT_MAR_MANAGE",
+  "INPATIENT_TRANSFER",
+  "INPATIENT_DISCHARGE",
+  "INPATIENT_BILLING_VIEW",
+  "INPATIENT_BILLING_UPDATE"
+];
+
+const INPATIENT_PERMISSIONS = [
+  "INPATIENT_VIEW",
+  "INPATIENT_ADMIT",
+  "INPATIENT_BEDS_MANAGE",
+  "INPATIENT_CLINICAL_WRITE",
+  "INPATIENT_ORDERS_MANAGE",
+  "INPATIENT_MAR_MANAGE",
+  "INPATIENT_TRANSFER",
+  "INPATIENT_DISCHARGE",
+  "INPATIENT_BILLING_VIEW",
+  "INPATIENT_BILLING_UPDATE",
+];
+
+const INPATIENT_ACCESS_LEVELS = [
+  { label: "None", permissions: [] },
+  { label: "Read", permissions: ["INPATIENT_VIEW"] },
+  {
+    label: "Admin",
+    permissions: [
+      "INPATIENT_VIEW",
+      "INPATIENT_ADMIT",
+      "INPATIENT_BEDS_MANAGE",
+      "INPATIENT_TRANSFER",
+      "INPATIENT_DISCHARGE",
+    ],
+  },
+  {
+    label: "Clinical",
+    permissions: [
+      "INPATIENT_VIEW",
+      "INPATIENT_CLINICAL_WRITE",
+      "INPATIENT_ORDERS_MANAGE",
+      "INPATIENT_MAR_MANAGE",
+    ],
+  },
+  {
+    label: "Billing",
+    permissions: [
+      "INPATIENT_VIEW",
+      "INPATIENT_BILLING_VIEW",
+      "INPATIENT_BILLING_UPDATE",
+    ],
+  },
+  { label: "Full", permissions: INPATIENT_PERMISSIONS },
 ];
 
 const StaffList = ({ clinicId }: { clinicId: string }) => {
   const { data, loading, error, refetch } = useQuery(GET_CLINIC_STAFF, {
     variables: { clinicId },
   });
+  const { data: inpatientAccessData } = useQuery(GET_CLINIC_MODULE_ACCESS, {
+    variables: { clinicId, moduleKey: "Inpatient" },
+  });
+  const hasInpatientAccess = Boolean(inpatientAccessData?.getClinicModuleAccess?.enabled);
+  const visiblePermissions = hasInpatientAccess
+    ? ALL_PERMISSIONS
+    : ALL_PERMISSIONS.filter((permission) => !INPATIENT_PERMISSIONS.includes(permission));
 
   const [addClinicStaff] = useMutation(ADD_CLINIC_STAFF);
   const [updateClinicStaff] = useMutation(UPDATE_CLINIC_STAFF);
@@ -115,6 +179,23 @@ const StaffList = ({ clinicId }: { clinicId: string }) => {
     }
   };
 
+  const normalizePermissions = (permissions: string[]) => (
+    hasInpatientAccess
+      ? permissions
+      : permissions.filter((permission) => !INPATIENT_PERMISSIONS.includes(permission))
+  );
+
+  const applyInpatientAccessLevel = (
+    permissions: string[],
+    levelPermissions: string[],
+    setter: (p: string[]) => void,
+  ) => {
+    const withoutInpatient = permissions.filter(
+      (permission) => !INPATIENT_PERMISSIONS.includes(permission),
+    );
+    setter([...withoutInpatient, ...levelPermissions]);
+  };
+
   const handleAddStaff = async (formData: AddStaffFormValues) => {
     try {
       await addClinicStaff({
@@ -125,7 +206,9 @@ const StaffList = ({ clinicId }: { clinicId: string }) => {
             phoneNumber: `${formData.phoneNumber}`,
             staffRole: formData.staffRole,
             clinicId,
-            ...(selectedPermissions.length > 0 && { permissions: selectedPermissions }),
+            ...(selectedPermissions.length > 0 && {
+              permissions: normalizePermissions(selectedPermissions),
+            }),
           },
         },
       });
@@ -150,7 +233,7 @@ const StaffList = ({ clinicId }: { clinicId: string }) => {
             firstName: formData.firstName,
             lastName: formData.lastName,
             phoneNumber: `${formData.phoneNumber}`,
-            permissions: editPermissions,
+            permissions: normalizePermissions(editPermissions),
           },
         },
       });
@@ -325,8 +408,29 @@ const StaffList = ({ clinicId }: { clinicId: string }) => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Permissions <span className="text-gray-400 font-normal">(optional)</span>
               </label>
+              {hasInpatientAccess && (
+                <div className="mb-3 rounded-md border border-blue-100 bg-blue-50 p-3">
+                  <div className="mb-2 text-xs font-semibold text-blue-900">Inpatient Access Level</div>
+                  <div className="flex flex-wrap gap-2">
+                    {INPATIENT_ACCESS_LEVELS.map((level) => (
+                      <button
+                        key={`add-${level.label}`}
+                        type="button"
+                        onClick={() => applyInpatientAccessLevel(
+                          selectedPermissions,
+                          level.permissions,
+                          setSelectedPermissions,
+                        )}
+                        className="rounded border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100"
+                      >
+                        {level.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto border border-gray-200 rounded-md p-3">
-                {ALL_PERMISSIONS.map((perm) => (
+                {visiblePermissions.map((perm) => (
                   <label key={perm} className="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
                     <input
                       type="checkbox"
@@ -419,8 +523,29 @@ const StaffList = ({ clinicId }: { clinicId: string }) => {
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
+              {hasInpatientAccess && (
+                <div className="mb-3 rounded-md border border-blue-100 bg-blue-50 p-3">
+                  <div className="mb-2 text-xs font-semibold text-blue-900">Inpatient Access Level</div>
+                  <div className="flex flex-wrap gap-2">
+                    {INPATIENT_ACCESS_LEVELS.map((level) => (
+                      <button
+                        key={`edit-${level.label}`}
+                        type="button"
+                        onClick={() => applyInpatientAccessLevel(
+                          editPermissions,
+                          level.permissions,
+                          setEditPermissions,
+                        )}
+                        className="rounded border border-blue-200 bg-white px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100"
+                      >
+                        {level.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto border border-gray-200 rounded-md p-3">
-                {ALL_PERMISSIONS.map((perm) => (
+                {visiblePermissions.map((perm) => (
                   <label key={perm} className="flex items-center gap-2 cursor-pointer text-xs text-gray-700">
                     <input
                       type="checkbox"

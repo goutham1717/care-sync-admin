@@ -1,8 +1,8 @@
-import { GetClinicsQuery } from '@/gql/graphql';
-import { GET_CLINICS } from '@/graphql/query/clinics';
-import { CREATE_BUSINESS } from '@/graphql/mutation/business';
-import { useQuery, useMutation } from '@apollo/client';
-import React, { useRef, useEffect } from 'react';
+import { GetClinicsQuery } from "@/gql/graphql";
+import { GET_CLINICS } from "@/graphql/query/clinics";
+import { CREATE_BUSINESS } from "@/graphql/mutation/business";
+import { useQuery, useMutation } from "@apollo/client";
+import React, { useRef, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -13,20 +13,25 @@ import {
   Drawer,
   Input,
 } from "@material-tailwind/react";
-import ClinicDetailsDrawer from './ClinicDetailsDrawer';
-import Link from 'next/link';
-import AddClinicDrawer from './AddClinicDrawer';
-import ConfigureClinicModal from './ConfigureClinicModal';
+import ClinicDetailsDrawer from "./ClinicDetailsDrawer";
+import Link from "next/link";
+import AddClinicDrawer from "./AddClinicDrawer";
+import ConfigureClinicModal from "./ConfigureClinicModal";
 
-type Props = {}
+type Props = {};
 
 const ClinicList = (props: Props) => {
-  const { data, loading, error } = useQuery<GetClinicsQuery>(GET_CLINICS);
-  const [selectedClinic, setSelectedClinic] = React.useState<GetClinicsQuery['getClinics'][0] | null>(null);
+  const { data, loading, error, refetch } =
+    useQuery<GetClinicsQuery>(GET_CLINICS);
+  const [selectedClinic, setSelectedClinic] = React.useState<
+    GetClinicsQuery["getClinics"][0] | null
+  >(null);
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [openAddClinicDrawer, setOpenAddClinicDrawer] = React.useState(false);
   const [openConfigureModal, setOpenConfigureModal] = React.useState(false);
-  const [configureClinic, setConfigureClinic] = React.useState<GetClinicsQuery['getClinics'][0] | null>(null);
+  const [configureClinic, setConfigureClinic] = React.useState<
+    GetClinicsQuery["getClinics"][0] | null
+  >(null);
   const [openMenuId, setOpenMenuId] = React.useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -36,32 +41,37 @@ const ClinicList = (props: Props) => {
         setOpenMenuId(null);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  const [businessName, setBusinessName] = React.useState('');
-  const [createdBusinessId, setCreatedBusinessId] = React.useState<string | null>(null);
-  const [step, setStep] = React.useState<'business' | 'clinic'>('business');
+  const [businessName, setBusinessName] = React.useState("");
+  const [createdBusinessId, setCreatedBusinessId] = React.useState<
+    string | null
+  >(null);
+  const [step, setStep] = React.useState<"business" | "clinic">("business");
 
-  const [createBusiness, { loading: creatingBusiness }] = useMutation(CREATE_BUSINESS, {
-    onCompleted: (data) => {
-      setCreatedBusinessId(data.createBusiness.id);
-      setStep('clinic');
+  const [createBusiness, { loading: creatingBusiness }] = useMutation(
+    CREATE_BUSINESS,
+    {
+      onCompleted: (data) => {
+        setCreatedBusinessId(data.createBusiness.id);
+        setStep("clinic");
+      },
+      onError: (error) => {
+        console.error("Error creating business:", error);
+        // You might want to show an error message to the user here
+      },
     },
-    onError: (error) => {
-      console.error('Error creating business:', error);
-      // You might want to show an error message to the user here
-    }
-  });
+  );
 
   const handleBusinessSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createBusiness({
       variables: {
         businessInput: {
-          name: businessName
-        }
-      }
+          name: businessName,
+        },
+      },
     });
   };
 
@@ -93,12 +103,12 @@ const ClinicList = (props: Props) => {
     );
   }
 
-  const handleClinicClick = (clinic: GetClinicsQuery['getClinics'][0]) => {
+  const handleClinicClick = (clinic: GetClinicsQuery["getClinics"][0]) => {
     setSelectedClinic(clinic);
     setOpenDrawer(true);
   };
 
-  const handleConfigureClick = (clinic: GetClinicsQuery['getClinics'][0]) => {
+  const handleConfigureClick = (clinic: GetClinicsQuery["getClinics"][0]) => {
     setConfigureClinic(clinic);
     setOpenConfigureModal(true);
   };
@@ -159,23 +169,25 @@ const ClinicList = (props: Props) => {
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                {["Name", "About", "City", "Timing", "Contact", "Actions"].map((head) => (
-                  <th
-                    key={head}
-                    className={`border-b border-blue-gray-100 bg-blue-gray-50 p-4 ${head === "About" ? "max-w-xs" : ""}`}
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                      placeholder={undefined}
-                      onPointerEnterCapture={undefined}
-                      onPointerLeaveCapture={undefined}
+                {["Name", "About", "City", "Timing", "Contact", "Actions"].map(
+                  (head) => (
+                    <th
+                      key={head}
+                      className={`border-b border-blue-gray-100 bg-blue-gray-50 p-4 ${head === "About" ? "max-w-xs" : ""}`}
                     >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
             <tbody>
@@ -243,12 +255,24 @@ const ClinicList = (props: Props) => {
                     </Typography>
                   </td>
                   <td className="p-4">
-                    <div className="relative" ref={openMenuId === clinic.id ? menuRef : null}>
+                    <div
+                      className="relative"
+                      ref={openMenuId === clinic.id ? menuRef : null}
+                    >
                       <button
-                        onClick={() => setOpenMenuId(openMenuId === clinic.id ? null : clinic.id)}
+                        onClick={() =>
+                          setOpenMenuId(
+                            openMenuId === clinic.id ? null : clinic.id,
+                          )
+                        }
                         className="p-1 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-800"
                       >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
                           <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                         </svg>
                       </button>
@@ -269,8 +293,18 @@ const ClinicList = (props: Props) => {
                             >
                               View Staff
                             </Link>
+                            <Link
+                              href={`/clinics/${clinic.id}/inpatient-defaults`}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => setOpenMenuId(null)}
+                            >
+                              Inpatient Defaults
+                            </Link>
                             <button
-                              onClick={() => { handleConfigureClick(clinic); setOpenMenuId(null); }}
+                              onClick={() => {
+                                handleConfigureClick(clinic);
+                                setOpenMenuId(null);
+                              }}
                               className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             >
                               Configure
@@ -297,6 +331,8 @@ const ClinicList = (props: Props) => {
 
       <AddClinicDrawer
         open={openAddClinicDrawer}
+        clinics={data?.getClinics || []}
+        onClinicCreated={() => refetch()}
         onClose={() => setOpenAddClinicDrawer(false)}
       />
 
@@ -307,6 +343,6 @@ const ClinicList = (props: Props) => {
       />
     </>
   );
-}
+};
 
-export default ClinicList
+export default ClinicList;
