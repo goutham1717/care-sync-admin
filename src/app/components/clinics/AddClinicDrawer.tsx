@@ -10,10 +10,18 @@ import {
 import { useMutation } from '@apollo/client';
 import { CREATE_BUSINESS } from '@/graphql/mutation/business';
 import { ADD_CLINIC } from '@/graphql/mutation/clinic';
+import Select from 'react-select';
 
 interface AddClinicDrawerProps {
   open: boolean;
   onClose: () => void;
+  clinics?: Array<{
+    id: string;
+    name: string;
+    business_id?: string | null;
+    city_name?: string | null;
+  }>;
+  onClinicCreated?: () => void;
 }
 
 interface ClinicFormData {
@@ -35,10 +43,26 @@ interface ClinicFormData {
   speciality: Array<{ name: string }>;
 }
 
-const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
+const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose, clinics = [], onClinicCreated }) => {
   const [businessName, setBusinessName] = React.useState('');
   const [createdBusinessId, setCreatedBusinessId] = React.useState<string | null>(null);
   const [step, setStep] = React.useState<'business' | 'clinic'>('business');
+  const [businessMode, setBusinessMode] = React.useState<'new' | 'existing'>('new');
+  const [selectedBusinessId, setSelectedBusinessId] = React.useState<string | null>(null);
+
+  const businessOptions = React.useMemo(() => {
+    const grouped = clinics.reduce<Record<string, typeof clinics>>((acc, clinic) => {
+      if (!clinic.business_id) return acc;
+      acc[clinic.business_id] = [...(acc[clinic.business_id] || []), clinic];
+      return acc;
+    }, {});
+
+    return Object.entries(grouped).map(([businessId, businessClinics]) => ({
+      value: businessId,
+      label: `Business ${businessId.slice(0, 8)} (${businessClinics.length} clinic${businessClinics.length === 1 ? '' : 's'})`,
+      description: businessClinics.map((clinic) => clinic.name).join(', '),
+    }));
+  }, [clinics]);
 
   const [clinicFormData, setClinicFormData] = React.useState<ClinicFormData>({
     name: '',
@@ -71,8 +95,8 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
 
   const [addClinic, { loading: creatingClinic }] = useMutation(ADD_CLINIC, {
     onCompleted: () => {
+      onClinicCreated?.();
       handleClose();
-      // You might want to refresh the clinic list here
     },
     onError: (error) => {
       console.error('Error creating clinic:', error);
@@ -81,6 +105,13 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
 
   const handleBusinessSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (businessMode === 'existing') {
+      if (!selectedBusinessId) return;
+      setCreatedBusinessId(selectedBusinessId);
+      setStep('clinic');
+      return;
+    }
+
     createBusiness({
       variables: {
         businessInput: {
@@ -114,8 +145,10 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
   const handleClose = () => {
     onClose();
     setStep('business');
+    setBusinessMode('new');
     setBusinessName('');
     setCreatedBusinessId(null);
+    setSelectedBusinessId(null);
     setClinicFormData({
       name: '',
       about: '',
@@ -194,7 +227,7 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
           onPointerEnterCapture={undefined}
           onPointerLeaveCapture={undefined}
         >
-          {step === 'business' ? 'Create Business' : 'Create Clinic'}
+          {step === 'business' ? 'Choose Business' : 'Create Clinic'}
         </Typography>
         <Button
           variant="text"
@@ -223,6 +256,44 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
 
       {step === 'business' && (
         <form onSubmit={handleBusinessSubmit} className="max-w-md mx-auto mt-8">
+          {businessOptions.length > 0 && (
+            <div className="mb-6 grid grid-cols-2 gap-2 rounded-lg bg-gray-100 p-1">
+              <button
+                type="button"
+                onClick={() => setBusinessMode('new')}
+                className={`rounded-md px-3 py-2 text-sm font-medium ${businessMode === 'new' ? 'bg-white shadow text-gray-900' : 'text-gray-600'}`}
+              >
+                New business
+              </button>
+              <button
+                type="button"
+                onClick={() => setBusinessMode('existing')}
+                className={`rounded-md px-3 py-2 text-sm font-medium ${businessMode === 'existing' ? 'bg-white shadow text-gray-900' : 'text-gray-600'}`}
+              >
+                Existing business
+              </button>
+            </div>
+          )}
+
+          {businessMode === 'existing' && (
+            <div className="mb-4">
+              <label className="mb-1 block text-sm font-semibold text-gray-800">Select Business</label>
+              <Select
+                options={businessOptions}
+                value={businessOptions.find((option) => option.value === selectedBusinessId) || null}
+                onChange={(option) => setSelectedBusinessId(option?.value || null)}
+                placeholder="Choose a business"
+                formatOptionLabel={(option) => (
+                  <div>
+                    <div className="font-medium">{option.label}</div>
+                    <div className="text-xs text-gray-500">{option.description}</div>
+                  </div>
+                )}
+              />
+            </div>
+          )}
+
+          {businessMode === 'new' && (
           <div className="mb-4">
             <Input
               type="text"
@@ -236,15 +307,18 @@ const AddClinicDrawer: React.FC<AddClinicDrawerProps> = ({ open, onClose }) => {
               onPointerLeaveCapture={undefined}
             />
           </div>
+          )}
           <Button
             type="submit"
             fullWidth
-            disabled={creatingBusiness}
+            disabled={creatingBusiness || (businessMode === 'existing' && !selectedBusinessId)}
             placeholder={undefined}
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
           >
-            {creatingBusiness ? (
+            {businessMode === 'existing' ? (
+              'Continue to Clinic Details'
+            ) : creatingBusiness ? (
               <div className="flex items-center gap-2">
                 <Spinner
                   className="h-4 w-4"

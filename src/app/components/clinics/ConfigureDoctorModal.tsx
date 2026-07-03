@@ -10,9 +10,10 @@ import { GET_CUSTOM_FEATURES, GET_DOCTOR } from '@/graphql/query/customFeatures'
 import { ASSIGN_CUSTOM_FEATURES_TO_DOCTOR, REMOVE_CUSTOM_FEATURES_FROM_DOCTOR } from '@/graphql/mutation/customFeatures';
 import { GET_DOCTOR_SUBSCRIPTION } from '@/graphql/query/subscription';
 import { CREATE_SUBSCRIPTION, UPDATE_SUBSCRIPTION, UPDATE_SUBSCRIPTION_STATUS } from '@/graphql/mutation/subscription';
-import { GET_DOCTOR_APPOINTMENT_LIMIT, GET_DOCTOR_SETTINGS } from '@/graphql/query/doctors';
-import { UPDATE_DOCTOR_APPOINTMENT_LIMIT, RECHARGE_APPOINTMENT_LIMIT } from '@/graphql/mutation/doctor';
-import React, { useState, useEffect } from 'react';
+import { GET_DOCTOR_APPOINTMENT_LIMIT, GET_DOCTOR_CLINIC_ACCESS, GET_DOCTOR_SETTINGS } from '@/graphql/query/doctors';
+import { ASSIGN_DOCTOR_TO_CLINICS, UPDATE_DOCTOR_APPOINTMENT_LIMIT, RECHARGE_APPOINTMENT_LIMIT } from '@/graphql/mutation/doctor';
+import { GET_CLINICS } from '@/graphql/query/clinics';
+import React, { useState, useEffect, useMemo } from 'react';
 import Select from 'react-select';
 
 type Doctor = {
@@ -42,6 +43,19 @@ type CustomFeature = {
   value: string;
 };
 
+type Clinic = {
+  id: string;
+  name: string;
+  business_id: string;
+  city_name?: string | null;
+};
+
+type ClinicOption = {
+  value: string;
+  label: string;
+  businessId: string;
+};
+
 type Subscription = {
   id: string;
   doctorId: string;
@@ -56,7 +70,9 @@ type Subscription = {
 
 type Props = {
   doctor: Doctor | null;
+  currentClinicId?: string;
   open: boolean;
+  onClinicAccessSaved?: () => void;
   onClose: () => void;
 }
 
@@ -68,9 +84,10 @@ const SUBSCRIPTION_STATUSES = [
   { value: 'SUBSCRIPTION_DONE', label: 'SUBSCRIPTION_DONE - Subscription period has completed/expired' },
 ];
 
-const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
-  const [activeTab, setActiveTab] = useState<'subscription' | 'customFeatures' | 'appointmentLimit'>('subscription');
+const ConfigureDoctorModal = ({ doctor, currentClinicId, open, onClinicAccessSaved, onClose }: Props) => {
+  const [activeTab, setActiveTab] = useState<'subscription' | 'customFeatures' | 'appointmentLimit' | 'clinicAccess'>('subscription');
   const [selectedFeature, setSelectedFeature] = useState<{ value: string; label: string } | null>(null);
+  const [selectedClinics, setSelectedClinics] = useState<ClinicOption[]>([]);
 
   // Subscription form state
   const [subscriptionForm, setSubscriptionForm] = useState({
@@ -231,6 +248,61 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
   const allFeatures: CustomFeature[] = allFeaturesData?.getCustomFeatures || [];
   const doctorFeatures: CustomFeature[] = doctorData?.getDoctor?.customFeatures || [];
 
+  // Clinic access
+  const { data: clinicsData, loading: loadingClinics } = useQuery(GET_CLINICS, {
+    skip: !open || !doctor || activeTab !== 'clinicAccess',
+  });
+
+  const {
+    data: doctorClinicAccessData,
+    loading: loadingDoctorClinicAccess,
+    refetch: refetchDoctorClinicAccess,
+  } = useQuery(
+    GET_DOCTOR_CLINIC_ACCESS,
+    {
+      variables: { doctor_id: doctor?.doctor_id || '' },
+      skip: !open || !doctor || activeTab !== 'clinicAccess',
+    }
+  );
+
+  const allClinics: Clinic[] = useMemo(() => clinicsData?.getClinics || [], [clinicsData]);
+  const assignedClinics: Clinic[] = useMemo(
+    () => doctorClinicAccessData?.getDoctor?.profile?.professional?.clinic || [],
+    [doctorClinicAccessData]
+  );
+  const clinicOptions: ClinicOption[] = useMemo(() => {
+    const routeClinic = allClinics.find((clinic) => clinic.id === currentClinicId);
+    const businessIdForClinicAccess = assignedClinics[0]?.business_id || routeClinic?.business_id || '';
+    const businessClinics = businessIdForClinicAccess
+      ? allClinics.filter((clinic) => clinic.business_id === businessIdForClinicAccess)
+      : allClinics;
+
+    return businessClinics.map((clinic) => ({
+      value: clinic.id,
+      label: clinic.city_name ? `${clinic.name} - ${clinic.city_name}` : clinic.name,
+      businessId: clinic.business_id,
+    }));
+  }, [allClinics, assignedClinics, currentClinicId]);
+  const assignedClinicIds = useMemo(() => assignedClinics.map((clinic) => clinic.id), [assignedClinics]);
+  const savingClinicAccessDisabled = loadingClinics || loadingDoctorClinicAccess || clinicOptions.length === 0 || selectedClinics.length === 0;
+
+  useEffect(() => {
+    if (activeTab !== 'clinicAccess') return;
+
+    const assignedOptions = clinicOptions.filter((option) => assignedClinicIds.includes(option.value));
+    setSelectedClinics(assignedOptions);
+  }, [activeTab, assignedClinicIds, clinicOptions]);
+
+  const [assignDoctorToClinics, { loading: savingClinicAccess }] = useMutation(ASSIGN_DOCTOR_TO_CLINICS, {
+    onCompleted: () => {
+      refetchDoctorClinicAccess();
+      onClinicAccessSaved?.();
+    },
+    onError: (error) => {
+      console.error('Error assigning doctor to clinics:', error);
+    },
+  });
+
   // Appointment Limit
   const [newLimit, setNewLimit] = useState('');
   const [rechargeAmount, setRechargeAmount] = useState('');
@@ -319,6 +391,18 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
     });
   };
 
+  const handleClinicAccessSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!doctor) return;
+
+    assignDoctorToClinics({
+      variables: {
+        doctorId: doctor.doctor_id,
+        clinicIds: selectedClinics.map((clinic) => clinic.value),
+      },
+    });
+  };
+
   return (
     <Dialog
       open={open}
@@ -392,6 +476,16 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
                   }`}
                 >
                   Appointment Limit
+                </button>
+                <button
+                  onClick={() => setActiveTab('clinicAccess')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'clinicAccess'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  Clinic Access
                 </button>
               </nav>
             </div>
@@ -732,6 +826,140 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
               </div>
             )}
 
+            {activeTab === 'clinicAccess' && (
+              <form onSubmit={handleClinicAccessSubmit} className="mt-6 space-y-6">
+                {loadingClinics || loadingDoctorClinicAccess ? (
+                  <div className="flex justify-center py-4">
+                    <Spinner className="h-6 w-6" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                  </div>
+                ) : (
+                  <>
+                    <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold mb-1"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {selectedClinics.length} clinic{selectedClinics.length === 1 ? '' : 's'} selected
+                      </Typography>
+                      <Typography
+                        variant="small"
+                        color="gray"
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        Clinics are limited to the doctor's current business when that business can be identified.
+                      </Typography>
+                    </div>
+
+                    <div>
+                      <label className="block mb-1 font-bold text-gray-900 text-sm">Clinic Access</label>
+                      {clinicOptions.length === 0 ? (
+                        <div className="p-3 border border-gray-200 rounded-lg bg-gray-50">
+                          <Typography
+                            variant="small"
+                            color="gray"
+                            placeholder={undefined}
+                            onPointerEnterCapture={undefined}
+                            onPointerLeaveCapture={undefined}
+                          >
+                            No clinics available for this doctor.
+                          </Typography>
+                        </div>
+                      ) : (
+                        <Select
+                          value={selectedClinics}
+                          onChange={(options) => setSelectedClinics([...(options || [])] as ClinicOption[])}
+                          options={clinicOptions}
+                          placeholder={`Select clinics (${clinicOptions.length} available)`}
+                          isMulti={true}
+                          isSearchable={true}
+                          closeMenuOnSelect={false}
+                          styles={{
+                            control: (base: any) => ({
+                              ...base,
+                              borderRadius: 8,
+                              backgroundColor: '#f9fafb',
+                              minHeight: 42,
+                              borderColor: '#d1d5db',
+                              '&:hover': { borderColor: '#d1d5db' },
+                            }),
+                            menu: (base: any) => ({
+                              ...base,
+                              zIndex: 9999,
+                            }),
+                          }}
+                        />
+                      )}
+                    </div>
+
+                    {assignedClinics.length > 0 && (
+                      <div>
+                        <Typography
+                          variant="h6"
+                          color="blue-gray"
+                          className="mb-3"
+                          placeholder={undefined}
+                          onPointerEnterCapture={undefined}
+                          onPointerLeaveCapture={undefined}
+                        >
+                          Current Access
+                        </Typography>
+                        <div className="space-y-2">
+                          {assignedClinics.map((clinic) => (
+                            <div
+                              key={clinic.id}
+                              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                            >
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-medium"
+                                placeholder={undefined}
+                                onPointerEnterCapture={undefined}
+                                onPointerLeaveCapture={undefined}
+                              >
+                                {clinic.name}
+                              </Typography>
+                              <Typography
+                                variant="small"
+                                color="gray"
+                                placeholder={undefined}
+                                onPointerEnterCapture={undefined}
+                                onPointerLeaveCapture={undefined}
+                              >
+                                {clinic.business_id}
+                              </Typography>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex justify-end pt-4">
+                      <Button
+                        type="submit"
+                        disabled={savingClinicAccess || savingClinicAccessDisabled}
+                        placeholder={undefined}
+                        onPointerEnterCapture={undefined}
+                        onPointerLeaveCapture={undefined}
+                      >
+                        {savingClinicAccess ? (
+                          <Spinner className="h-4 w-4" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} />
+                        ) : (
+                          'Save Clinic Access'
+                        )}
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </form>
+            )}
+
             {activeTab === 'customFeatures' && (
               <div className="mt-6 space-y-6">
                 {/* Add Feature Section */}
@@ -897,4 +1125,3 @@ const ConfigureDoctorModal = ({ doctor, open, onClose }: Props) => {
 }
 
 export default ConfigureDoctorModal;
-
