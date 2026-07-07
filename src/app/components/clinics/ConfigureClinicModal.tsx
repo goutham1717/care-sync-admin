@@ -32,6 +32,15 @@ type ClinicFeature = {
 };
 
 const INPATIENT_MODULE_KEY = "Inpatient";
+const AI_PRESCRIPTION_ASSISTANT_KEY = "AiPrescriptionAssistant";
+
+const FEATURE_COPY: Record<string, { label: string; description: string }> = {
+  [AI_PRESCRIPTION_ASSISTANT_KEY]: {
+    label: "AI Prescription Assistant",
+    description:
+      "Enable realtime consultation listening and prescription auto-fill for this clinic.",
+  },
+};
 
 const todayInputValue = () => new Date().toISOString().slice(0, 10);
 
@@ -74,6 +83,12 @@ const getStatusBadgeClass = (status?: string | null) => {
       return "bg-gray-50 text-gray-700 border-gray-200";
   }
 };
+
+const getFeatureMeta = (value: string) =>
+  FEATURE_COPY[value] || {
+    label: value,
+    description: "Clinic add-on enabled for this workspace.",
+  };
 
 const ConfigureClinicModal = ({ clinic, open, onClose }: Props) => {
   const [activeTab, setActiveTab] = useState<"addons" | "modules">("addons");
@@ -211,7 +226,7 @@ const ConfigureClinicModal = ({ clinic, open, onClose }: Props) => {
   // Convert to options for react-select
   const featureOptions = availableFeatures.map((feature) => ({
     value: feature.value,
-    label: feature.value,
+    label: getFeatureMeta(feature.value).label,
   }));
 
   const handleAddFeature = () => {
@@ -485,16 +500,28 @@ const ConfigureClinicModal = ({ clinic, open, onClose }: Props) => {
                             }
                             className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
                           >
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-medium"
-                              placeholder={undefined}
-                              onPointerEnterCapture={undefined}
-                              onPointerLeaveCapture={undefined}
-                            >
-                              {feature.value}
-                            </Typography>
+                            <div className="pr-4">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-medium"
+                                placeholder={undefined}
+                                onPointerEnterCapture={undefined}
+                                onPointerLeaveCapture={undefined}
+                              >
+                                {getFeatureMeta(feature.value).label}
+                              </Typography>
+                              <Typography
+                                variant="small"
+                                color="gray"
+                                className="mt-1"
+                                placeholder={undefined}
+                                onPointerEnterCapture={undefined}
+                                onPointerLeaveCapture={undefined}
+                              >
+                                {getFeatureMeta(feature.value).description}
+                              </Typography>
+                            </div>
                             <Button
                               size="sm"
                               variant="text"
