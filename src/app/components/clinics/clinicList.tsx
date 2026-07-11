@@ -16,7 +16,6 @@ import {
 import ClinicDetailsDrawer from "./ClinicDetailsDrawer";
 import Link from "next/link";
 import AddClinicDrawer from "./AddClinicDrawer";
-import ConfigureClinicModal from "./ConfigureClinicModal";
 
 type Props = {};
 
@@ -28,10 +27,6 @@ const ClinicList = (props: Props) => {
   >(null);
   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [openAddClinicDrawer, setOpenAddClinicDrawer] = React.useState(false);
-  const [openConfigureModal, setOpenConfigureModal] = React.useState(false);
-  const [configureClinic, setConfigureClinic] = React.useState<
-    GetClinicsQuery["getClinics"][0] | null
-  >(null);
   const [openMenuId, setOpenMenuId] = React.useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -106,11 +101,6 @@ const ClinicList = (props: Props) => {
   const handleClinicClick = (clinic: GetClinicsQuery["getClinics"][0]) => {
     setSelectedClinic(clinic);
     setOpenDrawer(true);
-  };
-
-  const handleConfigureClick = (clinic: GetClinicsQuery["getClinics"][0]) => {
-    setConfigureClinic(clinic);
-    setOpenConfigureModal(true);
   };
 
   return (
@@ -300,15 +290,13 @@ const ClinicList = (props: Props) => {
                             >
                               Inpatient Defaults
                             </Link>
-                            <button
-                              onClick={() => {
-                                handleConfigureClick(clinic);
-                                setOpenMenuId(null);
-                              }}
-                              className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            <Link
+                              href={`/clinics/${clinic.id}/configure`}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => setOpenMenuId(null)}
                             >
                               Configure
-                            </button>
+                            </Link>
                           </div>
                         </div>
                       )}
@@ -334,12 +322,6 @@ const ClinicList = (props: Props) => {
         clinics={data?.getClinics || []}
         onClinicCreated={() => refetch()}
         onClose={() => setOpenAddClinicDrawer(false)}
-      />
-
-      <ConfigureClinicModal
-        clinic={configureClinic}
-        open={openConfigureModal}
-        onClose={() => setOpenConfigureModal(false)}
       />
     </>
   );
