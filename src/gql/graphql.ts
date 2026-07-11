@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 /* eslint-disable */
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { gql } from '@apollo/client';
@@ -331,6 +331,66 @@ export type ClinicFeature = {
   value: Scalars['String']['output'];
 };
 
+export type ClinicMilestone = {
+  __typename?: 'ClinicMilestone';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  metricType: MilestoneMetricType;
+  repeatable: Scalars['Boolean']['output'];
+  rewardType: MilestoneRewardType;
+  rewardValue: Scalars['Int']['output'];
+  sortOrder: Scalars['Int']['output'];
+  targetValue: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ClinicMilestoneAchievement = {
+  __typename?: 'ClinicMilestoneAchievement';
+  achievedAt: Scalars['DateTime']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  errorMessage?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  milestoneId: Scalars['String']['output'];
+  progressValue: Scalars['Int']['output'];
+  rewardPayload?: Maybe<Scalars['JSON']['output']>;
+  rewardedAt?: Maybe<Scalars['DateTime']['output']>;
+  sequence: Scalars['Int']['output'];
+  status: ClinicMilestoneAchievementStatus;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum ClinicMilestoneAchievementStatus {
+  Applied = 'APPLIED',
+  Failed = 'FAILED',
+  Pending = 'PENDING'
+}
+
+export type ClinicMilestoneProgress = {
+  __typename?: 'ClinicMilestoneProgress';
+  achievedCount: Scalars['Int']['output'];
+  clinicId: Scalars['String']['output'];
+  currentProgress: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  isCompleted: Scalars['Boolean']['output'];
+  latestRewardedAt?: Maybe<Scalars['DateTime']['output']>;
+  metricType: MilestoneMetricType;
+  progressPercent: Scalars['Float']['output'];
+  remainingToUnlock: Scalars['Int']['output'];
+  repeatable: Scalars['Boolean']['output'];
+  rewardType: MilestoneRewardType;
+  rewardValue: Scalars['Int']['output'];
+  sortOrder: Scalars['Int']['output'];
+  targetValue: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+};
+
 export type ClinicModuleAccess = {
   __typename?: 'ClinicModuleAccess';
   enabled: Scalars['Boolean']['output'];
@@ -434,6 +494,19 @@ export type CpgDto = {
   nutritionalFacts: Scalars['String']['input'];
   productName: Scalars['String']['input'];
   size: Scalars['String']['input'];
+};
+
+export type CreateClinicMilestoneDto = {
+  clinicId: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  isActive?: Scalars['Boolean']['input'];
+  metricType: MilestoneMetricType;
+  repeatable?: Scalars['Boolean']['input'];
+  rewardType: MilestoneRewardType;
+  rewardValue: Scalars['Int']['input'];
+  sortOrder?: Scalars['Int']['input'];
+  targetValue: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type CreateCustomFieldInput = {
@@ -1604,6 +1677,20 @@ export enum MessagingPlatform {
   Whatsapp = 'WHATSAPP'
 }
 
+export enum MilestoneMetricType {
+  AiAppointmentsCreated = 'AI_APPOINTMENTS_CREATED',
+  AppointmentsCreated = 'APPOINTMENTS_CREATED',
+  BillingsCreated = 'BILLINGS_CREATED'
+}
+
+export enum MilestoneRewardType {
+  ClinicWalletInr = 'CLINIC_WALLET_INR',
+  OwnerSubscriptionDays = 'OWNER_SUBSCRIPTION_DAYS',
+  SmsCredits = 'SMS_CREDITS',
+  VideoCredits = 'VIDEO_CREDITS',
+  WhatsappCredits = 'WHATSAPP_CREDITS'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   DoctorLoginOTPRequest: OtpStatus;
@@ -1628,6 +1715,7 @@ export type Mutation = {
   cancelInpatientCharge: InpatientCharge;
   completeInpatientDischarge: InpatientEncounter;
   createBusiness: Business;
+  createClinicMilestone: ClinicMilestone;
   createCustomField: CustomField;
   createDentalChart: DentalChart;
   createDoctorWorkingHours: DoctorWorkingHours;
@@ -1652,6 +1740,7 @@ export type Mutation = {
   createTemplate: Template;
   deleteBusiness: Scalars['Boolean']['output'];
   deleteClinic: Scalars['Boolean']['output'];
+  deleteClinicMilestone: Scalars['Boolean']['output'];
   deleteConversation: DeleteConversationResult;
   deleteCustomField: Scalars['Boolean']['output'];
   deleteDentalChart: Scalars['Boolean']['output'];
@@ -1664,6 +1753,7 @@ export type Mutation = {
   deleteSchedule: Scalars['Float']['output'];
   editBilling: Scalars['String']['output'];
   editMedication: Medication;
+  evaluateClinicMilestones: Array<ClinicMilestoneAchievement>;
   finalizeInpatientBill: InpatientBillingAccount;
   generateReport: Scalars['String']['output'];
   getAppointmentGraph: Array<GraphData>;
@@ -1699,6 +1789,7 @@ export type Mutation = {
   updateAppointmentStatus: AppointmentDetails;
   updateClinicCoordinates: Clinic;
   updateClinicDetail: Clinic;
+  updateClinicMilestone: ClinicMilestone;
   updateClinicModuleSubscriptionStatus: ClinicModuleSubscription;
   updateClinicStaff: ClinicStaffModel;
   updateCredits: UpdatedCount;
@@ -1854,6 +1945,11 @@ export type MutationCreateBusinessArgs = {
 };
 
 
+export type MutationCreateClinicMilestoneArgs = {
+  input: CreateClinicMilestoneDto;
+};
+
+
 export type MutationCreateCustomFieldArgs = {
   input: CreateCustomFieldInput;
 };
@@ -1975,6 +2071,11 @@ export type MutationDeleteClinicArgs = {
 };
 
 
+export type MutationDeleteClinicMilestoneArgs = {
+  milestoneId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteConversationArgs = {
   input: DeleteConversationInput;
 };
@@ -2033,6 +2134,12 @@ export type MutationEditBillingArgs = {
 export type MutationEditMedicationArgs = {
   id: Scalars['String']['input'];
   medicationInput: MedicationDto;
+};
+
+
+export type MutationEvaluateClinicMilestonesArgs = {
+  clinicId: Scalars['String']['input'];
+  metricTypes?: InputMaybe<Array<MilestoneMetricType>>;
 };
 
 
@@ -2205,6 +2312,11 @@ export type MutationUpdateClinicCoordinatesArgs = {
 
 export type MutationUpdateClinicDetailArgs = {
   clinicDetailsInput: ClinicDetailDto;
+};
+
+
+export type MutationUpdateClinicMilestoneArgs = {
+  input: UpdateClinicMilestoneDto;
 };
 
 
@@ -2870,6 +2982,9 @@ export type Query = {
   getClinicCustomFields: Array<CustomField>;
   getClinicDoctors: Array<Doctor>;
   getClinicFeatures: Array<ClinicFeature>;
+  getClinicMilestoneAchievements: Array<ClinicMilestoneAchievement>;
+  getClinicMilestoneProgress: Array<ClinicMilestoneProgress>;
+  getClinicMilestones: Array<ClinicMilestone>;
   getClinicModuleAccess: ClinicModuleAccess;
   getClinicModuleSubscription?: Maybe<ClinicModuleSubscription>;
   getClinicModuleSubscriptions: Array<ClinicModuleSubscription>;
@@ -3087,6 +3202,21 @@ export type QueryGetClinicDoctorsArgs = {
 
 
 export type QueryGetClinicFeaturesArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicMilestoneAchievementsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicMilestoneProgressArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicMilestonesArgs = {
   clinicId: Scalars['String']['input'];
 };
 
@@ -3801,6 +3931,20 @@ export type UnifiedLoginResponse = {
   type: Scalars['String']['output'];
 };
 
+export type UpdateClinicMilestoneDto = {
+  clinicId?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  metricType?: InputMaybe<MilestoneMetricType>;
+  milestoneId: Scalars['String']['input'];
+  repeatable?: InputMaybe<Scalars['Boolean']['input']>;
+  rewardType?: InputMaybe<MilestoneRewardType>;
+  rewardValue?: InputMaybe<Scalars['Int']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  targetValue?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateClinicModuleSubscriptionStatusDto = {
   status: SubscriptionStatus;
   subscriptionId: Scalars['String']['input'];
@@ -4097,6 +4241,34 @@ export type RemoveClinicFeaturesMutationVariables = Exact<{
 
 export type RemoveClinicFeaturesMutation = { __typename?: 'Mutation', removeClinicFeatures: { __typename?: 'Clinic', id: string, name: string, customFeatures?: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> | null } };
 
+export type CreateClinicMilestoneMutationVariables = Exact<{
+  input: CreateClinicMilestoneDto;
+}>;
+
+
+export type CreateClinicMilestoneMutation = { __typename?: 'Mutation', createClinicMilestone: { __typename?: 'ClinicMilestone', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, createdAt: any, updatedAt: any } };
+
+export type UpdateClinicMilestoneMutationVariables = Exact<{
+  input: UpdateClinicMilestoneDto;
+}>;
+
+
+export type UpdateClinicMilestoneMutation = { __typename?: 'Mutation', updateClinicMilestone: { __typename?: 'ClinicMilestone', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, createdAt: any, updatedAt: any } };
+
+export type DeleteClinicMilestoneMutationVariables = Exact<{
+  milestoneId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteClinicMilestoneMutation = { __typename?: 'Mutation', deleteClinicMilestone: boolean };
+
+export type EvaluateClinicMilestonesMutationVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type EvaluateClinicMilestonesMutation = { __typename?: 'Mutation', evaluateClinicMilestones: Array<{ __typename?: 'ClinicMilestoneAchievement', id: string, clinicId: string, milestoneId: string, sequence: number, progressValue: number, status: ClinicMilestoneAchievementStatus, rewardPayload?: any | null, errorMessage?: string | null, achievedAt: any, rewardedAt?: any | null }> };
+
 export type UpsertClinicModuleSubscriptionMutationVariables = Exact<{
   input: UpsertClinicModuleSubscriptionDto;
 }>;
@@ -4226,6 +4398,20 @@ export type GetClinicFeaturesQueryVariables = Exact<{
 
 export type GetClinicFeaturesQuery = { __typename?: 'Query', getClinicFeatures: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> };
 
+export type GetClinicMilestonesQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicMilestonesQuery = { __typename?: 'Query', getClinicMilestones: Array<{ __typename?: 'ClinicMilestone', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, createdAt: any, updatedAt: any }> };
+
+export type GetClinicMilestoneProgressQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicMilestoneProgressQuery = { __typename?: 'Query', getClinicMilestoneProgress: Array<{ __typename?: 'ClinicMilestoneProgress', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, currentProgress: number, achievedCount: number, remainingToUnlock: number, isCompleted: boolean, progressPercent: number, latestRewardedAt?: any | null }> };
+
 export type GetClinicModuleSubscriptionQueryVariables = Exact<{
   clinicId: Scalars['String']['input'];
   moduleKey: Scalars['String']['input'];
@@ -4334,44 +4520,50 @@ export type GetDoctorSubscriptionQueryVariables = Exact<{
 export type GetDoctorSubscriptionQuery = { __typename?: 'Query', getDoctorSubscription?: { __typename?: 'DoctorSubscription', id: string, doctorId: string, status: SubscriptionStatus, startDate: any, endDate: any, trialStartDate?: any | null, trialEndDate?: any | null, createdAt: any, updatedAt: any } | null };
 
 
-export const CreateBusinessDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "CreateBusiness" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "businessInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "BusinessDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createBusiness" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "businessInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "businessInput" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }] } }] } as unknown as DocumentNode<CreateBusinessMutation, CreateBusinessMutationVariables>;
-export const AddClinicDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddClinic" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "businessId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "ClinicDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addClinic" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "businessId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "businessId" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicInput" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "city_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "closeTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "location" } }, { "kind": "Field", "name": { "kind": "Name", "value": "logoUrl" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "openTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "workingDays" } }] } }] } }] } as unknown as DocumentNode<AddClinicMutation, AddClinicMutationVariables>;
-export const AssignClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignClinicFeatures" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AssignClinicFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignClinicFeatures" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>;
-export const RemoveClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveClinicFeatures" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "RemoveClinicFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeClinicFeatures" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>;
-export const UpsertClinicModuleSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpsertClinicModuleSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpsertClinicModuleSubscriptionDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "upsertClinicModuleSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "moduleKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<UpsertClinicModuleSubscriptionMutation, UpsertClinicModuleSubscriptionMutationVariables>;
-export const UpdateClinicModuleSubscriptionStatusDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateClinicModuleSubscriptionStatus" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateClinicModuleSubscriptionStatusDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateClinicModuleSubscriptionStatus" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "moduleKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<UpdateClinicModuleSubscriptionStatusMutation, UpdateClinicModuleSubscriptionStatusMutationVariables>;
-export const AssignCustomFeaturesToDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignCustomFeaturesToDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AssignCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignCustomFeaturesToDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
-export const RemoveCustomFeaturesFromDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveCustomFeaturesFromDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "RemoveCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeCustomFeaturesFromDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }] } }] } }] } as unknown as DocumentNode<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
-export const AddDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "DoctorDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicIds" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }] } }] } }] } as unknown as DocumentNode<AddDoctorMutation, AddDoctorMutationVariables>;
-export const UpdateDoctorAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateDoctorAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "appointmentLimit" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Int" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateDoctorAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "appointmentLimit" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "appointmentLimit" } } }] }] } }] } as unknown as DocumentNode<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>;
-export const RechargeAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RechargeAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "amount" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Int" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "rechargeAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "amount" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "amount" } } }] }] } }] } as unknown as DocumentNode<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>;
-export const AssignDoctorToClinicsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignDoctorToClinics" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "ListType", "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignDoctorToClinics" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicIds" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "professional" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinic" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }] } }] } }] } }] } }] } }] } as unknown as DocumentNode<AssignDoctorToClinicsMutation, AssignDoctorToClinicsMutationVariables>;
-export const UpdateProfilePicUrlDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateProfilePicUrl" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateProfilePicUrl" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "picture_url" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
-export const UpsertInpatientModuleSettingsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpsertInpatientModuleSettings" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpsertInpatientModuleSettingsDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "upsertInpatientModuleSettings" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "wardBedTariffs" } }, { "kind": "Field", "name": { "kind": "Name", "value": "chargeHeads" } }, { "kind": "Field", "name": { "kind": "Name", "value": "packageTemplates" } }, { "kind": "Field", "name": { "kind": "Name", "value": "taxSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "invoiceSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "autoPostSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>;
-export const AddClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AddClinicStaffInput" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<AddClinicStaffMutation, AddClinicStaffMutationVariables>;
-export const UpdateClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateClinicStaffInput" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }] } }] } }] } as unknown as DocumentNode<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>;
-export const RemoveClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "staffId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "staffId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "staffId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }] } }] } }] } as unknown as DocumentNode<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>;
-export const CreateSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "CreateSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "CreateSubscriptionDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
-export const UpdateSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateSubscriptionDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
-export const UpdateSubscriptionStatusDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateSubscriptionStatus" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateSubscriptionStatusDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateSubscriptionStatus" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }] } }] } }] } as unknown as DocumentNode<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>;
-export const GetAllClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetAllClinicFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getAllClinicFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>;
-export const GetClinicFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicFeatures" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicFeatures" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>;
-export const GetClinicModuleSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicModuleSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "moduleKey" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicModuleSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "moduleKey" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "moduleKey" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "moduleKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>;
-export const GetClinicModuleAccessDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicModuleAccess" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "moduleKey" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicModuleAccess" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "moduleKey" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "moduleKey" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "moduleKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "enabled" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }] } }] } }] } as unknown as DocumentNode<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>;
-export const GetClinicsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinics" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinics" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "city_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "closeTime" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "latitude" } }, { "kind": "Field", "name": { "kind": "Name", "value": "location" } }, { "kind": "Field", "name": { "kind": "Name", "value": "logoUrl" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "address" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "city" } }, { "kind": "Field", "name": { "kind": "Name", "value": "country" } }, { "kind": "Field", "name": { "kind": "Name", "value": "line1" } }, { "kind": "Field", "name": { "kind": "Name", "value": "line2" } }, { "kind": "Field", "name": { "kind": "Name", "value": "pin" } }, { "kind": "Field", "name": { "kind": "Name", "value": "state" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "phone_number" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "n" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "workingDays" } }, { "kind": "Field", "name": { "kind": "Name", "value": "longitude" } }, { "kind": "Field", "name": { "kind": "Name", "value": "openTime" } }] } }] } }] } as unknown as DocumentNode<GetClinicsQuery, GetClinicsQueryVariables>;
-export const GetCustomFeaturesDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetCustomFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getCustomFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } as unknown as DocumentNode<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>;
-export const GetDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<GetDoctorQuery, GetDoctorQueryVariables>;
-export const GetClinicDoctorsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicDoctors" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicDoctors" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "designation" } }, { "kind": "Field", "name": { "kind": "Name", "value": "dob" } }, { "kind": "Field", "name": { "kind": "Name", "value": "email" } }, { "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "gender" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "middle_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phone_number" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile_pic" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "professional" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "about" } }, { "kind": "Field", "name": { "kind": "Name", "value": "active" } }, { "kind": "Field", "name": { "kind": "Name", "value": "language" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "major_speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "degree" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "branch_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "college_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "end_year" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "start_year" } }] } }] } }] } }] } }] } }] } as unknown as DocumentNode<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
-export const GetDoctorAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctorAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }] }] } }] } as unknown as DocumentNode<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>;
-export const GetDoctorSettingsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorSettings" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctorSettings" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "appointmentLimit" } }, { "kind": "Field", "name": { "kind": "Name", "value": "appointmentsUsed" } }] } }] } }] } as unknown as DocumentNode<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>;
-export const GetDoctorClinicAccessDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorClinicAccess" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "professional" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinic" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }] } }] } }] } }] } }] } }] } as unknown as DocumentNode<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>;
-export const GetDoctorsWithClinicsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorsWithClinics" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctors" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "designation" } }, { "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phone_number" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "professional" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinic" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "major_speciality" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "name" } }] } }] } }] } }] } }] } }] } as unknown as DocumentNode<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>;
-export const GetAllDraftsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinicName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "type" } }] } }] } }] } as unknown as DocumentNode<GetAllDraftsQuery, GetAllDraftsQueryVariables>;
-export const ApproveOrRejectDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "ApproveOrReject" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "approveOrReject" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "status" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } } }] }] } }] } as unknown as DocumentNode<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
-export const GetInpatientModuleSettingsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetInpatientModuleSettings" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getInpatientModuleSettings" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "wardBedTariffs" } }, { "kind": "Field", "name": { "kind": "Name", "value": "chargeHeads" } }, { "kind": "Field", "name": { "kind": "Name", "value": "packageTemplates" } }, { "kind": "Field", "name": { "kind": "Name", "value": "taxSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "invoiceSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "autoPostSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>;
-export const GetClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<GetClinicStaffQuery, GetClinicStaffQueryVariables>;
-export const GetSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "subscriptionId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "subscriptionId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "subscriptionId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetSubscriptionQuery, GetSubscriptionQueryVariables>;
-export const GetDoctorSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctorSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>;
+export const CreateBusinessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateBusiness"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"businessInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BusinessDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBusiness"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"businessInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"businessInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateBusinessMutation, CreateBusinessMutationVariables>;
+export const AddClinicDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddClinic"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"businessId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ClinicDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addClinic"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"businessId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"businessId"}}},{"kind":"Argument","name":{"kind":"Name","value":"clinicInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}},{"kind":"Field","name":{"kind":"Name","value":"city_name"}},{"kind":"Field","name":{"kind":"Name","value":"closeTime"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"openTime"}},{"kind":"Field","name":{"kind":"Name","value":"workingDays"}}]}}]}}]} as unknown as DocumentNode<AddClinicMutation, AddClinicMutationVariables>;
+export const AssignClinicFeaturesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AssignClinicFeatures"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AssignClinicFeaturesDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assignClinicFeatures"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"customFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>;
+export const RemoveClinicFeaturesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemoveClinicFeatures"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RemoveClinicFeaturesDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeClinicFeatures"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"customFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>;
+export const CreateClinicMilestoneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateClinicMilestone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateClinicMilestoneDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createClinicMilestone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"metricType"}},{"kind":"Field","name":{"kind":"Name","value":"targetValue"}},{"kind":"Field","name":{"kind":"Name","value":"rewardType"}},{"kind":"Field","name":{"kind":"Name","value":"rewardValue"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"repeatable"}},{"kind":"Field","name":{"kind":"Name","value":"sortOrder"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<CreateClinicMilestoneMutation, CreateClinicMilestoneMutationVariables>;
+export const UpdateClinicMilestoneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateClinicMilestone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateClinicMilestoneDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateClinicMilestone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"metricType"}},{"kind":"Field","name":{"kind":"Name","value":"targetValue"}},{"kind":"Field","name":{"kind":"Name","value":"rewardType"}},{"kind":"Field","name":{"kind":"Name","value":"rewardValue"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"repeatable"}},{"kind":"Field","name":{"kind":"Name","value":"sortOrder"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<UpdateClinicMilestoneMutation, UpdateClinicMilestoneMutationVariables>;
+export const DeleteClinicMilestoneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteClinicMilestone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"milestoneId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteClinicMilestone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"milestoneId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"milestoneId"}}}]}]}}]} as unknown as DocumentNode<DeleteClinicMilestoneMutation, DeleteClinicMilestoneMutationVariables>;
+export const EvaluateClinicMilestonesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EvaluateClinicMilestones"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"evaluateClinicMilestones"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"milestoneId"}},{"kind":"Field","name":{"kind":"Name","value":"sequence"}},{"kind":"Field","name":{"kind":"Name","value":"progressValue"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"rewardPayload"}},{"kind":"Field","name":{"kind":"Name","value":"errorMessage"}},{"kind":"Field","name":{"kind":"Name","value":"achievedAt"}},{"kind":"Field","name":{"kind":"Name","value":"rewardedAt"}}]}}]}}]} as unknown as DocumentNode<EvaluateClinicMilestonesMutation, EvaluateClinicMilestonesMutationVariables>;
+export const UpsertClinicModuleSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpsertClinicModuleSubscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpsertClinicModuleSubscriptionDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upsertClinicModuleSubscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"moduleKey"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialEndDate"}}]}}]}}]} as unknown as DocumentNode<UpsertClinicModuleSubscriptionMutation, UpsertClinicModuleSubscriptionMutationVariables>;
+export const UpdateClinicModuleSubscriptionStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateClinicModuleSubscriptionStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateClinicModuleSubscriptionStatusDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateClinicModuleSubscriptionStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"moduleKey"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialEndDate"}}]}}]}}]} as unknown as DocumentNode<UpdateClinicModuleSubscriptionStatusMutation, UpdateClinicModuleSubscriptionStatusMutationVariables>;
+export const AssignCustomFeaturesToDoctorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AssignCustomFeaturesToDoctor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AssignCustomFeaturesDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assignCustomFeaturesToDoctor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"personal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"customFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
+export const RemoveCustomFeaturesFromDoctorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemoveCustomFeaturesFromDoctor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"RemoveCustomFeaturesDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeCustomFeaturesFromDoctor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"customFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"personal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
+export const AddDoctorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddDoctor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicIds"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctorInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DoctorDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addDoctor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctorInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctorInput"}}},{"kind":"Argument","name":{"kind":"Name","value":"clinicIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}}]}}]}}]} as unknown as DocumentNode<AddDoctorMutation, AddDoctorMutationVariables>;
+export const UpdateDoctorAppointmentLimitDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateDoctorAppointmentLimit"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"appointmentLimit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateDoctorAppointmentLimit"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}},{"kind":"Argument","name":{"kind":"Name","value":"appointmentLimit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"appointmentLimit"}}}]}]}}]} as unknown as DocumentNode<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>;
+export const RechargeAppointmentLimitDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RechargeAppointmentLimit"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rechargeAppointmentLimit"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}},{"kind":"Argument","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}}]}]}}]} as unknown as DocumentNode<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>;
+export const AssignDoctorToClinicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AssignDoctorToClinics"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctorId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"assignDoctorToClinics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctorId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctorId"}}},{"kind":"Argument","name":{"kind":"Name","value":"clinicIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"professional"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clinic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AssignDoctorToClinicsMutation, AssignDoctorToClinicsMutationVariables>;
+export const UpdateProfilePicUrlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateProfilePicUrl"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"picture_url"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateProfilePicUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}},{"kind":"Argument","name":{"kind":"Name","value":"picture_url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"picture_url"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
+export const UpsertInpatientModuleSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpsertInpatientModuleSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpsertInpatientModuleSettingsDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upsertInpatientModuleSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"wardBedTariffs"}},{"kind":"Field","name":{"kind":"Name","value":"chargeHeads"}},{"kind":"Field","name":{"kind":"Name","value":"packageTemplates"}},{"kind":"Field","name":{"kind":"Name","value":"taxSettings"}},{"kind":"Field","name":{"kind":"Name","value":"invoiceSettings"}},{"kind":"Field","name":{"kind":"Name","value":"autoPostSettings"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>;
+export const AddClinicStaffDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddClinicStaff"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AddClinicStaffInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addClinicStaff"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"staffRole"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<AddClinicStaffMutation, AddClinicStaffMutationVariables>;
+export const UpdateClinicStaffDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateClinicStaff"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateClinicStaffInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateClinicStaff"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"staffRole"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]}}]} as unknown as DocumentNode<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>;
+export const RemoveClinicStaffDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"RemoveClinicStaff"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"staffId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"removeClinicStaff"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"staffId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"staffId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}}]}}]}}]} as unknown as DocumentNode<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>;
+export const CreateSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateSubscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateSubscriptionDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createSubscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"doctorId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialEndDate"}}]}}]}}]} as unknown as DocumentNode<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
+export const UpdateSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSubscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSubscriptionDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSubscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialEndDate"}}]}}]}}]} as unknown as DocumentNode<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
+export const UpdateSubscriptionStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateSubscriptionStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateSubscriptionStatusDTO"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateSubscriptionStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}}]}}]}}]} as unknown as DocumentNode<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>;
+export const GetAllClinicFeaturesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllClinicFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllClinicFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>;
+export const GetClinicFeaturesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicFeatures"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicFeatures"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>;
+export const GetClinicMilestonesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicMilestones"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicMilestones"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"metricType"}},{"kind":"Field","name":{"kind":"Name","value":"targetValue"}},{"kind":"Field","name":{"kind":"Name","value":"rewardType"}},{"kind":"Field","name":{"kind":"Name","value":"rewardValue"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"repeatable"}},{"kind":"Field","name":{"kind":"Name","value":"sortOrder"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables>;
+export const GetClinicMilestoneProgressDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicMilestoneProgress"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicMilestoneProgress"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"metricType"}},{"kind":"Field","name":{"kind":"Name","value":"targetValue"}},{"kind":"Field","name":{"kind":"Name","value":"rewardType"}},{"kind":"Field","name":{"kind":"Name","value":"rewardValue"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"repeatable"}},{"kind":"Field","name":{"kind":"Name","value":"sortOrder"}},{"kind":"Field","name":{"kind":"Name","value":"currentProgress"}},{"kind":"Field","name":{"kind":"Name","value":"achievedCount"}},{"kind":"Field","name":{"kind":"Name","value":"remainingToUnlock"}},{"kind":"Field","name":{"kind":"Name","value":"isCompleted"}},{"kind":"Field","name":{"kind":"Name","value":"progressPercent"}},{"kind":"Field","name":{"kind":"Name","value":"latestRewardedAt"}}]}}]}}]} as unknown as DocumentNode<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables>;
+export const GetClinicModuleSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicModuleSubscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"moduleKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicModuleSubscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}},{"kind":"Argument","name":{"kind":"Name","value":"moduleKey"},"value":{"kind":"Variable","name":{"kind":"Name","value":"moduleKey"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"moduleKey"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialEndDate"}}]}}]}}]} as unknown as DocumentNode<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>;
+export const GetClinicModuleAccessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicModuleAccess"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"moduleKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicModuleAccess"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}},{"kind":"Argument","name":{"kind":"Name","value":"moduleKey"},"value":{"kind":"Variable","name":{"kind":"Name","value":"moduleKey"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"moduleKey"}},{"kind":"Field","name":{"kind":"Name","value":"enabled"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}}]}}]}}]} as unknown as DocumentNode<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>;
+export const GetClinicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}},{"kind":"Field","name":{"kind":"Name","value":"city_name"}},{"kind":"Field","name":{"kind":"Name","value":"closeTime"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"latitude"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"address"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"country"}},{"kind":"Field","name":{"kind":"Name","value":"line1"}},{"kind":"Field","name":{"kind":"Name","value":"line2"}},{"kind":"Field","name":{"kind":"Name","value":"pin"}},{"kind":"Field","name":{"kind":"Name","value":"state"}}]}},{"kind":"Field","name":{"kind":"Name","value":"phone_number"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"workingDays"}},{"kind":"Field","name":{"kind":"Name","value":"longitude"}},{"kind":"Field","name":{"kind":"Name","value":"openTime"}}]}}]}}]} as unknown as DocumentNode<GetClinicsQuery, GetClinicsQueryVariables>;
+export const GetCustomFeaturesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCustomFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCustomFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>;
+export const GetDoctorDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDoctor"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getDoctor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"customFeatures"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GetDoctorQuery, GetDoctorQueryVariables>;
+export const GetClinicDoctorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicDoctors"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicDoctors"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"personal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"designation"}},{"kind":"Field","name":{"kind":"Name","value":"dob"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"middle_name"}},{"kind":"Field","name":{"kind":"Name","value":"phone_number"}},{"kind":"Field","name":{"kind":"Name","value":"profile_pic"}}]}},{"kind":"Field","name":{"kind":"Name","value":"professional"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"active"}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"major_speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"degree"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"branch_name"}},{"kind":"Field","name":{"kind":"Name","value":"college_name"}},{"kind":"Field","name":{"kind":"Name","value":"end_year"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"start_year"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>;
+export const GetDoctorAppointmentLimitDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDoctorAppointmentLimit"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getDoctorAppointmentLimit"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}}]}]}}]} as unknown as DocumentNode<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>;
+export const GetDoctorSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDoctorSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getDoctorSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"appointmentLimit"}},{"kind":"Field","name":{"kind":"Name","value":"appointmentsUsed"}}]}}]}}]} as unknown as DocumentNode<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>;
+export const GetDoctorClinicAccessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDoctorClinicAccess"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getDoctor"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctor_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctor_id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"professional"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clinic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>;
+export const GetDoctorsWithClinicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDoctorsWithClinics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getDoctors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doctor_id"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"profile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"personal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"designation"}},{"kind":"Field","name":{"kind":"Name","value":"first_name"}},{"kind":"Field","name":{"kind":"Name","value":"last_name"}},{"kind":"Field","name":{"kind":"Name","value":"phone_number"}}]}},{"kind":"Field","name":{"kind":"Name","value":"professional"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clinic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"business_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"major_speciality"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>;
+export const GetAllDraftsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllDrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllDrafts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"clinicName"}},{"kind":"Field","name":{"kind":"Name","value":"doctorName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]}}]} as unknown as DocumentNode<GetAllDraftsQuery, GetAllDraftsQueryVariables>;
+export const ApproveOrRejectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ApproveOrReject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"approveOrReject"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status"}}}]}]}}]} as unknown as DocumentNode<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
+export const GetInpatientModuleSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetInpatientModuleSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getInpatientModuleSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"wardBedTariffs"}},{"kind":"Field","name":{"kind":"Name","value":"chargeHeads"}},{"kind":"Field","name":{"kind":"Name","value":"packageTemplates"}},{"kind":"Field","name":{"kind":"Name","value":"taxSettings"}},{"kind":"Field","name":{"kind":"Name","value":"invoiceSettings"}},{"kind":"Field","name":{"kind":"Name","value":"autoPostSettings"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>;
+export const GetClinicStaffDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetClinicStaff"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getClinicStaff"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"clinicId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clinicId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"staffRole"}},{"kind":"Field","name":{"kind":"Name","value":"permissions"}},{"kind":"Field","name":{"kind":"Name","value":"clinicId"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<GetClinicStaffQuery, GetClinicStaffQueryVariables>;
+export const GetSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"subscriptionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSubscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"subscriptionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"subscriptionId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"doctorId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetSubscriptionQuery, GetSubscriptionQueryVariables>;
+export const GetDoctorSubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDoctorSubscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"doctorId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getDoctorSubscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"doctorId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"doctorId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"doctorId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialStartDate"}},{"kind":"Field","name":{"kind":"Name","value":"trialEndDate"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}}]}}]}}]} as unknown as DocumentNode<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -4692,6 +4884,66 @@ export type ClinicFeature = {
   value: Scalars['String']['output'];
 };
 
+export type ClinicMilestone = {
+  __typename?: 'ClinicMilestone';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  metricType: MilestoneMetricType;
+  repeatable: Scalars['Boolean']['output'];
+  rewardType: MilestoneRewardType;
+  rewardValue: Scalars['Int']['output'];
+  sortOrder: Scalars['Int']['output'];
+  targetValue: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ClinicMilestoneAchievement = {
+  __typename?: 'ClinicMilestoneAchievement';
+  achievedAt: Scalars['DateTime']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  errorMessage?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  milestoneId: Scalars['String']['output'];
+  progressValue: Scalars['Int']['output'];
+  rewardPayload?: Maybe<Scalars['JSON']['output']>;
+  rewardedAt?: Maybe<Scalars['DateTime']['output']>;
+  sequence: Scalars['Int']['output'];
+  status: ClinicMilestoneAchievementStatus;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum ClinicMilestoneAchievementStatus {
+  Applied = 'APPLIED',
+  Failed = 'FAILED',
+  Pending = 'PENDING'
+}
+
+export type ClinicMilestoneProgress = {
+  __typename?: 'ClinicMilestoneProgress';
+  achievedCount: Scalars['Int']['output'];
+  clinicId: Scalars['String']['output'];
+  currentProgress: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  isCompleted: Scalars['Boolean']['output'];
+  latestRewardedAt?: Maybe<Scalars['DateTime']['output']>;
+  metricType: MilestoneMetricType;
+  progressPercent: Scalars['Float']['output'];
+  remainingToUnlock: Scalars['Int']['output'];
+  repeatable: Scalars['Boolean']['output'];
+  rewardType: MilestoneRewardType;
+  rewardValue: Scalars['Int']['output'];
+  sortOrder: Scalars['Int']['output'];
+  targetValue: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+};
+
 export type ClinicModuleAccess = {
   __typename?: 'ClinicModuleAccess';
   enabled: Scalars['Boolean']['output'];
@@ -4795,6 +5047,19 @@ export type CpgDto = {
   nutritionalFacts: Scalars['String']['input'];
   productName: Scalars['String']['input'];
   size: Scalars['String']['input'];
+};
+
+export type CreateClinicMilestoneDto = {
+  clinicId: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  isActive?: Scalars['Boolean']['input'];
+  metricType: MilestoneMetricType;
+  repeatable?: Scalars['Boolean']['input'];
+  rewardType: MilestoneRewardType;
+  rewardValue: Scalars['Int']['input'];
+  sortOrder?: Scalars['Int']['input'];
+  targetValue: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type CreateCustomFieldInput = {
@@ -5965,6 +6230,20 @@ export enum MessagingPlatform {
   Whatsapp = 'WHATSAPP'
 }
 
+export enum MilestoneMetricType {
+  AiAppointmentsCreated = 'AI_APPOINTMENTS_CREATED',
+  AppointmentsCreated = 'APPOINTMENTS_CREATED',
+  BillingsCreated = 'BILLINGS_CREATED'
+}
+
+export enum MilestoneRewardType {
+  ClinicWalletInr = 'CLINIC_WALLET_INR',
+  OwnerSubscriptionDays = 'OWNER_SUBSCRIPTION_DAYS',
+  SmsCredits = 'SMS_CREDITS',
+  VideoCredits = 'VIDEO_CREDITS',
+  WhatsappCredits = 'WHATSAPP_CREDITS'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   DoctorLoginOTPRequest: OtpStatus;
@@ -5989,6 +6268,7 @@ export type Mutation = {
   cancelInpatientCharge: InpatientCharge;
   completeInpatientDischarge: InpatientEncounter;
   createBusiness: Business;
+  createClinicMilestone: ClinicMilestone;
   createCustomField: CustomField;
   createDentalChart: DentalChart;
   createDoctorWorkingHours: DoctorWorkingHours;
@@ -6013,6 +6293,7 @@ export type Mutation = {
   createTemplate: Template;
   deleteBusiness: Scalars['Boolean']['output'];
   deleteClinic: Scalars['Boolean']['output'];
+  deleteClinicMilestone: Scalars['Boolean']['output'];
   deleteConversation: DeleteConversationResult;
   deleteCustomField: Scalars['Boolean']['output'];
   deleteDentalChart: Scalars['Boolean']['output'];
@@ -6025,6 +6306,7 @@ export type Mutation = {
   deleteSchedule: Scalars['Float']['output'];
   editBilling: Scalars['String']['output'];
   editMedication: Medication;
+  evaluateClinicMilestones: Array<ClinicMilestoneAchievement>;
   finalizeInpatientBill: InpatientBillingAccount;
   generateReport: Scalars['String']['output'];
   getAppointmentGraph: Array<GraphData>;
@@ -6060,6 +6342,7 @@ export type Mutation = {
   updateAppointmentStatus: AppointmentDetails;
   updateClinicCoordinates: Clinic;
   updateClinicDetail: Clinic;
+  updateClinicMilestone: ClinicMilestone;
   updateClinicModuleSubscriptionStatus: ClinicModuleSubscription;
   updateClinicStaff: ClinicStaffModel;
   updateCredits: UpdatedCount;
@@ -6215,6 +6498,11 @@ export type MutationCreateBusinessArgs = {
 };
 
 
+export type MutationCreateClinicMilestoneArgs = {
+  input: CreateClinicMilestoneDto;
+};
+
+
 export type MutationCreateCustomFieldArgs = {
   input: CreateCustomFieldInput;
 };
@@ -6336,6 +6624,11 @@ export type MutationDeleteClinicArgs = {
 };
 
 
+export type MutationDeleteClinicMilestoneArgs = {
+  milestoneId: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteConversationArgs = {
   input: DeleteConversationInput;
 };
@@ -6394,6 +6687,12 @@ export type MutationEditBillingArgs = {
 export type MutationEditMedicationArgs = {
   id: Scalars['String']['input'];
   medicationInput: MedicationDto;
+};
+
+
+export type MutationEvaluateClinicMilestonesArgs = {
+  clinicId: Scalars['String']['input'];
+  metricTypes?: InputMaybe<Array<MilestoneMetricType>>;
 };
 
 
@@ -6566,6 +6865,11 @@ export type MutationUpdateClinicCoordinatesArgs = {
 
 export type MutationUpdateClinicDetailArgs = {
   clinicDetailsInput: ClinicDetailDto;
+};
+
+
+export type MutationUpdateClinicMilestoneArgs = {
+  input: UpdateClinicMilestoneDto;
 };
 
 
@@ -7231,6 +7535,9 @@ export type Query = {
   getClinicCustomFields: Array<CustomField>;
   getClinicDoctors: Array<Doctor>;
   getClinicFeatures: Array<ClinicFeature>;
+  getClinicMilestoneAchievements: Array<ClinicMilestoneAchievement>;
+  getClinicMilestoneProgress: Array<ClinicMilestoneProgress>;
+  getClinicMilestones: Array<ClinicMilestone>;
   getClinicModuleAccess: ClinicModuleAccess;
   getClinicModuleSubscription?: Maybe<ClinicModuleSubscription>;
   getClinicModuleSubscriptions: Array<ClinicModuleSubscription>;
@@ -7448,6 +7755,21 @@ export type QueryGetClinicDoctorsArgs = {
 
 
 export type QueryGetClinicFeaturesArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicMilestoneAchievementsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicMilestoneProgressArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetClinicMilestonesArgs = {
   clinicId: Scalars['String']['input'];
 };
 
@@ -8162,6 +8484,20 @@ export type UnifiedLoginResponse = {
   type: Scalars['String']['output'];
 };
 
+export type UpdateClinicMilestoneDto = {
+  clinicId?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  metricType?: InputMaybe<MilestoneMetricType>;
+  milestoneId: Scalars['String']['input'];
+  repeatable?: InputMaybe<Scalars['Boolean']['input']>;
+  rewardType?: InputMaybe<MilestoneRewardType>;
+  rewardValue?: InputMaybe<Scalars['Int']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  targetValue?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateClinicModuleSubscriptionStatusDto = {
   status: SubscriptionStatus;
   subscriptionId: Scalars['String']['input'];
@@ -8458,6 +8794,34 @@ export type RemoveClinicFeaturesMutationVariables = Exact<{
 
 export type RemoveClinicFeaturesMutation = { __typename?: 'Mutation', removeClinicFeatures: { __typename?: 'Clinic', id: string, name: string, customFeatures?: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> | null } };
 
+export type CreateClinicMilestoneMutationVariables = Exact<{
+  input: CreateClinicMilestoneDto;
+}>;
+
+
+export type CreateClinicMilestoneMutation = { __typename?: 'Mutation', createClinicMilestone: { __typename?: 'ClinicMilestone', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, createdAt: any, updatedAt: any } };
+
+export type UpdateClinicMilestoneMutationVariables = Exact<{
+  input: UpdateClinicMilestoneDto;
+}>;
+
+
+export type UpdateClinicMilestoneMutation = { __typename?: 'Mutation', updateClinicMilestone: { __typename?: 'ClinicMilestone', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, createdAt: any, updatedAt: any } };
+
+export type DeleteClinicMilestoneMutationVariables = Exact<{
+  milestoneId: Scalars['String']['input'];
+}>;
+
+
+export type DeleteClinicMilestoneMutation = { __typename?: 'Mutation', deleteClinicMilestone: boolean };
+
+export type EvaluateClinicMilestonesMutationVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type EvaluateClinicMilestonesMutation = { __typename?: 'Mutation', evaluateClinicMilestones: Array<{ __typename?: 'ClinicMilestoneAchievement', id: string, clinicId: string, milestoneId: string, sequence: number, progressValue: number, status: ClinicMilestoneAchievementStatus, rewardPayload?: any | null, errorMessage?: string | null, achievedAt: any, rewardedAt?: any | null }> };
+
 export type UpsertClinicModuleSubscriptionMutationVariables = Exact<{
   input: UpsertClinicModuleSubscriptionDto;
 }>;
@@ -8586,6 +8950,20 @@ export type GetClinicFeaturesQueryVariables = Exact<{
 
 
 export type GetClinicFeaturesQuery = { __typename?: 'Query', getClinicFeatures: Array<{ __typename?: 'ClinicFeature', id?: string | null, value: string }> };
+
+export type GetClinicMilestonesQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicMilestonesQuery = { __typename?: 'Query', getClinicMilestones: Array<{ __typename?: 'ClinicMilestone', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, createdAt: any, updatedAt: any }> };
+
+export type GetClinicMilestoneProgressQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetClinicMilestoneProgressQuery = { __typename?: 'Query', getClinicMilestoneProgress: Array<{ __typename?: 'ClinicMilestoneProgress', id: string, clinicId: string, title: string, description?: string | null, metricType: MilestoneMetricType, targetValue: number, rewardType: MilestoneRewardType, rewardValue: number, isActive: boolean, repeatable: boolean, sortOrder: number, currentProgress: number, achievedCount: number, remainingToUnlock: number, isCompleted: boolean, progressPercent: number, latestRewardedAt?: any | null }> };
 
 export type GetClinicModuleSubscriptionQueryVariables = Exact<{
   clinicId: Scalars['String']['input'];
@@ -8723,9 +9101,9 @@ export type CreateBusinessMutationFn = Apollo.MutationFunction<CreateBusinessMut
  * });
  */
 export function useCreateBusinessMutation(baseOptions?: Apollo.MutationHookOptions<CreateBusinessMutation, CreateBusinessMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<CreateBusinessMutation, CreateBusinessMutationVariables>(CreateBusinessDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBusinessMutation, CreateBusinessMutationVariables>(CreateBusinessDocument, options);
+      }
 export type CreateBusinessMutationHookResult = ReturnType<typeof useCreateBusinessMutation>;
 export type CreateBusinessMutationResult = Apollo.MutationResult<CreateBusinessMutation>;
 export type CreateBusinessMutationOptions = Apollo.BaseMutationOptions<CreateBusinessMutation, CreateBusinessMutationVariables>;
@@ -8767,9 +9145,9 @@ export type AddClinicMutationFn = Apollo.MutationFunction<AddClinicMutation, Add
  * });
  */
 export function useAddClinicMutation(baseOptions?: Apollo.MutationHookOptions<AddClinicMutation, AddClinicMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<AddClinicMutation, AddClinicMutationVariables>(AddClinicDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddClinicMutation, AddClinicMutationVariables>(AddClinicDocument, options);
+      }
 export type AddClinicMutationHookResult = ReturnType<typeof useAddClinicMutation>;
 export type AddClinicMutationResult = Apollo.MutationResult<AddClinicMutation>;
 export type AddClinicMutationOptions = Apollo.BaseMutationOptions<AddClinicMutation, AddClinicMutationVariables>;
@@ -8805,9 +9183,9 @@ export type AssignClinicFeaturesMutationFn = Apollo.MutationFunction<AssignClini
  * });
  */
 export function useAssignClinicFeaturesMutation(baseOptions?: Apollo.MutationHookOptions<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>(AssignClinicFeaturesDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>(AssignClinicFeaturesDocument, options);
+      }
 export type AssignClinicFeaturesMutationHookResult = ReturnType<typeof useAssignClinicFeaturesMutation>;
 export type AssignClinicFeaturesMutationResult = Apollo.MutationResult<AssignClinicFeaturesMutation>;
 export type AssignClinicFeaturesMutationOptions = Apollo.BaseMutationOptions<AssignClinicFeaturesMutation, AssignClinicFeaturesMutationVariables>;
@@ -8843,12 +9221,175 @@ export type RemoveClinicFeaturesMutationFn = Apollo.MutationFunction<RemoveClini
  * });
  */
 export function useRemoveClinicFeaturesMutation(baseOptions?: Apollo.MutationHookOptions<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>(RemoveClinicFeaturesDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>(RemoveClinicFeaturesDocument, options);
+      }
 export type RemoveClinicFeaturesMutationHookResult = ReturnType<typeof useRemoveClinicFeaturesMutation>;
 export type RemoveClinicFeaturesMutationResult = Apollo.MutationResult<RemoveClinicFeaturesMutation>;
 export type RemoveClinicFeaturesMutationOptions = Apollo.BaseMutationOptions<RemoveClinicFeaturesMutation, RemoveClinicFeaturesMutationVariables>;
+export const CreateClinicMilestoneDocument = gql`
+    mutation CreateClinicMilestone($input: CreateClinicMilestoneDTO!) {
+  createClinicMilestone(input: $input) {
+    id
+    clinicId
+    title
+    description
+    metricType
+    targetValue
+    rewardType
+    rewardValue
+    isActive
+    repeatable
+    sortOrder
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateClinicMilestoneMutationFn = Apollo.MutationFunction<CreateClinicMilestoneMutation, CreateClinicMilestoneMutationVariables>;
+
+/**
+ * __useCreateClinicMilestoneMutation__
+ *
+ * To run a mutation, you first call `useCreateClinicMilestoneMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateClinicMilestoneMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createClinicMilestoneMutation, { data, loading, error }] = useCreateClinicMilestoneMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateClinicMilestoneMutation(baseOptions?: Apollo.MutationHookOptions<CreateClinicMilestoneMutation, CreateClinicMilestoneMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateClinicMilestoneMutation, CreateClinicMilestoneMutationVariables>(CreateClinicMilestoneDocument, options);
+      }
+export type CreateClinicMilestoneMutationHookResult = ReturnType<typeof useCreateClinicMilestoneMutation>;
+export type CreateClinicMilestoneMutationResult = Apollo.MutationResult<CreateClinicMilestoneMutation>;
+export type CreateClinicMilestoneMutationOptions = Apollo.BaseMutationOptions<CreateClinicMilestoneMutation, CreateClinicMilestoneMutationVariables>;
+export const UpdateClinicMilestoneDocument = gql`
+    mutation UpdateClinicMilestone($input: UpdateClinicMilestoneDTO!) {
+  updateClinicMilestone(input: $input) {
+    id
+    clinicId
+    title
+    description
+    metricType
+    targetValue
+    rewardType
+    rewardValue
+    isActive
+    repeatable
+    sortOrder
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type UpdateClinicMilestoneMutationFn = Apollo.MutationFunction<UpdateClinicMilestoneMutation, UpdateClinicMilestoneMutationVariables>;
+
+/**
+ * __useUpdateClinicMilestoneMutation__
+ *
+ * To run a mutation, you first call `useUpdateClinicMilestoneMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClinicMilestoneMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateClinicMilestoneMutation, { data, loading, error }] = useUpdateClinicMilestoneMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateClinicMilestoneMutation(baseOptions?: Apollo.MutationHookOptions<UpdateClinicMilestoneMutation, UpdateClinicMilestoneMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateClinicMilestoneMutation, UpdateClinicMilestoneMutationVariables>(UpdateClinicMilestoneDocument, options);
+      }
+export type UpdateClinicMilestoneMutationHookResult = ReturnType<typeof useUpdateClinicMilestoneMutation>;
+export type UpdateClinicMilestoneMutationResult = Apollo.MutationResult<UpdateClinicMilestoneMutation>;
+export type UpdateClinicMilestoneMutationOptions = Apollo.BaseMutationOptions<UpdateClinicMilestoneMutation, UpdateClinicMilestoneMutationVariables>;
+export const DeleteClinicMilestoneDocument = gql`
+    mutation DeleteClinicMilestone($milestoneId: String!) {
+  deleteClinicMilestone(milestoneId: $milestoneId)
+}
+    `;
+export type DeleteClinicMilestoneMutationFn = Apollo.MutationFunction<DeleteClinicMilestoneMutation, DeleteClinicMilestoneMutationVariables>;
+
+/**
+ * __useDeleteClinicMilestoneMutation__
+ *
+ * To run a mutation, you first call `useDeleteClinicMilestoneMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteClinicMilestoneMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteClinicMilestoneMutation, { data, loading, error }] = useDeleteClinicMilestoneMutation({
+ *   variables: {
+ *      milestoneId: // value for 'milestoneId'
+ *   },
+ * });
+ */
+export function useDeleteClinicMilestoneMutation(baseOptions?: Apollo.MutationHookOptions<DeleteClinicMilestoneMutation, DeleteClinicMilestoneMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteClinicMilestoneMutation, DeleteClinicMilestoneMutationVariables>(DeleteClinicMilestoneDocument, options);
+      }
+export type DeleteClinicMilestoneMutationHookResult = ReturnType<typeof useDeleteClinicMilestoneMutation>;
+export type DeleteClinicMilestoneMutationResult = Apollo.MutationResult<DeleteClinicMilestoneMutation>;
+export type DeleteClinicMilestoneMutationOptions = Apollo.BaseMutationOptions<DeleteClinicMilestoneMutation, DeleteClinicMilestoneMutationVariables>;
+export const EvaluateClinicMilestonesDocument = gql`
+    mutation EvaluateClinicMilestones($clinicId: String!) {
+  evaluateClinicMilestones(clinicId: $clinicId) {
+    id
+    clinicId
+    milestoneId
+    sequence
+    progressValue
+    status
+    rewardPayload
+    errorMessage
+    achievedAt
+    rewardedAt
+  }
+}
+    `;
+export type EvaluateClinicMilestonesMutationFn = Apollo.MutationFunction<EvaluateClinicMilestonesMutation, EvaluateClinicMilestonesMutationVariables>;
+
+/**
+ * __useEvaluateClinicMilestonesMutation__
+ *
+ * To run a mutation, you first call `useEvaluateClinicMilestonesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEvaluateClinicMilestonesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [evaluateClinicMilestonesMutation, { data, loading, error }] = useEvaluateClinicMilestonesMutation({
+ *   variables: {
+ *      clinicId: // value for 'clinicId'
+ *   },
+ * });
+ */
+export function useEvaluateClinicMilestonesMutation(baseOptions?: Apollo.MutationHookOptions<EvaluateClinicMilestonesMutation, EvaluateClinicMilestonesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EvaluateClinicMilestonesMutation, EvaluateClinicMilestonesMutationVariables>(EvaluateClinicMilestonesDocument, options);
+      }
+export type EvaluateClinicMilestonesMutationHookResult = ReturnType<typeof useEvaluateClinicMilestonesMutation>;
+export type EvaluateClinicMilestonesMutationResult = Apollo.MutationResult<EvaluateClinicMilestonesMutation>;
+export type EvaluateClinicMilestonesMutationOptions = Apollo.BaseMutationOptions<EvaluateClinicMilestonesMutation, EvaluateClinicMilestonesMutationVariables>;
 export const UpsertClinicModuleSubscriptionDocument = gql`
     mutation UpsertClinicModuleSubscription($input: UpsertClinicModuleSubscriptionDTO!) {
   upsertClinicModuleSubscription(input: $input) {
@@ -8883,9 +9424,9 @@ export type UpsertClinicModuleSubscriptionMutationFn = Apollo.MutationFunction<U
  * });
  */
 export function useUpsertClinicModuleSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<UpsertClinicModuleSubscriptionMutation, UpsertClinicModuleSubscriptionMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpsertClinicModuleSubscriptionMutation, UpsertClinicModuleSubscriptionMutationVariables>(UpsertClinicModuleSubscriptionDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpsertClinicModuleSubscriptionMutation, UpsertClinicModuleSubscriptionMutationVariables>(UpsertClinicModuleSubscriptionDocument, options);
+      }
 export type UpsertClinicModuleSubscriptionMutationHookResult = ReturnType<typeof useUpsertClinicModuleSubscriptionMutation>;
 export type UpsertClinicModuleSubscriptionMutationResult = Apollo.MutationResult<UpsertClinicModuleSubscriptionMutation>;
 export type UpsertClinicModuleSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpsertClinicModuleSubscriptionMutation, UpsertClinicModuleSubscriptionMutationVariables>;
@@ -8923,9 +9464,9 @@ export type UpdateClinicModuleSubscriptionStatusMutationFn = Apollo.MutationFunc
  * });
  */
 export function useUpdateClinicModuleSubscriptionStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateClinicModuleSubscriptionStatusMutation, UpdateClinicModuleSubscriptionStatusMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpdateClinicModuleSubscriptionStatusMutation, UpdateClinicModuleSubscriptionStatusMutationVariables>(UpdateClinicModuleSubscriptionStatusDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateClinicModuleSubscriptionStatusMutation, UpdateClinicModuleSubscriptionStatusMutationVariables>(UpdateClinicModuleSubscriptionStatusDocument, options);
+      }
 export type UpdateClinicModuleSubscriptionStatusMutationHookResult = ReturnType<typeof useUpdateClinicModuleSubscriptionStatusMutation>;
 export type UpdateClinicModuleSubscriptionStatusMutationResult = Apollo.MutationResult<UpdateClinicModuleSubscriptionStatusMutation>;
 export type UpdateClinicModuleSubscriptionStatusMutationOptions = Apollo.BaseMutationOptions<UpdateClinicModuleSubscriptionStatusMutation, UpdateClinicModuleSubscriptionStatusMutationVariables>;
@@ -8966,9 +9507,9 @@ export type AssignCustomFeaturesToDoctorMutationFn = Apollo.MutationFunction<Ass
  * });
  */
 export function useAssignCustomFeaturesToDoctorMutation(baseOptions?: Apollo.MutationHookOptions<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>(AssignCustomFeaturesToDoctorDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>(AssignCustomFeaturesToDoctorDocument, options);
+      }
 export type AssignCustomFeaturesToDoctorMutationHookResult = ReturnType<typeof useAssignCustomFeaturesToDoctorMutation>;
 export type AssignCustomFeaturesToDoctorMutationResult = Apollo.MutationResult<AssignCustomFeaturesToDoctorMutation>;
 export type AssignCustomFeaturesToDoctorMutationOptions = Apollo.BaseMutationOptions<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
@@ -9009,9 +9550,9 @@ export type RemoveCustomFeaturesFromDoctorMutationFn = Apollo.MutationFunction<R
  * });
  */
 export function useRemoveCustomFeaturesFromDoctorMutation(baseOptions?: Apollo.MutationHookOptions<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>(RemoveCustomFeaturesFromDoctorDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>(RemoveCustomFeaturesFromDoctorDocument, options);
+      }
 export type RemoveCustomFeaturesFromDoctorMutationHookResult = ReturnType<typeof useRemoveCustomFeaturesFromDoctorMutation>;
 export type RemoveCustomFeaturesFromDoctorMutationResult = Apollo.MutationResult<RemoveCustomFeaturesFromDoctorMutation>;
 export type RemoveCustomFeaturesFromDoctorMutationOptions = Apollo.BaseMutationOptions<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
@@ -9043,9 +9584,9 @@ export type AddDoctorMutationFn = Apollo.MutationFunction<AddDoctorMutation, Add
  * });
  */
 export function useAddDoctorMutation(baseOptions?: Apollo.MutationHookOptions<AddDoctorMutation, AddDoctorMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<AddDoctorMutation, AddDoctorMutationVariables>(AddDoctorDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddDoctorMutation, AddDoctorMutationVariables>(AddDoctorDocument, options);
+      }
 export type AddDoctorMutationHookResult = ReturnType<typeof useAddDoctorMutation>;
 export type AddDoctorMutationResult = Apollo.MutationResult<AddDoctorMutation>;
 export type AddDoctorMutationOptions = Apollo.BaseMutationOptions<AddDoctorMutation, AddDoctorMutationVariables>;
@@ -9078,9 +9619,9 @@ export type UpdateDoctorAppointmentLimitMutationFn = Apollo.MutationFunction<Upd
  * });
  */
 export function useUpdateDoctorAppointmentLimitMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>(UpdateDoctorAppointmentLimitDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>(UpdateDoctorAppointmentLimitDocument, options);
+      }
 export type UpdateDoctorAppointmentLimitMutationHookResult = ReturnType<typeof useUpdateDoctorAppointmentLimitMutation>;
 export type UpdateDoctorAppointmentLimitMutationResult = Apollo.MutationResult<UpdateDoctorAppointmentLimitMutation>;
 export type UpdateDoctorAppointmentLimitMutationOptions = Apollo.BaseMutationOptions<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>;
@@ -9110,9 +9651,9 @@ export type RechargeAppointmentLimitMutationFn = Apollo.MutationFunction<Recharg
  * });
  */
 export function useRechargeAppointmentLimitMutation(baseOptions?: Apollo.MutationHookOptions<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>(RechargeAppointmentLimitDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>(RechargeAppointmentLimitDocument, options);
+      }
 export type RechargeAppointmentLimitMutationHookResult = ReturnType<typeof useRechargeAppointmentLimitMutation>;
 export type RechargeAppointmentLimitMutationResult = Apollo.MutationResult<RechargeAppointmentLimitMutation>;
 export type RechargeAppointmentLimitMutationOptions = Apollo.BaseMutationOptions<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>;
@@ -9153,9 +9694,9 @@ export type AssignDoctorToClinicsMutationFn = Apollo.MutationFunction<AssignDoct
  * });
  */
 export function useAssignDoctorToClinicsMutation(baseOptions?: Apollo.MutationHookOptions<AssignDoctorToClinicsMutation, AssignDoctorToClinicsMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<AssignDoctorToClinicsMutation, AssignDoctorToClinicsMutationVariables>(AssignDoctorToClinicsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AssignDoctorToClinicsMutation, AssignDoctorToClinicsMutationVariables>(AssignDoctorToClinicsDocument, options);
+      }
 export type AssignDoctorToClinicsMutationHookResult = ReturnType<typeof useAssignDoctorToClinicsMutation>;
 export type AssignDoctorToClinicsMutationResult = Apollo.MutationResult<AssignDoctorToClinicsMutation>;
 export type AssignDoctorToClinicsMutationOptions = Apollo.BaseMutationOptions<AssignDoctorToClinicsMutation, AssignDoctorToClinicsMutationVariables>;
@@ -9189,9 +9730,9 @@ export type UpdateProfilePicUrlMutationFn = Apollo.MutationFunction<UpdateProfil
  * });
  */
 export function useUpdateProfilePicUrlMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>(UpdateProfilePicUrlDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>(UpdateProfilePicUrlDocument, options);
+      }
 export type UpdateProfilePicUrlMutationHookResult = ReturnType<typeof useUpdateProfilePicUrlMutation>;
 export type UpdateProfilePicUrlMutationResult = Apollo.MutationResult<UpdateProfilePicUrlMutation>;
 export type UpdateProfilePicUrlMutationOptions = Apollo.BaseMutationOptions<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
@@ -9231,9 +9772,9 @@ export type UpsertInpatientModuleSettingsMutationFn = Apollo.MutationFunction<Up
  * });
  */
 export function useUpsertInpatientModuleSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>(UpsertInpatientModuleSettingsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>(UpsertInpatientModuleSettingsDocument, options);
+      }
 export type UpsertInpatientModuleSettingsMutationHookResult = ReturnType<typeof useUpsertInpatientModuleSettingsMutation>;
 export type UpsertInpatientModuleSettingsMutationResult = Apollo.MutationResult<UpsertInpatientModuleSettingsMutation>;
 export type UpsertInpatientModuleSettingsMutationOptions = Apollo.BaseMutationOptions<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>;
@@ -9272,9 +9813,9 @@ export type AddClinicStaffMutationFn = Apollo.MutationFunction<AddClinicStaffMut
  * });
  */
 export function useAddClinicStaffMutation(baseOptions?: Apollo.MutationHookOptions<AddClinicStaffMutation, AddClinicStaffMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<AddClinicStaffMutation, AddClinicStaffMutationVariables>(AddClinicStaffDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddClinicStaffMutation, AddClinicStaffMutationVariables>(AddClinicStaffDocument, options);
+      }
 export type AddClinicStaffMutationHookResult = ReturnType<typeof useAddClinicStaffMutation>;
 export type AddClinicStaffMutationResult = Apollo.MutationResult<AddClinicStaffMutation>;
 export type AddClinicStaffMutationOptions = Apollo.BaseMutationOptions<AddClinicStaffMutation, AddClinicStaffMutationVariables>;
@@ -9311,9 +9852,9 @@ export type UpdateClinicStaffMutationFn = Apollo.MutationFunction<UpdateClinicSt
  * });
  */
 export function useUpdateClinicStaffMutation(baseOptions?: Apollo.MutationHookOptions<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>(UpdateClinicStaffDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>(UpdateClinicStaffDocument, options);
+      }
 export type UpdateClinicStaffMutationHookResult = ReturnType<typeof useUpdateClinicStaffMutation>;
 export type UpdateClinicStaffMutationResult = Apollo.MutationResult<UpdateClinicStaffMutation>;
 export type UpdateClinicStaffMutationOptions = Apollo.BaseMutationOptions<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>;
@@ -9347,9 +9888,9 @@ export type RemoveClinicStaffMutationFn = Apollo.MutationFunction<RemoveClinicSt
  * });
  */
 export function useRemoveClinicStaffMutation(baseOptions?: Apollo.MutationHookOptions<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>(RemoveClinicStaffDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>(RemoveClinicStaffDocument, options);
+      }
 export type RemoveClinicStaffMutationHookResult = ReturnType<typeof useRemoveClinicStaffMutation>;
 export type RemoveClinicStaffMutationResult = Apollo.MutationResult<RemoveClinicStaffMutation>;
 export type RemoveClinicStaffMutationOptions = Apollo.BaseMutationOptions<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>;
@@ -9386,9 +9927,9 @@ export type CreateSubscriptionMutationFn = Apollo.MutationFunction<CreateSubscri
  * });
  */
 export function useCreateSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>(CreateSubscriptionDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>(CreateSubscriptionDocument, options);
+      }
 export type CreateSubscriptionMutationHookResult = ReturnType<typeof useCreateSubscriptionMutation>;
 export type CreateSubscriptionMutationResult = Apollo.MutationResult<CreateSubscriptionMutation>;
 export type CreateSubscriptionMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionMutation, CreateSubscriptionMutationVariables>;
@@ -9424,9 +9965,9 @@ export type UpdateSubscriptionMutationFn = Apollo.MutationFunction<UpdateSubscri
  * });
  */
 export function useUpdateSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>(UpdateSubscriptionDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>(UpdateSubscriptionDocument, options);
+      }
 export type UpdateSubscriptionMutationHookResult = ReturnType<typeof useUpdateSubscriptionMutation>;
 export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubscriptionMutation>;
 export type UpdateSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
@@ -9460,9 +10001,9 @@ export type UpdateSubscriptionStatusMutationFn = Apollo.MutationFunction<UpdateS
  * });
  */
 export function useUpdateSubscriptionStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>(UpdateSubscriptionStatusDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>(UpdateSubscriptionStatusDocument, options);
+      }
 export type UpdateSubscriptionStatusMutationHookResult = ReturnType<typeof useUpdateSubscriptionStatusMutation>;
 export type UpdateSubscriptionStatusMutationResult = Apollo.MutationResult<UpdateSubscriptionStatusMutation>;
 export type UpdateSubscriptionStatusMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionStatusMutation, UpdateSubscriptionStatusMutationVariables>;
@@ -9491,17 +10032,17 @@ export const GetAllClinicFeaturesDocument = gql`
  * });
  */
 export function useGetAllClinicFeaturesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
+      }
 export function useGetAllClinicFeaturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
+        }
 export function useGetAllClinicFeaturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllClinicFeaturesQuery, GetAllClinicFeaturesQueryVariables>(GetAllClinicFeaturesDocument, options);
+        }
 export type GetAllClinicFeaturesQueryHookResult = ReturnType<typeof useGetAllClinicFeaturesQuery>;
 export type GetAllClinicFeaturesLazyQueryHookResult = ReturnType<typeof useGetAllClinicFeaturesLazyQuery>;
 export type GetAllClinicFeaturesSuspenseQueryHookResult = ReturnType<typeof useGetAllClinicFeaturesSuspenseQuery>;
@@ -9531,22 +10072,130 @@ export const GetClinicFeaturesDocument = gql`
  *   },
  * });
  */
-export function useGetClinicFeaturesQuery(baseOptions: Apollo.QueryHookOptions<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables> & ({ variables: GetClinicFeaturesQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
-}
+export function useGetClinicFeaturesQuery(baseOptions: Apollo.QueryHookOptions<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables> & ({ variables: GetClinicFeaturesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
+      }
 export function useGetClinicFeaturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
+        }
 export function useGetClinicFeaturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>(GetClinicFeaturesDocument, options);
+        }
 export type GetClinicFeaturesQueryHookResult = ReturnType<typeof useGetClinicFeaturesQuery>;
 export type GetClinicFeaturesLazyQueryHookResult = ReturnType<typeof useGetClinicFeaturesLazyQuery>;
 export type GetClinicFeaturesSuspenseQueryHookResult = ReturnType<typeof useGetClinicFeaturesSuspenseQuery>;
 export type GetClinicFeaturesQueryResult = Apollo.QueryResult<GetClinicFeaturesQuery, GetClinicFeaturesQueryVariables>;
+export const GetClinicMilestonesDocument = gql`
+    query GetClinicMilestones($clinicId: String!) {
+  getClinicMilestones(clinicId: $clinicId) {
+    id
+    clinicId
+    title
+    description
+    metricType
+    targetValue
+    rewardType
+    rewardValue
+    isActive
+    repeatable
+    sortOrder
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetClinicMilestonesQuery__
+ *
+ * To run a query within a React component, call `useGetClinicMilestonesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClinicMilestonesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClinicMilestonesQuery({
+ *   variables: {
+ *      clinicId: // value for 'clinicId'
+ *   },
+ * });
+ */
+export function useGetClinicMilestonesQuery(baseOptions: Apollo.QueryHookOptions<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables> & ({ variables: GetClinicMilestonesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables>(GetClinicMilestonesDocument, options);
+      }
+export function useGetClinicMilestonesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables>(GetClinicMilestonesDocument, options);
+        }
+export function useGetClinicMilestonesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables>(GetClinicMilestonesDocument, options);
+        }
+export type GetClinicMilestonesQueryHookResult = ReturnType<typeof useGetClinicMilestonesQuery>;
+export type GetClinicMilestonesLazyQueryHookResult = ReturnType<typeof useGetClinicMilestonesLazyQuery>;
+export type GetClinicMilestonesSuspenseQueryHookResult = ReturnType<typeof useGetClinicMilestonesSuspenseQuery>;
+export type GetClinicMilestonesQueryResult = Apollo.QueryResult<GetClinicMilestonesQuery, GetClinicMilestonesQueryVariables>;
+export const GetClinicMilestoneProgressDocument = gql`
+    query GetClinicMilestoneProgress($clinicId: String!) {
+  getClinicMilestoneProgress(clinicId: $clinicId) {
+    id
+    clinicId
+    title
+    description
+    metricType
+    targetValue
+    rewardType
+    rewardValue
+    isActive
+    repeatable
+    sortOrder
+    currentProgress
+    achievedCount
+    remainingToUnlock
+    isCompleted
+    progressPercent
+    latestRewardedAt
+  }
+}
+    `;
+
+/**
+ * __useGetClinicMilestoneProgressQuery__
+ *
+ * To run a query within a React component, call `useGetClinicMilestoneProgressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClinicMilestoneProgressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClinicMilestoneProgressQuery({
+ *   variables: {
+ *      clinicId: // value for 'clinicId'
+ *   },
+ * });
+ */
+export function useGetClinicMilestoneProgressQuery(baseOptions: Apollo.QueryHookOptions<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables> & ({ variables: GetClinicMilestoneProgressQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables>(GetClinicMilestoneProgressDocument, options);
+      }
+export function useGetClinicMilestoneProgressLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables>(GetClinicMilestoneProgressDocument, options);
+        }
+export function useGetClinicMilestoneProgressSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables>(GetClinicMilestoneProgressDocument, options);
+        }
+export type GetClinicMilestoneProgressQueryHookResult = ReturnType<typeof useGetClinicMilestoneProgressQuery>;
+export type GetClinicMilestoneProgressLazyQueryHookResult = ReturnType<typeof useGetClinicMilestoneProgressLazyQuery>;
+export type GetClinicMilestoneProgressSuspenseQueryHookResult = ReturnType<typeof useGetClinicMilestoneProgressSuspenseQuery>;
+export type GetClinicMilestoneProgressQueryResult = Apollo.QueryResult<GetClinicMilestoneProgressQuery, GetClinicMilestoneProgressQueryVariables>;
 export const GetClinicModuleSubscriptionDocument = gql`
     query GetClinicModuleSubscription($clinicId: String!, $moduleKey: String!) {
   getClinicModuleSubscription(clinicId: $clinicId, moduleKey: $moduleKey) {
@@ -9579,18 +10228,18 @@ export const GetClinicModuleSubscriptionDocument = gql`
  *   },
  * });
  */
-export function useGetClinicModuleSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables> & ({ variables: GetClinicModuleSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>(GetClinicModuleSubscriptionDocument, options);
-}
+export function useGetClinicModuleSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables> & ({ variables: GetClinicModuleSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>(GetClinicModuleSubscriptionDocument, options);
+      }
 export function useGetClinicModuleSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>(GetClinicModuleSubscriptionDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>(GetClinicModuleSubscriptionDocument, options);
+        }
 export function useGetClinicModuleSubscriptionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>(GetClinicModuleSubscriptionDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicModuleSubscriptionQuery, GetClinicModuleSubscriptionQueryVariables>(GetClinicModuleSubscriptionDocument, options);
+        }
 export type GetClinicModuleSubscriptionQueryHookResult = ReturnType<typeof useGetClinicModuleSubscriptionQuery>;
 export type GetClinicModuleSubscriptionLazyQueryHookResult = ReturnType<typeof useGetClinicModuleSubscriptionLazyQuery>;
 export type GetClinicModuleSubscriptionSuspenseQueryHookResult = ReturnType<typeof useGetClinicModuleSubscriptionSuspenseQuery>;
@@ -9624,18 +10273,18 @@ export const GetClinicModuleAccessDocument = gql`
  *   },
  * });
  */
-export function useGetClinicModuleAccessQuery(baseOptions: Apollo.QueryHookOptions<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables> & ({ variables: GetClinicModuleAccessQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>(GetClinicModuleAccessDocument, options);
-}
+export function useGetClinicModuleAccessQuery(baseOptions: Apollo.QueryHookOptions<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables> & ({ variables: GetClinicModuleAccessQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>(GetClinicModuleAccessDocument, options);
+      }
 export function useGetClinicModuleAccessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>(GetClinicModuleAccessDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>(GetClinicModuleAccessDocument, options);
+        }
 export function useGetClinicModuleAccessSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>(GetClinicModuleAccessDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicModuleAccessQuery, GetClinicModuleAccessQueryVariables>(GetClinicModuleAccessDocument, options);
+        }
 export type GetClinicModuleAccessQueryHookResult = ReturnType<typeof useGetClinicModuleAccessQuery>;
 export type GetClinicModuleAccessLazyQueryHookResult = ReturnType<typeof useGetClinicModuleAccessLazyQuery>;
 export type GetClinicModuleAccessSuspenseQueryHookResult = ReturnType<typeof useGetClinicModuleAccessSuspenseQuery>;
@@ -9691,17 +10340,17 @@ export const GetClinicsDocument = gql`
  * });
  */
 export function useGetClinicsQuery(baseOptions?: Apollo.QueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+      }
 export function useGetClinicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+        }
 export function useGetClinicsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicsQuery, GetClinicsQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicsQuery, GetClinicsQueryVariables>(GetClinicsDocument, options);
+        }
 export type GetClinicsQueryHookResult = ReturnType<typeof useGetClinicsQuery>;
 export type GetClinicsLazyQueryHookResult = ReturnType<typeof useGetClinicsLazyQuery>;
 export type GetClinicsSuspenseQueryHookResult = ReturnType<typeof useGetClinicsSuspenseQuery>;
@@ -9731,17 +10380,17 @@ export const GetCustomFeaturesDocument = gql`
  * });
  */
 export function useGetCustomFeaturesQuery(baseOptions?: Apollo.QueryHookOptions<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
+      }
 export function useGetCustomFeaturesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
+        }
 export function useGetCustomFeaturesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCustomFeaturesQuery, GetCustomFeaturesQueryVariables>(GetCustomFeaturesDocument, options);
+        }
 export type GetCustomFeaturesQueryHookResult = ReturnType<typeof useGetCustomFeaturesQuery>;
 export type GetCustomFeaturesLazyQueryHookResult = ReturnType<typeof useGetCustomFeaturesLazyQuery>;
 export type GetCustomFeaturesSuspenseQueryHookResult = ReturnType<typeof useGetCustomFeaturesSuspenseQuery>;
@@ -9774,18 +10423,18 @@ export const GetDoctorDocument = gql`
  *   },
  * });
  */
-export function useGetDoctorQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorQuery, GetDoctorQueryVariables> & ({ variables: GetDoctorQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
-}
+export function useGetDoctorQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorQuery, GetDoctorQueryVariables> & ({ variables: GetDoctorQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
+      }
 export function useGetDoctorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorQuery, GetDoctorQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
+        }
 export function useGetDoctorSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorQuery, GetDoctorQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDoctorQuery, GetDoctorQueryVariables>(GetDoctorDocument, options);
+        }
 export type GetDoctorQueryHookResult = ReturnType<typeof useGetDoctorQuery>;
 export type GetDoctorLazyQueryHookResult = ReturnType<typeof useGetDoctorLazyQuery>;
 export type GetDoctorSuspenseQueryHookResult = ReturnType<typeof useGetDoctorSuspenseQuery>;
@@ -9850,18 +10499,18 @@ export const GetClinicDoctorsDocument = gql`
  *   },
  * });
  */
-export function useGetClinicDoctorsQuery(baseOptions: Apollo.QueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables> & ({ variables: GetClinicDoctorsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
-}
+export function useGetClinicDoctorsQuery(baseOptions: Apollo.QueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables> & ({ variables: GetClinicDoctorsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+      }
 export function useGetClinicDoctorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+        }
 export function useGetClinicDoctorsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicDoctorsQuery, GetClinicDoctorsQueryVariables>(GetClinicDoctorsDocument, options);
+        }
 export type GetClinicDoctorsQueryHookResult = ReturnType<typeof useGetClinicDoctorsQuery>;
 export type GetClinicDoctorsLazyQueryHookResult = ReturnType<typeof useGetClinicDoctorsLazyQuery>;
 export type GetClinicDoctorsSuspenseQueryHookResult = ReturnType<typeof useGetClinicDoctorsSuspenseQuery>;
@@ -9888,18 +10537,18 @@ export const GetDoctorAppointmentLimitDocument = gql`
  *   },
  * });
  */
-export function useGetDoctorAppointmentLimitQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables> & ({ variables: GetDoctorAppointmentLimitQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
-}
+export function useGetDoctorAppointmentLimitQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables> & ({ variables: GetDoctorAppointmentLimitQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
+      }
 export function useGetDoctorAppointmentLimitLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
+        }
 export function useGetDoctorAppointmentLimitSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDoctorAppointmentLimitQuery, GetDoctorAppointmentLimitQueryVariables>(GetDoctorAppointmentLimitDocument, options);
+        }
 export type GetDoctorAppointmentLimitQueryHookResult = ReturnType<typeof useGetDoctorAppointmentLimitQuery>;
 export type GetDoctorAppointmentLimitLazyQueryHookResult = ReturnType<typeof useGetDoctorAppointmentLimitLazyQuery>;
 export type GetDoctorAppointmentLimitSuspenseQueryHookResult = ReturnType<typeof useGetDoctorAppointmentLimitSuspenseQuery>;
@@ -9929,18 +10578,18 @@ export const GetDoctorSettingsDocument = gql`
  *   },
  * });
  */
-export function useGetDoctorSettingsQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables> & ({ variables: GetDoctorSettingsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
-}
+export function useGetDoctorSettingsQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables> & ({ variables: GetDoctorSettingsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
+      }
 export function useGetDoctorSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
+        }
 export function useGetDoctorSettingsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDoctorSettingsQuery, GetDoctorSettingsQueryVariables>(GetDoctorSettingsDocument, options);
+        }
 export type GetDoctorSettingsQueryHookResult = ReturnType<typeof useGetDoctorSettingsQuery>;
 export type GetDoctorSettingsLazyQueryHookResult = ReturnType<typeof useGetDoctorSettingsLazyQuery>;
 export type GetDoctorSettingsSuspenseQueryHookResult = ReturnType<typeof useGetDoctorSettingsSuspenseQuery>;
@@ -9978,18 +10627,18 @@ export const GetDoctorClinicAccessDocument = gql`
  *   },
  * });
  */
-export function useGetDoctorClinicAccessQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables> & ({ variables: GetDoctorClinicAccessQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>(GetDoctorClinicAccessDocument, options);
-}
+export function useGetDoctorClinicAccessQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables> & ({ variables: GetDoctorClinicAccessQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>(GetDoctorClinicAccessDocument, options);
+      }
 export function useGetDoctorClinicAccessLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>(GetDoctorClinicAccessDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>(GetDoctorClinicAccessDocument, options);
+        }
 export function useGetDoctorClinicAccessSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>(GetDoctorClinicAccessDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDoctorClinicAccessQuery, GetDoctorClinicAccessQueryVariables>(GetDoctorClinicAccessDocument, options);
+        }
 export type GetDoctorClinicAccessQueryHookResult = ReturnType<typeof useGetDoctorClinicAccessQuery>;
 export type GetDoctorClinicAccessLazyQueryHookResult = ReturnType<typeof useGetDoctorClinicAccessLazyQuery>;
 export type GetDoctorClinicAccessSuspenseQueryHookResult = ReturnType<typeof useGetDoctorClinicAccessSuspenseQuery>;
@@ -10037,17 +10686,17 @@ export const GetDoctorsWithClinicsDocument = gql`
  * });
  */
 export function useGetDoctorsWithClinicsQuery(baseOptions?: Apollo.QueryHookOptions<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>(GetDoctorsWithClinicsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>(GetDoctorsWithClinicsDocument, options);
+      }
 export function useGetDoctorsWithClinicsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>(GetDoctorsWithClinicsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>(GetDoctorsWithClinicsDocument, options);
+        }
 export function useGetDoctorsWithClinicsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>(GetDoctorsWithClinicsDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDoctorsWithClinicsQuery, GetDoctorsWithClinicsQueryVariables>(GetDoctorsWithClinicsDocument, options);
+        }
 export type GetDoctorsWithClinicsQueryHookResult = ReturnType<typeof useGetDoctorsWithClinicsQuery>;
 export type GetDoctorsWithClinicsLazyQueryHookResult = ReturnType<typeof useGetDoctorsWithClinicsLazyQuery>;
 export type GetDoctorsWithClinicsSuspenseQueryHookResult = ReturnType<typeof useGetDoctorsWithClinicsSuspenseQuery>;
@@ -10080,17 +10729,17 @@ export const GetAllDraftsDocument = gql`
  * });
  */
 export function useGetAllDraftsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllDraftsQuery, GetAllDraftsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
-}
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
+      }
 export function useGetAllDraftsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllDraftsQuery, GetAllDraftsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
+        }
 export function useGetAllDraftsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllDraftsQuery, GetAllDraftsQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllDraftsQuery, GetAllDraftsQueryVariables>(GetAllDraftsDocument, options);
+        }
 export type GetAllDraftsQueryHookResult = ReturnType<typeof useGetAllDraftsQuery>;
 export type GetAllDraftsLazyQueryHookResult = ReturnType<typeof useGetAllDraftsLazyQuery>;
 export type GetAllDraftsSuspenseQueryHookResult = ReturnType<typeof useGetAllDraftsSuspenseQuery>;
@@ -10118,18 +10767,18 @@ export const ApproveOrRejectDocument = gql`
  *   },
  * });
  */
-export function useApproveOrRejectQuery(baseOptions: Apollo.QueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables> & ({ variables: ApproveOrRejectQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
-}
+export function useApproveOrRejectQuery(baseOptions: Apollo.QueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables> & ({ variables: ApproveOrRejectQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
+      }
 export function useApproveOrRejectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
+        }
 export function useApproveOrRejectSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>(ApproveOrRejectDocument, options);
+        }
 export type ApproveOrRejectQueryHookResult = ReturnType<typeof useApproveOrRejectQuery>;
 export type ApproveOrRejectLazyQueryHookResult = ReturnType<typeof useApproveOrRejectLazyQuery>;
 export type ApproveOrRejectSuspenseQueryHookResult = ReturnType<typeof useApproveOrRejectSuspenseQuery>;
@@ -10167,18 +10816,18 @@ export const GetInpatientModuleSettingsDocument = gql`
  *   },
  * });
  */
-export function useGetInpatientModuleSettingsQuery(baseOptions: Apollo.QueryHookOptions<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables> & ({ variables: GetInpatientModuleSettingsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>(GetInpatientModuleSettingsDocument, options);
-}
+export function useGetInpatientModuleSettingsQuery(baseOptions: Apollo.QueryHookOptions<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables> & ({ variables: GetInpatientModuleSettingsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>(GetInpatientModuleSettingsDocument, options);
+      }
 export function useGetInpatientModuleSettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>(GetInpatientModuleSettingsDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>(GetInpatientModuleSettingsDocument, options);
+        }
 export function useGetInpatientModuleSettingsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>(GetInpatientModuleSettingsDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>(GetInpatientModuleSettingsDocument, options);
+        }
 export type GetInpatientModuleSettingsQueryHookResult = ReturnType<typeof useGetInpatientModuleSettingsQuery>;
 export type GetInpatientModuleSettingsLazyQueryHookResult = ReturnType<typeof useGetInpatientModuleSettingsLazyQuery>;
 export type GetInpatientModuleSettingsSuspenseQueryHookResult = ReturnType<typeof useGetInpatientModuleSettingsSuspenseQuery>;
@@ -10215,18 +10864,18 @@ export const GetClinicStaffDocument = gql`
  *   },
  * });
  */
-export function useGetClinicStaffQuery(baseOptions: Apollo.QueryHookOptions<GetClinicStaffQuery, GetClinicStaffQueryVariables> & ({ variables: GetClinicStaffQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
-}
+export function useGetClinicStaffQuery(baseOptions: Apollo.QueryHookOptions<GetClinicStaffQuery, GetClinicStaffQueryVariables> & ({ variables: GetClinicStaffQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
+      }
 export function useGetClinicStaffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClinicStaffQuery, GetClinicStaffQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
+        }
 export function useGetClinicStaffSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetClinicStaffQuery, GetClinicStaffQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetClinicStaffQuery, GetClinicStaffQueryVariables>(GetClinicStaffDocument, options);
+        }
 export type GetClinicStaffQueryHookResult = ReturnType<typeof useGetClinicStaffQuery>;
 export type GetClinicStaffLazyQueryHookResult = ReturnType<typeof useGetClinicStaffLazyQuery>;
 export type GetClinicStaffSuspenseQueryHookResult = ReturnType<typeof useGetClinicStaffSuspenseQuery>;
@@ -10263,18 +10912,18 @@ export const GetSubscriptionDocument = gql`
  *   },
  * });
  */
-export function useGetSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetSubscriptionQuery, GetSubscriptionQueryVariables> & ({ variables: GetSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
-}
+export function useGetSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetSubscriptionQuery, GetSubscriptionQueryVariables> & ({ variables: GetSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
+      }
 export function useGetSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSubscriptionQuery, GetSubscriptionQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
+        }
 export function useGetSubscriptionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSubscriptionQuery, GetSubscriptionQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSubscriptionQuery, GetSubscriptionQueryVariables>(GetSubscriptionDocument, options);
+        }
 export type GetSubscriptionQueryHookResult = ReturnType<typeof useGetSubscriptionQuery>;
 export type GetSubscriptionLazyQueryHookResult = ReturnType<typeof useGetSubscriptionLazyQuery>;
 export type GetSubscriptionSuspenseQueryHookResult = ReturnType<typeof useGetSubscriptionSuspenseQuery>;
@@ -10311,18 +10960,18 @@ export const GetDoctorSubscriptionDocument = gql`
  *   },
  * });
  */
-export function useGetDoctorSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables> & ({ variables: GetDoctorSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
-}
+export function useGetDoctorSubscriptionQuery(baseOptions: Apollo.QueryHookOptions<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables> & ({ variables: GetDoctorSubscriptionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
+      }
 export function useGetDoctorSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
-}
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
+        }
 export function useGetDoctorSubscriptionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>) {
-  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
-}
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>(GetDoctorSubscriptionDocument, options);
+        }
 export type GetDoctorSubscriptionQueryHookResult = ReturnType<typeof useGetDoctorSubscriptionQuery>;
 export type GetDoctorSubscriptionLazyQueryHookResult = ReturnType<typeof useGetDoctorSubscriptionLazyQuery>;
 export type GetDoctorSubscriptionSuspenseQueryHookResult = ReturnType<typeof useGetDoctorSubscriptionSuspenseQuery>;
