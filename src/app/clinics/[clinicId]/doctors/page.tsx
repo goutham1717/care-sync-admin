@@ -20,6 +20,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { gql } from "@apollo/client";
 import ConfigureDoctorModal from "@/app/components/clinics/ConfigureDoctorModal";
 import { GET_CLINICS } from "@/graphql/query/clinics";
+import Link from "next/link";
 
 type Doctor = {
   doctor_id: string;
@@ -1157,15 +1158,23 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
                     </div>
                   </td>
                   <td className="p-4">
-                    <button
-                      onClick={() => {
-                        setSelectedDoctor(doctor);
-                        setOpenConfigureModal(true);
-                      }}
-                      className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Configure
-                    </button>
+                    <div className="flex items-center gap-4">
+                      <Link
+                        href={`/doctors/${doctor.doctor_id}/dashboard`}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        Dashboard
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setSelectedDoctor(doctor);
+                          setOpenConfigureModal(true);
+                        }}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        Configure
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
