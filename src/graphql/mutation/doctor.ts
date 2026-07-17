@@ -44,6 +44,12 @@ export const ASSIGN_DOCTOR_TO_CLINICS = gql`
   }
 `;
 
+export const DELETE_DOCTOR = gql`
+  mutation DeleteDoctor($doctor_id: String!) {
+    deleteDoctor(doctor_id: $doctor_id)
+  }
+`;
+
 export const UPDATE_PROFILE_PICTURE_URL = gql`
 mutation UpdateProfilePicUrl($doctor_id: String!, $picture_url: String!) {
     updateProfilePicUrl(doctor_id: $doctor_id, picture_url: $picture_url) {

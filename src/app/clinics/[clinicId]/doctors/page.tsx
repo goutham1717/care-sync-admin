@@ -13,7 +13,7 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/src/ReactCrop.scss';
-import { ASSIGN_DOCTOR_TO_CLINICS, ADD_DOCTOR_TO_CLINIC, UPDATE_PROFILE_PICTURE_URL } from "@/graphql/mutation/doctor";
+import { ASSIGN_DOCTOR_TO_CLINICS, ADD_DOCTOR_TO_CLINIC, DELETE_DOCTOR, UPDATE_PROFILE_PICTURE_URL } from "@/graphql/mutation/doctor";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
@@ -223,6 +223,7 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
   const [step, setStep] = useState(0);
   const [openConfigureModal, setOpenConfigureModal] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [doctorToDelete, setDoctorToDelete] = useState<Doctor | null>(null);
 
   const { control, handleSubmit, setValue, getValues, watch } = useForm<FormValues>({
     defaultValues: {
@@ -261,6 +262,7 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
 
   const [updateDoctorStatus] = useMutation(UPDATE_DOCTOR_ACTIVE_STATUS);
   const [assignDoctorToClinics, { loading: assigningExistingDoctor }] = useMutation(ASSIGN_DOCTOR_TO_CLINICS);
+  const [deleteDoctor, { loading: deletingDoctor }] = useMutation(DELETE_DOCTOR);
 
   const currentClinic = clinicsData?.getClinics?.find((clinic: any) => clinic.id === clinicId);
   const currentBusinessId = currentClinic?.business_id;
@@ -359,6 +361,25 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
     } catch (err) {
       console.error("Error attaching existing doctor:", err);
       toast.error("Failed to add doctor to clinic");
+    }
+  };
+
+  const handleDeleteDoctor = async () => {
+    if (!doctorToDelete) return;
+
+    try {
+      await deleteDoctor({
+        variables: {
+          doctor_id: doctorToDelete.doctor_id,
+        },
+      });
+      toast.success("Doctor deleted successfully");
+      setDoctorToDelete(null);
+      await refetch();
+      await refetchAllDoctors();
+    } catch (err) {
+      console.error("Error deleting doctor:", err);
+      toast.error("Failed to delete doctor");
     }
   };
 
@@ -1054,6 +1075,71 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
             )}
           </div>
         </Dialog>
+        <Dialog
+          open={!!doctorToDelete}
+          handler={() => {
+            if (!deletingDoctor) setDoctorToDelete(null);
+          }}
+          size="sm"
+          placeholder={undefined}
+          onPointerEnterCapture={undefined}
+          onPointerLeaveCapture={undefined}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <Typography
+                variant="h5"
+                color="blue-gray"
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                Delete Doctor
+              </Typography>
+              <button
+                className="text-gray-400 hover:text-gray-600 text-2xl"
+                onClick={() => {
+                  if (!deletingDoctor) setDoctorToDelete(null);
+                }}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <Typography
+              color="gray"
+              className="mb-5 font-normal"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              {`This will deactivate ${doctorToDelete?.profile.personal.designation || "Dr"} ${doctorToDelete?.profile.personal.first_name || ""} ${doctorToDelete?.profile.personal.last_name || ""}, remove clinic access, and detach the doctor from all clinics. This cannot be undone from this screen.`}
+            </Typography>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="text"
+                color="gray"
+                disabled={deletingDoctor}
+                onClick={() => setDoctorToDelete(null)}
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="red"
+                disabled={deletingDoctor}
+                onClick={handleDeleteDoctor}
+                placeholder={undefined}
+                onPointerEnterCapture={undefined}
+                onPointerLeaveCapture={undefined}
+              >
+                {deletingDoctor ? "Deleting..." : "Delete Doctor"}
+              </Button>
+            </div>
+          </div>
+        </Dialog>
         <CardBody
           className="overflow-scroll px-0"
           placeholder={undefined}
@@ -1173,6 +1259,12 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
                         className="text-blue-600 hover:text-blue-800 font-medium"
                       >
                         Configure
+                      </button>
+                      <button
+                        onClick={() => setDoctorToDelete(doctor)}
+                        className="text-red-600 hover:text-red-800 font-medium"
+                      >
+                        Delete
                       </button>
                     </div>
                   </td>
