@@ -44,6 +44,7 @@ type ClinicFeature = {
 
 const INPATIENT_MODULE_KEY = "Inpatient";
 const AI_PRESCRIPTION_ASSISTANT_KEY = "AiPrescriptionAssistant";
+const CONNECT_WITH_INVENTORY_KEY = "Connect with inventory";
 const MILESTONES_FEATURE_KEY = "Milestones";
 
 type MilestoneTab = "addons" | "modules" | "milestones";
@@ -74,6 +75,11 @@ type MilestoneFormState = {
 };
 
 const FEATURE_COPY: Record<string, { label: string; description: string }> = {
+  [CONNECT_WITH_INVENTORY_KEY]: {
+    label: "Connect with Inventory",
+    description:
+      "Prioritize this clinic's inventory medicines inside prescription search and show stock and low-stock details in the EMR pad.",
+  },
   [AI_PRESCRIPTION_ASSISTANT_KEY]: {
     label: "AI Prescription Assistant",
     description:

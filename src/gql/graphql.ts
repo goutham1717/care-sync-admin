@@ -1,6 +1,5 @@
-// @ts-nocheck
 /* eslint-disable */
-
+// @ts-nocheck
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
@@ -1052,8 +1051,13 @@ export type DraftsDto = {
 
 export type DrugList = {
   __typename?: 'DrugList';
+  currentStock?: Maybe<Scalars['Int']['output']>;
   id: Scalars['String']['output'];
+  inventoryItemId?: Maybe<Scalars['String']['output']>;
+  isInventoryLinked?: Maybe<Scalars['Boolean']['output']>;
+  lowStock?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
+  unit?: Maybe<Scalars['String']['output']>;
 };
 
 export type EditBillingDto = {
@@ -1762,6 +1766,8 @@ export type MeResponse = {
   businessId?: Maybe<Scalars['String']['output']>;
   clinicId?: Maybe<Scalars['String']['output']>;
   clinicIds?: Maybe<Array<Scalars['String']['output']>>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
   role: Scalars['String']['output'];
   staffId?: Maybe<Scalars['String']['output']>;
@@ -3565,6 +3571,8 @@ export type QueryGetDoctorWorkingHoursArgs = {
 
 
 export type QueryGetDrugListArgs = {
+  clinicId?: InputMaybe<Scalars['String']['input']>;
+  getInventory?: InputMaybe<Scalars['Boolean']['input']>;
   query: Scalars['String']['input'];
 };
 
@@ -5925,8 +5933,13 @@ export type DraftsDto = {
 
 export type DrugList = {
   __typename?: 'DrugList';
+  currentStock?: Maybe<Scalars['Int']['output']>;
   id: Scalars['String']['output'];
+  inventoryItemId?: Maybe<Scalars['String']['output']>;
+  isInventoryLinked?: Maybe<Scalars['Boolean']['output']>;
+  lowStock?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
+  unit?: Maybe<Scalars['String']['output']>;
 };
 
 export type EditBillingDto = {
@@ -6635,6 +6648,8 @@ export type MeResponse = {
   businessId?: Maybe<Scalars['String']['output']>;
   clinicId?: Maybe<Scalars['String']['output']>;
   clinicIds?: Maybe<Array<Scalars['String']['output']>>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
   role: Scalars['String']['output'];
   staffId?: Maybe<Scalars['String']['output']>;
@@ -8438,6 +8453,8 @@ export type QueryGetDoctorWorkingHoursArgs = {
 
 
 export type QueryGetDrugListArgs = {
+  clinicId?: InputMaybe<Scalars['String']['input']>;
+  getInventory?: InputMaybe<Scalars['Boolean']['input']>;
   query: Scalars['String']['input'];
 };
 
