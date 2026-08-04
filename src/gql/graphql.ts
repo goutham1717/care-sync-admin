@@ -181,6 +181,7 @@ export type AppointmentDetails = {
   patientProfile: PatientProfile;
   paymentDetails?: Maybe<PaymentDetails>;
   purpose?: Maybe<Scalars['String']['output']>;
+  queueToken?: Maybe<QueueTokenDetails>;
   reference_id?: Maybe<Scalars['String']['output']>;
   service_type: Scalars['String']['output'];
   start_time: Scalars['String']['output'];
@@ -869,6 +870,10 @@ export type DegreeDto = {
   end_year: Scalars['DateTime']['input'];
   name: Scalars['String']['input'];
   start_year: Scalars['DateTime']['input'];
+};
+
+export type DeleteBillingDto = {
+  pid: Scalars['String']['input'];
 };
 
 export type DeleteConversationInput = {
@@ -1872,6 +1877,7 @@ export type Mutation = {
   assignCustomFieldToDoctors: CustomField;
   assignDoctorToClinics: Doctor;
   assignPatientsToGroup: PatientGroup;
+  assignQueueToken: QueueTokenDetails;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
   cancelAppointmentByPatient: Scalars['String']['output'];
@@ -1902,6 +1908,7 @@ export type Mutation = {
   createService: ServicesModel;
   createSubscription: DoctorSubscription;
   createTemplate: Template;
+  deleteBilling: Scalars['String']['output'];
   deleteBusiness: Scalars['Boolean']['output'];
   deleteClinic: Scalars['Boolean']['output'];
   deleteClinicMilestone: Scalars['Boolean']['output'];
@@ -1913,6 +1920,7 @@ export type Mutation = {
   deleteDocument: Scalars['Boolean']['output'];
   deleteInventoryItem: Scalars['String']['output'];
   deletePatientGroup: Scalars['Boolean']['output'];
+  deletePrescription: Scalars['Boolean']['output'];
   deleteReportSettings: Scalars['String']['output'];
   deleteReview: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
@@ -2088,6 +2096,11 @@ export type MutationAssignPatientsToGroupArgs = {
 };
 
 
+export type MutationAssignQueueTokenArgs = {
+  aid: Scalars['String']['input'];
+};
+
+
 export type MutationBookAppointmentArgs = {
   appointmentInput: AppointmentDetailsDto;
 };
@@ -2239,6 +2252,11 @@ export type MutationCreateTemplateArgs = {
 };
 
 
+export type MutationDeleteBillingArgs = {
+  input: DeleteBillingDto;
+};
+
+
 export type MutationDeleteBusinessArgs = {
   businessId: Scalars['String']['input'];
 };
@@ -2291,6 +2309,11 @@ export type MutationDeleteInventoryItemArgs = {
 
 export type MutationDeletePatientGroupArgs = {
   groupId: Scalars['String']['input'];
+};
+
+
+export type MutationDeletePrescriptionArgs = {
+  rx_id: Scalars['String']['input'];
 };
 
 
@@ -2727,6 +2750,7 @@ export type Notifications = {
   call: Scalars['Boolean']['output'];
   event: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  sendToCaretaker: Scalars['Boolean']['output'];
   sms: Scalars['Boolean']['output'];
   whatsapp: Scalars['Boolean']['output'];
 };
@@ -2828,6 +2852,24 @@ export type PatientCancelAppointmentInput = {
   mobile: Scalars['String']['input'];
 };
 
+export type PatientCaretaker = {
+  __typename?: 'PatientCaretaker';
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isPrimary: Scalars['Boolean']['output'];
+  mobile: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  relationship?: Maybe<Scalars['String']['output']>;
+};
+
+export type PatientCaretakerInput = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  isPrimary?: InputMaybe<Scalars['Boolean']['input']>;
+  mobile: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  relationship?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PatientDto = {
   profile: PatientProfileDto;
 };
@@ -2907,6 +2949,7 @@ export type PatientProfile = {
   __typename?: 'PatientProfile';
   address?: Maybe<Address>;
   age?: Maybe<Scalars['String']['output']>;
+  caretakers?: Maybe<Array<PatientCaretaker>>;
   case_id?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
   dob?: Maybe<Scalars['String']['output']>;
@@ -2923,6 +2966,7 @@ export type PatientProfile = {
 export type PatientProfileDto = {
   address?: InputMaybe<AddressDto>;
   age?: InputMaybe<Scalars['String']['input']>;
+  caretakers?: InputMaybe<Array<PatientCaretakerInput>>;
   case_id?: InputMaybe<Scalars['String']['input']>;
   designation: Scalars['String']['input'];
   dob?: InputMaybe<Scalars['String']['input']>;
@@ -2939,6 +2983,7 @@ export type PatientProfileLastVisited = {
   __typename?: 'PatientProfileLastVisited';
   address?: Maybe<Address>;
   age?: Maybe<Scalars['String']['output']>;
+  caretakers?: Maybe<Array<PatientCaretaker>>;
   case_id?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
   dob?: Maybe<Scalars['String']['output']>;
@@ -3008,6 +3053,7 @@ export type PatientsWithAppointment = {
   AppointmentDetails?: Maybe<Array<AppointmentDetails>>;
   address?: Maybe<Address>;
   age?: Maybe<Scalars['String']['output']>;
+  caretakers?: Maybe<Array<PatientCaretaker>>;
   case_id?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
   dob?: Maybe<Scalars['String']['output']>;
@@ -3136,6 +3182,7 @@ export type PrescriptionDto = {
   patientProfileId: Scalars['String']['input'];
   privateNotes?: InputMaybe<Scalars['String']['input']>;
   rx_entries: Rx_Entries;
+  rx_id?: InputMaybe<Scalars['String']['input']>;
   rx_url?: InputMaybe<Scalars['String']['input']>;
   visit_name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3885,6 +3932,20 @@ export type QuerySearchClinicPatientsForGroupAssignmentArgs = {
 
 export type QueryTodayMedicationArgs = {
   userId: Scalars['String']['input'];
+};
+
+export type QueueTokenDetails = {
+  __typename?: 'QueueTokenDetails';
+  calledAt?: Maybe<Scalars['DateTime']['output']>;
+  cancelledAt?: Maybe<Scalars['DateTime']['output']>;
+  completedAt?: Maybe<Scalars['DateTime']['output']>;
+  consultationStartedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  issuedAt: Scalars['DateTime']['output'];
+  queueDate: Scalars['DateTime']['output'];
+  skippedAt?: Maybe<Scalars['DateTime']['output']>;
+  status: Scalars['String']['output'];
+  tokenNumber: Scalars['Float']['output'];
 };
 
 export type Rx_Entries = {
@@ -5063,6 +5124,7 @@ export type AppointmentDetails = {
   patientProfile: PatientProfile;
   paymentDetails?: Maybe<PaymentDetails>;
   purpose?: Maybe<Scalars['String']['output']>;
+  queueToken?: Maybe<QueueTokenDetails>;
   reference_id?: Maybe<Scalars['String']['output']>;
   service_type: Scalars['String']['output'];
   start_time: Scalars['String']['output'];
@@ -5751,6 +5813,10 @@ export type DegreeDto = {
   end_year: Scalars['DateTime']['input'];
   name: Scalars['String']['input'];
   start_year: Scalars['DateTime']['input'];
+};
+
+export type DeleteBillingDto = {
+  pid: Scalars['String']['input'];
 };
 
 export type DeleteConversationInput = {
@@ -6754,6 +6820,7 @@ export type Mutation = {
   assignCustomFieldToDoctors: CustomField;
   assignDoctorToClinics: Doctor;
   assignPatientsToGroup: PatientGroup;
+  assignQueueToken: QueueTokenDetails;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
   cancelAppointmentByPatient: Scalars['String']['output'];
@@ -6784,6 +6851,7 @@ export type Mutation = {
   createService: ServicesModel;
   createSubscription: DoctorSubscription;
   createTemplate: Template;
+  deleteBilling: Scalars['String']['output'];
   deleteBusiness: Scalars['Boolean']['output'];
   deleteClinic: Scalars['Boolean']['output'];
   deleteClinicMilestone: Scalars['Boolean']['output'];
@@ -6795,6 +6863,7 @@ export type Mutation = {
   deleteDocument: Scalars['Boolean']['output'];
   deleteInventoryItem: Scalars['String']['output'];
   deletePatientGroup: Scalars['Boolean']['output'];
+  deletePrescription: Scalars['Boolean']['output'];
   deleteReportSettings: Scalars['String']['output'];
   deleteReview: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
@@ -6970,6 +7039,11 @@ export type MutationAssignPatientsToGroupArgs = {
 };
 
 
+export type MutationAssignQueueTokenArgs = {
+  aid: Scalars['String']['input'];
+};
+
+
 export type MutationBookAppointmentArgs = {
   appointmentInput: AppointmentDetailsDto;
 };
@@ -7121,6 +7195,11 @@ export type MutationCreateTemplateArgs = {
 };
 
 
+export type MutationDeleteBillingArgs = {
+  input: DeleteBillingDto;
+};
+
+
 export type MutationDeleteBusinessArgs = {
   businessId: Scalars['String']['input'];
 };
@@ -7173,6 +7252,11 @@ export type MutationDeleteInventoryItemArgs = {
 
 export type MutationDeletePatientGroupArgs = {
   groupId: Scalars['String']['input'];
+};
+
+
+export type MutationDeletePrescriptionArgs = {
+  rx_id: Scalars['String']['input'];
 };
 
 
@@ -7609,6 +7693,7 @@ export type Notifications = {
   call: Scalars['Boolean']['output'];
   event: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  sendToCaretaker: Scalars['Boolean']['output'];
   sms: Scalars['Boolean']['output'];
   whatsapp: Scalars['Boolean']['output'];
 };
@@ -7710,6 +7795,24 @@ export type PatientCancelAppointmentInput = {
   mobile: Scalars['String']['input'];
 };
 
+export type PatientCaretaker = {
+  __typename?: 'PatientCaretaker';
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  isPrimary: Scalars['Boolean']['output'];
+  mobile: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  relationship?: Maybe<Scalars['String']['output']>;
+};
+
+export type PatientCaretakerInput = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  isPrimary?: InputMaybe<Scalars['Boolean']['input']>;
+  mobile: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  relationship?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PatientDto = {
   profile: PatientProfileDto;
 };
@@ -7789,6 +7892,7 @@ export type PatientProfile = {
   __typename?: 'PatientProfile';
   address?: Maybe<Address>;
   age?: Maybe<Scalars['String']['output']>;
+  caretakers?: Maybe<Array<PatientCaretaker>>;
   case_id?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
   dob?: Maybe<Scalars['String']['output']>;
@@ -7805,6 +7909,7 @@ export type PatientProfile = {
 export type PatientProfileDto = {
   address?: InputMaybe<AddressDto>;
   age?: InputMaybe<Scalars['String']['input']>;
+  caretakers?: InputMaybe<Array<PatientCaretakerInput>>;
   case_id?: InputMaybe<Scalars['String']['input']>;
   designation: Scalars['String']['input'];
   dob?: InputMaybe<Scalars['String']['input']>;
@@ -7821,6 +7926,7 @@ export type PatientProfileLastVisited = {
   __typename?: 'PatientProfileLastVisited';
   address?: Maybe<Address>;
   age?: Maybe<Scalars['String']['output']>;
+  caretakers?: Maybe<Array<PatientCaretaker>>;
   case_id?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
   dob?: Maybe<Scalars['String']['output']>;
@@ -7890,6 +7996,7 @@ export type PatientsWithAppointment = {
   AppointmentDetails?: Maybe<Array<AppointmentDetails>>;
   address?: Maybe<Address>;
   age?: Maybe<Scalars['String']['output']>;
+  caretakers?: Maybe<Array<PatientCaretaker>>;
   case_id?: Maybe<Scalars['String']['output']>;
   designation: Scalars['String']['output'];
   dob?: Maybe<Scalars['String']['output']>;
@@ -8018,6 +8125,7 @@ export type PrescriptionDto = {
   patientProfileId: Scalars['String']['input'];
   privateNotes?: InputMaybe<Scalars['String']['input']>;
   rx_entries: Rx_Entries;
+  rx_id?: InputMaybe<Scalars['String']['input']>;
   rx_url?: InputMaybe<Scalars['String']['input']>;
   visit_name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -8767,6 +8875,20 @@ export type QuerySearchClinicPatientsForGroupAssignmentArgs = {
 
 export type QueryTodayMedicationArgs = {
   userId: Scalars['String']['input'];
+};
+
+export type QueueTokenDetails = {
+  __typename?: 'QueueTokenDetails';
+  calledAt?: Maybe<Scalars['DateTime']['output']>;
+  cancelledAt?: Maybe<Scalars['DateTime']['output']>;
+  completedAt?: Maybe<Scalars['DateTime']['output']>;
+  consultationStartedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  issuedAt: Scalars['DateTime']['output'];
+  queueDate: Scalars['DateTime']['output'];
+  skippedAt?: Maybe<Scalars['DateTime']['output']>;
+  status: Scalars['String']['output'];
+  tokenNumber: Scalars['Float']['output'];
 };
 
 export type Rx_Entries = {
