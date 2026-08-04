@@ -45,6 +45,8 @@ type ClinicFeature = {
 const INPATIENT_MODULE_KEY = "Inpatient";
 const AI_PRESCRIPTION_ASSISTANT_KEY = "AiPrescriptionAssistant";
 const CONNECT_WITH_INVENTORY_KEY = "Connect with inventory";
+const QUEUE_MANAGEMENT_FEATURE_KEY = "Queue management system";
+const SOFT_DELETE_BILLING_FEATURE_KEY = "Soft delete billing";
 const MILESTONES_FEATURE_KEY = "Milestones";
 
 type MilestoneTab = "addons" | "modules" | "milestones";
@@ -79,6 +81,16 @@ const FEATURE_COPY: Record<string, { label: string; description: string }> = {
     label: "Connect with Inventory",
     description:
       "Prioritize this clinic's inventory medicines inside prescription search and show stock and low-stock details in the EMR pad.",
+  },
+  [QUEUE_MANAGEMENT_FEATURE_KEY]: {
+    label: "Queue Management System",
+    description:
+      "Enable virtual token issuance for walk-ins so front desk staff can control doctor order based on patient arrival.",
+  },
+  [SOFT_DELETE_BILLING_FEATURE_KEY]: {
+    label: "Soft Delete Billing",
+    description:
+      "Allow staff to hide bills without removing them from the database, so billing history stays auditable.",
   },
   [AI_PRESCRIPTION_ASSISTANT_KEY]: {
     label: "AI Prescription Assistant",
