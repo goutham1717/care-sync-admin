@@ -291,6 +291,13 @@ const ClinicList = (props: Props) => {
                               View Staff
                             </Link>
                             <Link
+                              href={`/clinics/${clinic.id}/inventory-logins`}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              onClick={() => setOpenMenuId(null)}
+                            >
+                              Inventory Logins
+                            </Link>
+                            <Link
                               href={`/clinics/${clinic.id}/inpatient-defaults`}
                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                               onClick={() => setOpenMenuId(null)}
