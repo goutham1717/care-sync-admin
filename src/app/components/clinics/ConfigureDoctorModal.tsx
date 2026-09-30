@@ -76,6 +76,12 @@ type Props = {
   onClose: () => void;
 }
 
+const CUSTOM_FEATURE_LABELS: Record<string, string> = {
+  "Pediatric Prescription Template": "Pediatric Prescription Template",
+  "Pediatric Growth Chart": "Pediatric Growth Chart",
+  "Custom Vitals": "Custom Vitals & Trends",
+};
+
 const SUBSCRIPTION_STATUSES = [
   { value: 'TRIAL', label: 'TRIAL - Doctor is in trial period' },
   { value: 'ACTIVE', label: 'ACTIVE - Doctor has an active paid subscription' },
@@ -362,7 +368,7 @@ const ConfigureDoctorModal = ({ doctor, currentClinicId, open, onClinicAccessSav
   // Convert to options for react-select
   const featureOptions = availableFeatures.map((feature) => ({
     value: feature.value,
-    label: feature.value,
+    label: CUSTOM_FEATURE_LABELS[feature.value] || feature.value,
   }));
 
   const handleAddFeature = () => {
@@ -1088,7 +1094,7 @@ const ConfigureDoctorModal = ({ doctor, currentClinicId, open, onClinicAccessSav
                             onPointerEnterCapture={undefined}
                             onPointerLeaveCapture={undefined}
                           >
-                            {feature.value}
+                            {CUSTOM_FEATURE_LABELS[feature.value] || feature.value}
                           </Typography>
                           <Button
                             size="sm"

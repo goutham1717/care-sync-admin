@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable */
 // @ts-nocheck
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -45,6 +46,8 @@ export type AddStockDto = {
   notes?: InputMaybe<Scalars['String']['input']>;
   purchasePrice?: InputMaybe<Scalars['Float']['input']>;
   quantity: Scalars['Int']['input'];
+  storageLocation?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Address = {
@@ -100,8 +103,13 @@ export type AgeGroupStats = {
 export type AiPrescriptionDiagnosis = {
   __typename?: 'AiPrescriptionDiagnosis';
   duration?: Maybe<Scalars['String']['output']>;
+  isCustom?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  matchedName?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  rawExtractedName?: Maybe<Scalars['String']['output']>;
   severity?: Maybe<Scalars['String']['output']>;
+  suggestedMatches?: Maybe<Array<AiPrescriptionTermSuggestion>>;
 };
 
 export type AiPrescriptionDraft = {
@@ -113,6 +121,7 @@ export type AiPrescriptionDraft = {
   notes?: Maybe<Scalars['String']['output']>;
   summary: Scalars['String']['output'];
   symptoms: Array<AiPrescriptionSymptom>;
+  vitals: Array<AiPrescriptionVital>;
 };
 
 export type AiPrescriptionMedication = {
@@ -120,8 +129,29 @@ export type AiPrescriptionMedication = {
   dose?: Maybe<Scalars['String']['output']>;
   duration?: Maybe<Scalars['String']['output']>;
   frequency?: Maybe<Scalars['String']['output']>;
+  inventoryItemId?: Maybe<Scalars['String']['output']>;
+  isCustom?: Maybe<Scalars['Boolean']['output']>;
+  isInventoryLinked?: Maybe<Scalars['Boolean']['output']>;
+  lowStock?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  matchedDrugId?: Maybe<Scalars['String']['output']>;
+  matchedDrugName?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  rawExtractedName?: Maybe<Scalars['String']['output']>;
+  suggestedMatches?: Maybe<Array<AiPrescriptionMedicationSuggestion>>;
   timing?: Maybe<Scalars['String']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+};
+
+export type AiPrescriptionMedicationSuggestion = {
+  __typename?: 'AiPrescriptionMedicationSuggestion';
+  id: Scalars['String']['output'];
+  inventoryItemId?: Maybe<Scalars['String']['output']>;
+  isInventoryLinked?: Maybe<Scalars['Boolean']['output']>;
+  lowStock?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  unit?: Maybe<Scalars['String']['output']>;
 };
 
 export type AiPrescriptionSession = {
@@ -143,8 +173,26 @@ export type AiPrescriptionSession = {
 export type AiPrescriptionSymptom = {
   __typename?: 'AiPrescriptionSymptom';
   duration?: Maybe<Scalars['String']['output']>;
+  isCustom?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  matchedName?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  rawExtractedName?: Maybe<Scalars['String']['output']>;
   severity?: Maybe<Scalars['String']['output']>;
+  suggestedMatches?: Maybe<Array<AiPrescriptionTermSuggestion>>;
+};
+
+export type AiPrescriptionTermSuggestion = {
+  __typename?: 'AiPrescriptionTermSuggestion';
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
+export type AiPrescriptionVital = {
+  __typename?: 'AiPrescriptionVital';
+  name: Scalars['String']['output'];
+  unit?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
 };
 
 export type AiUsageStats = {
@@ -162,6 +210,23 @@ export type AiUsageStatsInput = {
   endDate?: InputMaybe<Scalars['String']['input']>;
   platform?: InputMaybe<MessagingPlatform>;
   startDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AppointmentApprovalRequest = {
+  __typename?: 'AppointmentApprovalRequest';
+  aid: Scalars['String']['output'];
+  channel: Scalars['String']['output'];
+  clinicId: Scalars['String']['output'];
+  doctorId?: Maybe<Scalars['String']['output']>;
+  doctorName: Scalars['String']['output'];
+  endTime: Scalars['DateTime']['output'];
+  patientMobile: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
+  referenceId?: Maybe<Scalars['String']['output']>;
+  serviceType: Scalars['String']['output'];
+  startTime: Scalars['DateTime']['output'];
+  status: Scalars['String']['output'];
 };
 
 export type AppointmentCount = {
@@ -266,6 +331,11 @@ export type CancelInpatientChargeDto = {
   reason: Scalars['String']['input'];
 };
 
+export type ChangeInventoryPasswordDto = {
+  confirmPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+};
+
 export type ChannelCount = {
   __typename?: 'ChannelCount';
   appointmentcount: Scalars['Float']['output'];
@@ -304,7 +374,9 @@ export type Clinic = {
   customFeatures?: Maybe<Array<ClinicFeature>>;
   doctors?: Maybe<Array<Doctor>>;
   email: Scalars['String']['output'];
+  gstNumber?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  inventoryGstNumber?: Maybe<Scalars['String']['output']>;
   latitude?: Maybe<Scalars['Float']['output']>;
   location: Array<Scalars['String']['output']>;
   logoUrl?: Maybe<Scalars['String']['output']>;
@@ -313,6 +385,7 @@ export type Clinic = {
   openTime: Scalars['String']['output'];
   phone_number: Array<PhoneNumber>;
   speciality?: Maybe<Array<Speciality>>;
+  taxationType: Scalars['String']['output'];
   workingDays: Array<Scalars['Boolean']['output']>;
 };
 
@@ -396,7 +469,7 @@ export type ClinicDto = {
   logoUrl?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   openTime?: InputMaybe<Scalars['String']['input']>;
-  phone_number: Array<PhoneNumberDto>;
+  phone_number: Array<ClinicPhoneNumberInput>;
   speciality: Array<SpecailityDto>;
   workingDays?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
@@ -405,7 +478,7 @@ export type ClinicDetailDto = {
   addressValue?: InputMaybe<AddressDto>;
   clinicId: Scalars['String']['input'];
   field: Scalars['String']['input'];
-  phoneValue?: InputMaybe<Array<PhoneNumberDto>>;
+  phoneValue?: InputMaybe<Array<ClinicPhoneNumberInput>>;
   stringValue?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -531,6 +604,11 @@ export type ClinicPatientsResponse = {
   patients: Array<ClinicPatientBasicInfo>;
 };
 
+export type ClinicPhoneNumberInput = {
+  n: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type ClinicStaffModel = {
   __typename?: 'ClinicStaffModel';
   clinicId: Scalars['String']['output'];
@@ -554,6 +632,7 @@ export type ConversationListItemResult = {
   __typename?: 'ConversationListItemResult';
   createdAt: Scalars['DateTime']['output'];
   externalSenderId: Scalars['String']['output'];
+  handoffSummary?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   lastMessage?: Maybe<Scalars['String']['output']>;
   lastMessageAt?: Maybe<Scalars['DateTime']['output']>;
@@ -563,6 +642,7 @@ export type ConversationListItemResult = {
   mode: ConversationMode;
   platform: MessagingPlatform;
   updatedAt: Scalars['DateTime']['output'];
+  workflowState?: Maybe<ConversationWorkflowState>;
 };
 
 export type ConversationMessageResult = {
@@ -584,6 +664,17 @@ export type ConversationModeResult = {
   conversationId: Scalars['String']['output'];
   mode: ConversationMode;
 };
+
+export enum ConversationWorkflowState {
+  AwaitingSlotSelection = 'AWAITING_SLOT_SELECTION',
+  AwaitingStaff = 'AWAITING_STAFF',
+  Booked = 'BOOKED',
+  CollectingDetails = 'COLLECTING_DETAILS',
+  FollowUpNeeded = 'FOLLOW_UP_NEEDED',
+  Open = 'OPEN',
+  ReadyToBook = 'READY_TO_BOOK',
+  Resolved = 'RESOLVED'
+}
 
 export type CpgDto = {
   barCode: Scalars['String']['input'];
@@ -616,6 +707,23 @@ export type CreateCustomFieldInput = {
   options?: InputMaybe<Array<Scalars['String']['input']>>;
   parentComponent: Scalars['String']['input'];
   valueType: CustomFieldValueType;
+};
+
+export type CreateDoctorVitalDefinitionInput = {
+  clinicId: Scalars['String']['input'];
+  diastolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  diastolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  doctorId: Scalars['String']['input'];
+  inputType: DoctorVitalInputType;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  referenceMax?: InputMaybe<Scalars['Float']['input']>;
+  referenceMin?: InputMaybe<Scalars['Float']['input']>;
+  semanticCode?: InputMaybe<Scalars['String']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  systolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  systolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  unit: Scalars['String']['input'];
 };
 
 export type CreateDoctorWorkingHoursDto = {
@@ -744,24 +852,42 @@ export type CreateInpatientWardDto = {
 export type CreateInventoryItemDto = {
   barcode?: InputMaybe<Scalars['String']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
+  chemicalName?: InputMaybe<Scalars['String']['input']>;
   clinicId: Scalars['String']['input'];
+  costCgstRate?: InputMaybe<Scalars['Float']['input']>;
   costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  costSgstRate?: InputMaybe<Scalars['Float']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  hsnCode?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
   manufacturer?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  requiresPrescription?: InputMaybe<Scalars['Boolean']['input']>;
+  sellingCgstRate?: InputMaybe<Scalars['Float']['input']>;
   sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  sellingSgstRate?: InputMaybe<Scalars['Float']['input']>;
+  strength?: InputMaybe<Scalars['String']['input']>;
+  supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
   type: Scalars['String']['input'];
   unit: Scalars['String']['input'];
 };
 
+export type CreateInventoryLoginDto = {
+  clinicId: Scalars['String']['input'];
+  temporaryPassword: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
 export type CreateInventoryTransactionDto = {
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  discountValue?: InputMaybe<Scalars['Float']['input']>;
   itemId: Scalars['String']['input'];
   notes?: InputMaybe<Scalars['String']['input']>;
   quantity: Scalars['Int']['input'];
   referenceId?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
   type: Scalars['String']['input'];
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
 };
@@ -774,12 +900,57 @@ export type CreatePatientGroupInput = {
 };
 
 export type CreatePatientPurchaseDto = {
+  billDiscountType?: InputMaybe<Scalars['String']['input']>;
+  billDiscountValue?: InputMaybe<Scalars['Float']['input']>;
   clinicId: Scalars['String']['input'];
   items: Array<PatientPurchaseItemDto>;
   notes?: InputMaybe<Scalars['String']['input']>;
   patientProfileId: Scalars['String']['input'];
   paymentStatus?: InputMaybe<Scalars['String']['input']>;
   paymentType?: InputMaybe<Scalars['String']['input']>;
+  prescriptionVerified?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type CreatePurchaseEntryDto = {
+  amountPaid?: InputMaybe<Scalars['Float']['input']>;
+  clinicId: Scalars['String']['input'];
+  creditPeriodDays?: InputMaybe<Scalars['Int']['input']>;
+  dueDate?: InputMaybe<Scalars['DateTime']['input']>;
+  invoiceDate: Scalars['DateTime']['input'];
+  items: Array<PurchaseEntryItemDto>;
+  location: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  paymentType: Scalars['String']['input'];
+  purchaseOrderId?: InputMaybe<Scalars['String']['input']>;
+  receivedDate: Scalars['DateTime']['input'];
+  supplierId: Scalars['String']['input'];
+  supplierInvoiceNumber: Scalars['String']['input'];
+};
+
+export type CreatePurchaseOrderDto = {
+  clinicId: Scalars['String']['input'];
+  creditPeriodDays?: InputMaybe<Scalars['Int']['input']>;
+  expectedDelivery?: InputMaybe<Scalars['DateTime']['input']>;
+  items: Array<PurchaseOrderItemDto>;
+  location: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  orderDate: Scalars['DateTime']['input'];
+  paymentReminderDate?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentType: Scalars['String']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId: Scalars['String']['input'];
+};
+
+export type CreatePurchaseReturnDto = {
+  clinicId: Scalars['String']['input'];
+  creditNoteNumber?: InputMaybe<Scalars['String']['input']>;
+  items: Array<PurchaseReturnItemDto>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  purchaseEntryId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+  returnDate: Scalars['DateTime']['input'];
+  settlementType: Scalars['String']['input'];
+  supplierId: Scalars['String']['input'];
 };
 
 export type CreateReportSettingsInput = {
@@ -808,6 +979,30 @@ export type CreateSubscriptionDto = {
   status: Scalars['String']['input'];
   trialEndDate?: InputMaybe<Scalars['String']['input']>;
   trialStartDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateSupplierDto = {
+  address: Scalars['String']['input'];
+  clinicId: Scalars['String']['input'];
+  contactPerson: Scalars['String']['input'];
+  drugLicenseNumber: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  gstNumber: Scalars['String']['input'];
+  landlineNumber?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateSupplierPaymentDto = {
+  allocations?: InputMaybe<Array<SupplierPaymentAllocationDto>>;
+  amount: Scalars['Float']['input'];
+  clinicId: Scalars['String']['input'];
+  mode: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  paymentDate: Scalars['DateTime']['input'];
+  referenceNumber?: InputMaybe<Scalars['String']['input']>;
+  supplierId: Scalars['String']['input'];
 };
 
 export type CreditsUpdateDto = {
@@ -1020,6 +1215,33 @@ export type DoctorSubscription = {
   trialStartDate?: Maybe<Scalars['DateTime']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
+
+export type DoctorVitalDefinition = {
+  __typename?: 'DoctorVitalDefinition';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  diastolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  diastolicReferenceMin?: Maybe<Scalars['Float']['output']>;
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  inputType: DoctorVitalInputType;
+  isActive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  referenceMax?: Maybe<Scalars['Float']['output']>;
+  referenceMin?: Maybe<Scalars['Float']['output']>;
+  semanticCode?: Maybe<Scalars['String']['output']>;
+  sortOrder: Scalars['Int']['output'];
+  systolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  systolicReferenceMin?: Maybe<Scalars['Float']['output']>;
+  unit: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum DoctorVitalInputType {
+  BloodPressure = 'BLOOD_PRESSURE',
+  Numeric = 'NUMERIC',
+  Text = 'TEXT'
+}
 
 export type DoctorWorkingHours = {
   __typename?: 'DoctorWorkingHours';
@@ -1669,20 +1891,31 @@ export type InventoryItem = {
   barcode?: Maybe<Scalars['String']['output']>;
   batchNumber?: Maybe<Scalars['String']['output']>;
   category?: Maybe<Scalars['String']['output']>;
+  chemicalName?: Maybe<Scalars['String']['output']>;
   clinicId: Scalars['String']['output'];
+  costCgstRate: Scalars['Float']['output'];
   costPerUnit?: Maybe<Scalars['Float']['output']>;
+  costSgstRate: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   currentStock: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  hsnCode?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   lowStockThreshold: Scalars['Int']['output'];
   manufacturer?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  purchaseOrderItems?: Maybe<Array<PurchaseOrderItem>>;
   reorderLevel?: Maybe<Scalars['Int']['output']>;
+  requiresPrescription: Scalars['Boolean']['output'];
+  sellingCgstRate: Scalars['Float']['output'];
   sellingPrice?: Maybe<Scalars['Float']['output']>;
+  sellingSgstRate: Scalars['Float']['output'];
   stock?: Maybe<Array<InventoryStock>>;
+  storageLocation?: Maybe<Scalars['String']['output']>;
+  strength?: Maybe<Scalars['String']['output']>;
+  suppliers?: Maybe<Array<Supplier>>;
   transactions?: Maybe<Array<InventoryTransaction>>;
   type: InventoryItemType;
   unit: Scalars['String']['output'];
@@ -1696,6 +1929,33 @@ export enum InventoryItemType {
   Medicine = 'MEDICINE',
   Other = 'OTHER'
 }
+
+export type InventoryLoginDto = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+export type InventoryLoginModel = {
+  __typename?: 'InventoryLoginModel';
+  clinicId: Scalars['String']['output'];
+  clinicName: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  mustChangePassword: Scalars['Boolean']['output'];
+  username: Scalars['String']['output'];
+};
+
+export type InventoryLoginSession = {
+  __typename?: 'InventoryLoginSession';
+  businessId: Scalars['String']['output'];
+  clinicId: Scalars['String']['output'];
+  clinicName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  mustChangePassword: Scalars['Boolean']['output'];
+  permissions: Array<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
+};
 
 export type InventoryStats = {
   __typename?: 'InventoryStats';
@@ -1716,18 +1976,32 @@ export type InventoryStock = {
   purchaseDate: Scalars['DateTime']['output'];
   purchasePrice?: Maybe<Scalars['Float']['output']>;
   quantity: Scalars['Int']['output'];
+  storageLocation?: Maybe<Scalars['String']['output']>;
+  supplier?: Maybe<Supplier>;
+  supplierId?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
 export type InventoryTransaction = {
   __typename?: 'InventoryTransaction';
+  cgstAmount?: Maybe<Scalars['Float']['output']>;
+  cgstRate?: Maybe<Scalars['Float']['output']>;
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
+  discountAmount?: Maybe<Scalars['Float']['output']>;
+  discountType?: Maybe<Scalars['String']['output']>;
+  discountValue?: Maybe<Scalars['Float']['output']>;
   id: Scalars['String']['output'];
   itemId: Scalars['String']['output'];
   notes?: Maybe<Scalars['String']['output']>;
   quantity: Scalars['Int']['output'];
   referenceId?: Maybe<Scalars['String']['output']>;
+  sgstAmount?: Maybe<Scalars['Float']['output']>;
+  sgstRate?: Maybe<Scalars['Float']['output']>;
+  subtotalAmount?: Maybe<Scalars['Float']['output']>;
+  supplier?: Maybe<Supplier>;
+  supplierId?: Maybe<Scalars['String']['output']>;
+  taxationType?: Maybe<TaxationType>;
   totalAmount?: Maybe<Scalars['Float']['output']>;
   type: InventoryTransactionType;
   unitPrice?: Maybe<Scalars['Float']['output']>;
@@ -1738,6 +2012,7 @@ export enum InventoryTransactionType {
   Damaged = 'DAMAGED',
   Expired = 'EXPIRED',
   Purchase = 'PURCHASE',
+  PurchaseReturn = 'PURCHASE_RETURN',
   Restock = 'RESTOCK',
   Sale = 'SALE',
   Usage = 'USAGE'
@@ -1757,6 +2032,25 @@ export type LastVisited = {
   visit_checkin: Scalars['String']['output'];
 };
 
+export type LearnAiClinicalAliasDto = {
+  aliasType: Scalars['String']['input'];
+  clinicId: Scalars['String']['input'];
+  doctorId?: InputMaybe<Scalars['String']['input']>;
+  matchedName: Scalars['String']['input'];
+  rawName: Scalars['String']['input'];
+};
+
+export type LearnAiMedicationAliasDto = {
+  clinicId: Scalars['String']['input'];
+  doctorId?: InputMaybe<Scalars['String']['input']>;
+  inventoryItemId?: InputMaybe<Scalars['String']['input']>;
+  isInventoryLinked?: Scalars['Boolean']['input'];
+  matchedDrugId?: InputMaybe<Scalars['String']['input']>;
+  matchedDrugName: Scalars['String']['input'];
+  rawName: Scalars['String']['input'];
+  unit?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type MajorSpecaility = {
   __typename?: 'MajorSpecaility';
   name: Scalars['String']['output'];
@@ -1772,6 +2066,7 @@ export type MeResponse = {
   clinicId?: Maybe<Scalars['String']['output']>;
   clinicIds?: Maybe<Array<Scalars['String']['output']>>;
   firstName?: Maybe<Scalars['String']['output']>;
+  inventoryLoginId?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
   role: Scalars['String']['output'];
@@ -1880,13 +2175,16 @@ export type Mutation = {
   assignQueueToken: QueueTokenDetails;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
+  bookWebsiteAppointment: WebsiteAppointmentBookingResult;
   cancelAppointmentByPatient: Scalars['String']['output'];
   cancelInpatientCharge: InpatientCharge;
+  changeInventoryPassword: InventoryLoginSession;
   completeInpatientDischarge: InpatientEncounter;
   createBusiness: Business;
   createClinicMilestone: ClinicMilestone;
   createCustomField: CustomField;
   createDentalChart: DentalChart;
+  createDoctorVitalDefinition: DoctorVitalDefinition;
   createDoctorWorkingHours: DoctorWorkingHours;
   createDraft: Draft;
   createInpatientBed: InpatientBed;
@@ -1899,15 +2197,22 @@ export type Mutation = {
   createInpatientVital: InpatientVital;
   createInpatientWard: InpatientWard;
   createInventoryItem: InventoryItem;
+  createInventoryLogin: InventoryLoginModel;
   createInventoryTransaction: InventoryTransaction;
   createOrder: Scalars['String']['output'];
   createPatientGroup: PatientGroup;
   createPatientPurchase: PatientPurchase;
+  createPurchaseEntry: PurchaseEntry;
+  createPurchaseOrder: PurchaseOrder;
+  createPurchaseReturn: PurchaseReturn;
   createReportSettings: ReportSettings;
   createReview: Review;
   createService: ServicesModel;
   createSubscription: DoctorSubscription;
+  createSupplier: Supplier;
+  createSupplierPayment: SupplierPayment;
   createTemplate: Template;
+  createWebsiteBookingSession: WebsiteBookingSession;
   deleteBilling: Scalars['String']['output'];
   deleteBusiness: Scalars['Boolean']['output'];
   deleteClinic: Scalars['Boolean']['output'];
@@ -1916,24 +2221,31 @@ export type Mutation = {
   deleteCustomField: Scalars['Boolean']['output'];
   deleteDentalChart: Scalars['Boolean']['output'];
   deleteDoctor: Scalars['Boolean']['output'];
+  deleteDoctorVitalDefinition: Scalars['Boolean']['output'];
   deleteDoctorWorkingHours: Scalars['String']['output'];
   deleteDocument: Scalars['Boolean']['output'];
   deleteInventoryItem: Scalars['String']['output'];
   deletePatientGroup: Scalars['Boolean']['output'];
   deletePrescription: Scalars['Boolean']['output'];
+  deletePurchaseOrder: Scalars['String']['output'];
   deleteReportSettings: Scalars['String']['output'];
   deleteReview: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
+  deleteSupplier: Scalars['String']['output'];
   editBilling: Scalars['String']['output'];
   editMedication: Medication;
   evaluateClinicMilestones: Array<ClinicMilestoneAchievement>;
   finalizeInpatientBill: InpatientBillingAccount;
   generateReport: Scalars['String']['output'];
+  generateWebsiteBookingKey: WebsiteBookingKeyGenerationResult;
   getAppointmentGraph: Array<GraphData>;
   getAppointmentStats: AppointmentStats;
   getProductMetrics: Cpg;
   getRevenue: RevenueStats;
   initiateInpatientDischarge: InpatientEncounter;
+  inventoryLogin: InventoryLoginSession;
+  learnAiClinicalAlias: Scalars['Boolean']['output'];
+  learnAiMedicationAlias: Scalars['Boolean']['output'];
   loginOTPRequest: OtpRequestStatus;
   logout: Scalars['String']['output'];
   onboarding: RegisterResponse;
@@ -1951,6 +2263,7 @@ export type Mutation = {
   removeFavourite: Scalars['String']['output'];
   removePatientsFromGroup: PatientGroup;
   rescheduleAppointmentByPatient: AppointmentDetails;
+  resolveAppointmentApproval: AppointmentApprovalRequest;
   savePrescription: Prescription;
   savePrescriptionTemplate: PrescriptionTemplate;
   sendConversationMessage: ConversationMessageResult;
@@ -1973,6 +2286,7 @@ export type Mutation = {
   updateDoctorActiveStatus: Scalars['Boolean']['output'];
   updateDoctorAppointmentLimit: Scalars['Int']['output'];
   updateDoctorSettings: Scalars['Boolean']['output'];
+  updateDoctorVitalDefinition: DoctorVitalDefinition;
   updateDoctorWorkingHours: DoctorWorkingHours;
   updateInpatientBed: InpatientBed;
   updateInpatientCharge: InpatientCharge;
@@ -1981,18 +2295,24 @@ export type Mutation = {
   updateInpatientOrderStatus: InpatientOrder;
   updateInpatientWard: InpatientWard;
   updateInventoryItem: InventoryItem;
+  updateInventoryLoginStatus: InventoryLoginModel;
   updateMedicationStatus: MedicationStatus;
   updateNotifications: Notifications;
   updatePatientGroup: PatientGroup;
   updatePatientProfile: PatientProfile;
+  updatePatientPurchaseBill: PatientPurchase;
   updatePaymentDetails: Scalars['String']['output'];
   updateProfilePicUrl: Doctor;
+  updatePurchaseOrder: PurchaseOrder;
+  updateQueueTokenStatus: QueueTokenDetails;
   updateReportSettings: ReportSettings;
   updateReview: Review;
   updateService: ServicesModel;
   updateSubscription: DoctorSubscription;
   updateSubscriptionStatus: DoctorSubscription;
+  updateSupplier: Supplier;
   updateVideoDuration: Scalars['String']['output'];
+  updateWebsiteBookingOrigins: WebsiteBookingIntegration;
   upsertAiPrescriptionSession: AiPrescriptionSession;
   upsertCheckInData: CheckInDataModel;
   upsertClinicModuleSubscription: ClinicModuleSubscription;
@@ -2003,6 +2323,7 @@ export type Mutation = {
   validateLoginOTP: UnifiedLoginResponse;
   voidInpatientDocument: InpatientDocument;
   voidInpatientPayment: InpatientPayment;
+  voidSupplierPayment: SupplierPayment;
 };
 
 
@@ -2111,6 +2432,11 @@ export type MutationBookAppointmentOnlineArgs = {
 };
 
 
+export type MutationBookWebsiteAppointmentArgs = {
+  input: WebsiteAppointmentBookingInput;
+};
+
+
 export type MutationCancelAppointmentByPatientArgs = {
   input: PatientCancelAppointmentInput;
 };
@@ -2118,6 +2444,11 @@ export type MutationCancelAppointmentByPatientArgs = {
 
 export type MutationCancelInpatientChargeArgs = {
   input: CancelInpatientChargeDto;
+};
+
+
+export type MutationChangeInventoryPasswordArgs = {
+  input: ChangeInventoryPasswordDto;
 };
 
 
@@ -2143,6 +2474,11 @@ export type MutationCreateCustomFieldArgs = {
 
 export type MutationCreateDentalChartArgs = {
   input: DentalChartCreateInput;
+};
+
+
+export type MutationCreateDoctorVitalDefinitionArgs = {
+  input: CreateDoctorVitalDefinitionInput;
 };
 
 
@@ -2206,6 +2542,11 @@ export type MutationCreateInventoryItemArgs = {
 };
 
 
+export type MutationCreateInventoryLoginArgs = {
+  input: CreateInventoryLoginDto;
+};
+
+
 export type MutationCreateInventoryTransactionArgs = {
   input: CreateInventoryTransactionDto;
 };
@@ -2223,6 +2564,21 @@ export type MutationCreatePatientGroupArgs = {
 
 export type MutationCreatePatientPurchaseArgs = {
   input: CreatePatientPurchaseDto;
+};
+
+
+export type MutationCreatePurchaseEntryArgs = {
+  input: CreatePurchaseEntryDto;
+};
+
+
+export type MutationCreatePurchaseOrderArgs = {
+  input: CreatePurchaseOrderDto;
+};
+
+
+export type MutationCreatePurchaseReturnArgs = {
+  input: CreatePurchaseReturnDto;
 };
 
 
@@ -2244,6 +2600,16 @@ export type MutationCreateServiceArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   input: CreateSubscriptionDto;
+};
+
+
+export type MutationCreateSupplierArgs = {
+  input: CreateSupplierDto;
+};
+
+
+export type MutationCreateSupplierPaymentArgs = {
+  input: CreateSupplierPaymentDto;
 };
 
 
@@ -2292,6 +2658,11 @@ export type MutationDeleteDoctorArgs = {
 };
 
 
+export type MutationDeleteDoctorVitalDefinitionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteDoctorWorkingHoursArgs = {
   workingHoursId: Scalars['String']['input'];
 };
@@ -2317,6 +2688,12 @@ export type MutationDeletePrescriptionArgs = {
 };
 
 
+export type MutationDeletePurchaseOrderArgs = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteReportSettingsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -2329,6 +2706,12 @@ export type MutationDeleteReviewArgs = {
 
 export type MutationDeleteScheduleArgs = {
   id: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteSupplierArgs = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -2382,6 +2765,21 @@ export type MutationGetRevenueArgs = {
 
 export type MutationInitiateInpatientDischargeArgs = {
   input: DischargeInpatientDto;
+};
+
+
+export type MutationInventoryLoginArgs = {
+  input: InventoryLoginDto;
+};
+
+
+export type MutationLearnAiClinicalAliasArgs = {
+  input: LearnAiClinicalAliasDto;
+};
+
+
+export type MutationLearnAiMedicationAliasArgs = {
+  input: LearnAiMedicationAliasDto;
 };
 
 
@@ -2459,6 +2857,12 @@ export type MutationRemovePatientsFromGroupArgs = {
 
 export type MutationRescheduleAppointmentByPatientArgs = {
   input: PatientRescheduleAppointmentInput;
+};
+
+
+export type MutationResolveAppointmentApprovalArgs = {
+  aid: Scalars['String']['input'];
+  approved: Scalars['Boolean']['input'];
 };
 
 
@@ -2580,6 +2984,11 @@ export type MutationUpdateDoctorSettingsArgs = {
 };
 
 
+export type MutationUpdateDoctorVitalDefinitionArgs = {
+  input: UpdateDoctorVitalDefinitionInput;
+};
+
+
 export type MutationUpdateDoctorWorkingHoursArgs = {
   input: UpdateDoctorWorkingHoursDto;
 };
@@ -2620,6 +3029,11 @@ export type MutationUpdateInventoryItemArgs = {
 };
 
 
+export type MutationUpdateInventoryLoginStatusArgs = {
+  input: UpdateInventoryLoginStatusDto;
+};
+
+
 export type MutationUpdateMedicationStatusArgs = {
   medicationStatusInput: MedicationStatusDto;
 };
@@ -2642,6 +3056,11 @@ export type MutationUpdatePatientProfileArgs = {
 };
 
 
+export type MutationUpdatePatientPurchaseBillArgs = {
+  input: UpdatePatientPurchaseBillDto;
+};
+
+
 export type MutationUpdatePaymentDetailsArgs = {
   paymentInput: PaymentDto;
 };
@@ -2650,6 +3069,18 @@ export type MutationUpdatePaymentDetailsArgs = {
 export type MutationUpdateProfilePicUrlArgs = {
   doctor_id: Scalars['String']['input'];
   picture_url: Scalars['String']['input'];
+};
+
+
+export type MutationUpdatePurchaseOrderArgs = {
+  input: UpdatePurchaseOrderDto;
+};
+
+
+export type MutationUpdateQueueTokenStatusArgs = {
+  clinic_id: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  tokenId: Scalars['String']['input'];
 };
 
 
@@ -2680,10 +3111,20 @@ export type MutationUpdateSubscriptionStatusArgs = {
 };
 
 
+export type MutationUpdateSupplierArgs = {
+  input: UpdateSupplierDto;
+};
+
+
 export type MutationUpdateVideoDurationArgs = {
   aid: Scalars['String']['input'];
   clinic_id: Scalars['String']['input'];
   mins: Scalars['Float']['input'];
+};
+
+
+export type MutationUpdateWebsiteBookingOriginsArgs = {
+  input: UpdateWebsiteBookingOriginsInput;
 };
 
 
@@ -2734,6 +3175,12 @@ export type MutationVoidInpatientDocumentArgs = {
 
 export type MutationVoidInpatientPaymentArgs = {
   input: VoidInpatientPaymentDto;
+};
+
+
+export type MutationVoidSupplierPaymentArgs = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
 };
 
 export type NotificationCredits = {
@@ -2824,11 +3271,83 @@ export type PaginatedCpg = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedInventoryItems = {
+  __typename?: 'PaginatedInventoryItems';
+  nodes: Array<InventoryItem>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedPatientPurchases = {
+  __typename?: 'PaginatedPatientPurchases';
+  nodes: Array<PatientPurchase>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
 export type PaginatedPatients = {
   __typename?: 'PaginatedPatients';
   patients: Array<PatientsWithAppointment>;
   totalCount: Scalars['Float']['output'];
   totalPages: Scalars['Float']['output'];
+};
+
+export type PaginatedPurchaseEntries = {
+  __typename?: 'PaginatedPurchaseEntries';
+  nodes: Array<PurchaseEntry>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedPurchaseOrders = {
+  __typename?: 'PaginatedPurchaseOrders';
+  nodes: Array<PurchaseOrder>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedPurchaseReturns = {
+  __typename?: 'PaginatedPurchaseReturns';
+  nodes: Array<PurchaseReturn>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedSupplierLedger = {
+  __typename?: 'PaginatedSupplierLedger';
+  nodes: Array<SupplierPayableEntry>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedSupplierPayableInvoices = {
+  __typename?: 'PaginatedSupplierPayableInvoices';
+  nodes: Array<SupplierPayableInvoice>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedSupplierPayments = {
+  __typename?: 'PaginatedSupplierPayments';
+  nodes: Array<SupplierPayment>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export type Patient = {
@@ -3000,36 +3519,59 @@ export type PatientProfileLastVisited = {
 
 export type PatientPurchase = {
   __typename?: 'PatientPurchase';
+  billDiscountAmount: Scalars['Float']['output'];
+  billDiscountType?: Maybe<Scalars['String']['output']>;
+  billDiscountValue: Scalars['Float']['output'];
   billNo?: Maybe<Scalars['String']['output']>;
   billURL?: Maybe<Scalars['String']['output']>;
+  cgstAmount: Scalars['Float']['output'];
   clinicId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
   finalAmount: Scalars['Float']['output'];
   id: Scalars['String']['output'];
+  itemDiscountAmount: Scalars['Float']['output'];
   items: Array<PatientPurchaseItem>;
   notes?: Maybe<Scalars['String']['output']>;
   patientProfileId: Scalars['String']['output'];
   paymentStatus?: Maybe<Scalars['String']['output']>;
   paymentType?: Maybe<Scalars['String']['output']>;
+  prescriptionVerified: Scalars['Boolean']['output'];
+  sgstAmount: Scalars['Float']['output'];
+  stockAllocations?: Maybe<Array<SaleStockAllocation>>;
+  taxationType?: Maybe<TaxationType>;
   totalAmount: Scalars['Float']['output'];
+  totalDiscountAmount: Scalars['Float']['output'];
+  totalTaxAmount: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
 export type PatientPurchaseItem = {
   __typename?: 'PatientPurchaseItem';
+  cgstAmount: Scalars['Float']['output'];
+  cgstRate: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
+  discountAmount: Scalars['Float']['output'];
+  discountType?: Maybe<Scalars['String']['output']>;
+  discountValue: Scalars['Float']['output'];
+  finalPrice: Scalars['Float']['output'];
   id: Scalars['String']['output'];
   item?: Maybe<InventoryItem>;
   itemId: Scalars['String']['output'];
   purchaseId: Scalars['String']['output'];
   quantity: Scalars['Int']['output'];
+  sgstAmount: Scalars['Float']['output'];
+  sgstRate: Scalars['Float']['output'];
+  stockAllocations?: Maybe<Array<SaleStockAllocation>>;
+  taxableAmount: Scalars['Float']['output'];
   totalPrice: Scalars['Float']['output'];
   unitPrice: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
 export type PatientPurchaseItemDto = {
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  discountValue?: InputMaybe<Scalars['Float']['input']>;
   itemId: Scalars['String']['input'];
   quantity: Scalars['Int']['input'];
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
@@ -3046,6 +3588,26 @@ export type PatientStatsResponse = {
   __typename?: 'PatientStatsResponse';
   groupedPatients: GroupedPatients;
   totalPatients: Scalars['Int']['output'];
+};
+
+export type PatientVitalTrend = {
+  __typename?: 'PatientVitalTrend';
+  definition: DoctorVitalDefinition;
+  latestPoint?: Maybe<PatientVitalTrendPoint>;
+  points: Array<PatientVitalTrendPoint>;
+};
+
+export type PatientVitalTrendPoint = {
+  __typename?: 'PatientVitalTrendPoint';
+  diastolicValue?: Maybe<Scalars['Float']['output']>;
+  isOutOfRange: Scalars['Boolean']['output'];
+  numericValue?: Maybe<Scalars['Float']['output']>;
+  prescriptionId?: Maybe<Scalars['String']['output']>;
+  recordedAt: Scalars['DateTime']['output'];
+  systolicValue?: Maybe<Scalars['Float']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
+  vitalId: Scalars['String']['output'];
 };
 
 export type PatientsWithAppointment = {
@@ -3154,11 +3716,6 @@ export type PhoneNumber = {
 };
 
 export type PhoneNumberDto = {
-  n: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-};
-
-export type PhoneNumberDto = {
   phoneNumber: Scalars['String']['input'];
 };
 
@@ -3247,6 +3804,217 @@ export type ProfileDto = {
   professional: ProfessionalDto;
 };
 
+export type PurchaseEntry = {
+  __typename?: 'PurchaseEntry';
+  amountPaid: Scalars['Float']['output'];
+  balanceAmount: Scalars['Float']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  creditPeriodDays?: Maybe<Scalars['Int']['output']>;
+  discountAmount: Scalars['Float']['output'];
+  dueDate?: Maybe<Scalars['DateTime']['output']>;
+  grossAmount: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  invoiceDate: Scalars['DateTime']['output'];
+  items: Array<PurchaseEntryItem>;
+  location: Scalars['String']['output'];
+  netAmount: Scalars['Float']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  paymentType: PurchaseOrderPaymentType;
+  purchaseEntryNumber: Scalars['String']['output'];
+  purchaseOrder?: Maybe<PurchaseOrder>;
+  purchaseOrderId?: Maybe<Scalars['String']['output']>;
+  receivedDate: Scalars['DateTime']['output'];
+  status: PurchaseEntryStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  supplierInvoiceNumber: Scalars['String']['output'];
+  taxAmount: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseEntryFilterDto = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PurchaseEntryItem = {
+  __typename?: 'PurchaseEntryItem';
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  cgstAmount: Scalars['Float']['output'];
+  cgstRate: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  discountAmount: Scalars['Float']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  freeQuantity: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  inventoryStock?: Maybe<InventoryStock>;
+  item: InventoryItem;
+  itemId: Scalars['String']['output'];
+  lineTotal: Scalars['Float']['output'];
+  orderedQuantity?: Maybe<Scalars['Int']['output']>;
+  purchaseEntryId: Scalars['String']['output'];
+  purchaseOrderItemId?: Maybe<Scalars['String']['output']>;
+  purchasePrice: Scalars['Float']['output'];
+  receivedQuantity: Scalars['Int']['output'];
+  sgstAmount: Scalars['Float']['output'];
+  sgstRate: Scalars['Float']['output'];
+  storageLocation?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseEntryItemDto = {
+  batchNumber?: InputMaybe<Scalars['String']['input']>;
+  cgstRate?: InputMaybe<Scalars['Float']['input']>;
+  discountAmount?: InputMaybe<Scalars['Float']['input']>;
+  expiryDate?: InputMaybe<Scalars['DateTime']['input']>;
+  freeQuantity?: InputMaybe<Scalars['Int']['input']>;
+  itemId: Scalars['String']['input'];
+  purchaseOrderItemId?: InputMaybe<Scalars['String']['input']>;
+  purchasePrice: Scalars['Float']['input'];
+  receivedQuantity: Scalars['Int']['input'];
+  sgstRate?: InputMaybe<Scalars['Float']['input']>;
+  storageLocation?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum PurchaseEntryStatus {
+  Open = 'OPEN',
+  Paid = 'PAID',
+  PartiallyPaid = 'PARTIALLY_PAID',
+  Void = 'VOID'
+}
+
+export type PurchaseOrder = {
+  __typename?: 'PurchaseOrder';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  creditPeriodDays?: Maybe<Scalars['Int']['output']>;
+  expectedDelivery?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  items: Array<PurchaseOrderItem>;
+  location: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  orderDate: Scalars['DateTime']['output'];
+  paymentReminderDate?: Maybe<Scalars['DateTime']['output']>;
+  paymentType: PurchaseOrderPaymentType;
+  poNumber: Scalars['String']['output'];
+  status: PurchaseOrderStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  totalAmount: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseOrderFilterDto = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PurchaseOrderItem = {
+  __typename?: 'PurchaseOrderItem';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  item: InventoryItem;
+  itemId: Scalars['String']['output'];
+  purchaseOrderId: Scalars['String']['output'];
+  purchasePrice: Scalars['Float']['output'];
+  quantity: Scalars['Int']['output'];
+  receivedQuantity: Scalars['Int']['output'];
+  totalPrice: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseOrderItemDto = {
+  itemId: Scalars['String']['input'];
+  purchasePrice: Scalars['Float']['input'];
+  quantity: Scalars['Int']['input'];
+};
+
+export enum PurchaseOrderPaymentType {
+  Cash = 'CASH',
+  Credit = 'CREDIT'
+}
+
+export enum PurchaseOrderStatus {
+  Cancelled = 'CANCELLED',
+  Draft = 'DRAFT',
+  PartiallyReceived = 'PARTIALLY_RECEIVED',
+  Received = 'RECEIVED',
+  Sent = 'SENT'
+}
+
+export type PurchaseReturn = {
+  __typename?: 'PurchaseReturn';
+  approvedBy?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  creditNoteNumber?: Maybe<Scalars['String']['output']>;
+  grossReturnAmount: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  items: Array<PurchaseReturnItem>;
+  netReturnAmount: Scalars['Float']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  purchaseEntry: PurchaseEntry;
+  purchaseEntryId: Scalars['String']['output'];
+  reason: Scalars['String']['output'];
+  returnDate: Scalars['DateTime']['output'];
+  returnNumber: Scalars['String']['output'];
+  settlementType: PurchaseReturnSettlementType;
+  status: PurchaseReturnStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  taxAdjustment: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseReturnFilterDto = {
+  purchaseEntryId?: InputMaybe<Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PurchaseReturnItem = {
+  __typename?: 'PurchaseReturnItem';
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  inventoryStockId: Scalars['String']['output'];
+  item: InventoryItem;
+  itemId: Scalars['String']['output'];
+  purchaseEntryItemId: Scalars['String']['output'];
+  purchaseReturnId: Scalars['String']['output'];
+  quantityReturned: Scalars['Int']['output'];
+  reason?: Maybe<Scalars['String']['output']>;
+  returnAmount: Scalars['Float']['output'];
+  taxAdjustment: Scalars['Float']['output'];
+  unitCost: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseReturnItemDto = {
+  inventoryStockId: Scalars['String']['input'];
+  purchaseEntryItemId: Scalars['String']['input'];
+  quantityReturned: Scalars['Int']['input'];
+  reason?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum PurchaseReturnSettlementType {
+  CarryCredit = 'CARRY_CREDIT',
+  ReduceOutstanding = 'REDUCE_OUTSTANDING',
+  Refund = 'REFUND'
+}
+
+export enum PurchaseReturnStatus {
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  Draft = 'DRAFT'
+}
+
 export type Query = {
   __typename?: 'Query';
   aiUsageStats: AiUsageStats;
@@ -3302,6 +4070,7 @@ export type Query = {
   getDoctorCustomFields: Array<CustomField>;
   getDoctorSettings: DoctorSettings;
   getDoctorSubscription?: Maybe<DoctorSubscription>;
+  getDoctorVitalDefinitions: Array<DoctorVitalDefinition>;
   getDoctorWorkingHours?: Maybe<DoctorWorkingHours>;
   getDoctors: Array<Doctor>;
   getDrugList: Array<DrugList>;
@@ -3323,9 +4092,12 @@ export type Query = {
   getInpatientWards: Array<InpatientWard>;
   getInventoryItem: InventoryItem;
   getInventoryItems: Array<InventoryItem>;
+  getInventoryItemsPaginated: PaginatedInventoryItems;
+  getInventoryLogins: Array<InventoryLoginModel>;
   getInventoryStats: InventoryStats;
   getInventoryTransactions: Array<InventoryTransaction>;
   getLowStockItems: Array<InventoryItem>;
+  getLowStockItemsPaginated: PaginatedInventoryItems;
   getMedicationRange: Array<Medication>;
   getNearestDoctors: Array<Doctor>;
   getNotificationCredits: NotificationCredits;
@@ -3339,26 +4111,51 @@ export type Query = {
   getPatientHistory: Array<AppointmentDetails>;
   getPatientPurchase: PatientPurchase;
   getPatientPurchases: Array<PatientPurchase>;
+  getPatientPurchasesPaginated: PaginatedPatientPurchases;
+  getPatientVitalTrend: PatientVitalTrend;
   getPatientsByAgeAndGender: PatientStatsResponse;
   getPatientsCount: Scalars['Float']['output'];
   getPatientsPaginated: PaginatedPatients;
   getPaymentAnalytics: Array<PaymentCount>;
   getPaymentModeBreakdown: Array<PaymentModeBreakdown>;
+  getPendingAppointmentApprovals: Array<AppointmentApprovalRequest>;
   getPrescriptionTemplate: PrescriptionTemplate;
   getProduct: Cpg;
   getProducts: PaginatedCpg;
+  getPurchaseEntries: Array<PurchaseEntry>;
+  getPurchaseEntriesPaginated: PaginatedPurchaseEntries;
+  getPurchaseEntry: PurchaseEntry;
+  getPurchaseOrder: PurchaseOrder;
+  getPurchaseOrders: Array<PurchaseOrder>;
+  getPurchaseOrdersPaginated: PaginatedPurchaseOrders;
+  getPurchaseReturn: PurchaseReturn;
+  getPurchaseReturns: Array<PurchaseReturn>;
+  getPurchaseReturnsPaginated: PaginatedPurchaseReturns;
+  getQueueDisplay: QueueDisplay;
   getReportSettings?: Maybe<ReportSettings>;
   getReportStatus: Scalars['String']['output'];
   getReviewsByDoctor: Array<Review>;
   getRooms: Scalars['String']['output'];
+  getSalesProfitReport: SalesProfitReport;
   getServices: Array<ServicesModel>;
   getSlots: Array<Scalars['String']['output']>;
   getStats: Stats;
   getStock: Array<InventoryStock>;
   getSubscription: DoctorSubscription;
+  getSupplier: Supplier;
+  getSupplierLedger: Array<SupplierPayableEntry>;
+  getSupplierLedgerPaginated: PaginatedSupplierLedger;
+  getSupplierPayableInvoicesPaginated: PaginatedSupplierPayableInvoices;
+  getSupplierPayableSummary: SupplierPayableSummary;
+  getSupplierPayments: Array<SupplierPayment>;
+  getSupplierPaymentsPaginated: PaginatedSupplierPayments;
+  getSuppliers: Array<Supplier>;
   getSymptomsList: Array<SymptomsList>;
   getUserByPhoneNumber: User;
   getUsers: Array<User>;
+  getWebsiteBookingAvailability: WebsiteBookingAvailability;
+  getWebsiteBookingCatalog: WebsiteBookingCatalog;
+  getWebsiteBookingIntegration?: Maybe<WebsiteBookingIntegration>;
   getWeeklyRevenue: Array<GraphData>;
   me: MeResponse;
   search: SearchResult;
@@ -3612,6 +4409,12 @@ export type QueryGetDoctorSubscriptionArgs = {
 };
 
 
+export type QueryGetDoctorVitalDefinitionsArgs = {
+  doctorId: Scalars['String']['input'];
+  includeInactive?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type QueryGetDoctorWorkingHoursArgs = {
   doctorId: Scalars['String']['input'];
 };
@@ -3720,6 +4523,19 @@ export type QueryGetInventoryItemsArgs = {
 };
 
 
+export type QueryGetInventoryItemsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<InventoryFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetInventoryLoginsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetInventoryStatsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -3734,6 +4550,13 @@ export type QueryGetInventoryTransactionsArgs = {
 
 export type QueryGetLowStockItemsArgs = {
   clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetLowStockItemsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -3810,6 +4633,24 @@ export type QueryGetPatientPurchasesArgs = {
 };
 
 
+export type QueryGetPatientPurchasesPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+  patientProfileId?: InputMaybe<Scalars['String']['input']>;
+  paymentStatus?: InputMaybe<Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetPatientVitalTrendArgs = {
+  doctorVitalDefinitionId: Scalars['String']['input'];
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  patientProfileId: Scalars['String']['input'];
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+
 export type QueryGetPatientsByAgeAndGenderArgs = {
   clinic_id: Scalars['String']['input'];
 };
@@ -3843,6 +4684,11 @@ export type QueryGetPaymentModeBreakdownArgs = {
 };
 
 
+export type QueryGetPendingAppointmentApprovalsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetPrescriptionTemplateArgs = {
   doctor_id: Scalars['String']['input'];
 };
@@ -3858,6 +4704,71 @@ export type QueryGetProductsArgs = {
 };
 
 
+export type QueryGetPurchaseEntriesArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseEntryFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseEntriesPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseEntryFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseEntryArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPurchaseOrderArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPurchaseOrdersArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseOrderFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseOrdersPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseOrderFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseReturnArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPurchaseReturnsArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseReturnFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseReturnsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseReturnFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetQueueDisplayArgs = {
+  clinic_id: Scalars['String']['input'];
+};
+
+
 export type QueryGetReportSettingsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -3870,6 +4781,12 @@ export type QueryGetReportStatusArgs = {
 
 export type QueryGetReviewsByDoctorArgs = {
   doctorId: Scalars['String']['input'];
+};
+
+
+export type QueryGetSalesProfitReportArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SalesProfitReportFilterDto>;
 };
 
 
@@ -3900,6 +4817,61 @@ export type QueryGetSubscriptionArgs = {
 };
 
 
+export type QueryGetSupplierArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetSupplierLedgerArgs = {
+  clinicId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierLedgerPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierPayableInvoicesPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierPayableSummaryArgs = {
+  clinicId: Scalars['String']['input'];
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierPaymentsArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SupplierPaymentFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetSupplierPaymentsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SupplierPaymentFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetSuppliersArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SupplierFilterDto>;
+};
+
+
 export type QueryGetSymptomsListArgs = {
   query: Scalars['String']['input'];
 };
@@ -3907,6 +4879,11 @@ export type QueryGetSymptomsListArgs = {
 
 export type QueryGetUserByPhoneNumberArgs = {
   phoneNumber: Scalars['String']['input'];
+};
+
+
+export type QueryGetWebsiteBookingAvailabilityArgs = {
+  input: WebsiteBookingAvailabilityInput;
 };
 
 
@@ -3932,6 +4909,31 @@ export type QuerySearchClinicPatientsForGroupAssignmentArgs = {
 
 export type QueryTodayMedicationArgs = {
   userId: Scalars['String']['input'];
+};
+
+export type QueueDisplay = {
+  __typename?: 'QueueDisplay';
+  clinicId: Scalars['String']['output'];
+  clinicName?: Maybe<Scalars['String']['output']>;
+  current: Array<QueueDisplayToken>;
+  enabled: Scalars['Boolean']['output'];
+  generatedAt: Scalars['DateTime']['output'];
+  skipped: Array<QueueDisplayToken>;
+  upcoming: Array<QueueDisplayToken>;
+};
+
+export type QueueDisplayToken = {
+  __typename?: 'QueueDisplayToken';
+  appointmentTime?: Maybe<Scalars['DateTime']['output']>;
+  calledAt?: Maybe<Scalars['DateTime']['output']>;
+  consultationStartedAt?: Maybe<Scalars['DateTime']['output']>;
+  doctorId?: Maybe<Scalars['String']['output']>;
+  doctorName: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  serviceType?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  tokenId: Scalars['String']['output'];
+  tokenNumber: Scalars['Float']['output'];
 };
 
 export type QueueTokenDetails = {
@@ -4061,6 +5063,177 @@ export type Review = {
   patientProfileId: Scalars['String']['output'];
   rating: Scalars['Int']['output'];
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type SaleStockAllocation = {
+  __typename?: 'SaleStockAllocation';
+  allocationMethod: Scalars['String']['output'];
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  cogsAmount: Scalars['Float']['output'];
+  costUnavailable: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  historicalUnitCost?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['String']['output'];
+  inventoryStock?: Maybe<InventoryStock>;
+  inventoryStockId?: Maybe<Scalars['String']['output']>;
+  itemId: Scalars['String']['output'];
+  patientPurchaseId: Scalars['String']['output'];
+  patientPurchaseItemId: Scalars['String']['output'];
+  purchaseEntryItem?: Maybe<PurchaseEntryItem>;
+  purchaseEntryItemId?: Maybe<Scalars['String']['output']>;
+  quantity: Scalars['Int']['output'];
+  supplier?: Maybe<Supplier>;
+  supplierId?: Maybe<Scalars['String']['output']>;
+};
+
+export type SalesProfitBatchRow = {
+  __typename?: 'SalesProfitBatchRow';
+  batchNumber: Scalars['String']['output'];
+  cogs: Scalars['Float']['output'];
+  costUnavailable: Scalars['Boolean']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  grossProfit: Scalars['Float']['output'];
+  itemId: Scalars['String']['output'];
+  itemName: Scalars['String']['output'];
+  marginPercentage: Scalars['Float']['output'];
+  purchaseCostPerUnit?: Maybe<Scalars['Float']['output']>;
+  purchaseEntryNumber?: Maybe<Scalars['String']['output']>;
+  salesValue: Scalars['Float']['output'];
+  supplierName?: Maybe<Scalars['String']['output']>;
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitGroupRow = {
+  __typename?: 'SalesProfitGroupRow';
+  cogs: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  key: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  marginPercentage: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitInvoiceItemRow = {
+  __typename?: 'SalesProfitInvoiceItemRow';
+  billNo?: Maybe<Scalars['String']['output']>;
+  cogs: Scalars['Float']['output'];
+  costUnavailableQuantity: Scalars['Int']['output'];
+  discountAmount: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  itemId: Scalars['String']['output'];
+  itemName: Scalars['String']['output'];
+  marginPercentage: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  patientName: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
+  paymentStatus?: Maybe<Scalars['String']['output']>;
+  paymentType?: Maybe<Scalars['String']['output']>;
+  purchaseId: Scalars['String']['output'];
+  purchaseItemId: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
+  saleDate: Scalars['DateTime']['output'];
+  sellingValue: Scalars['Float']['output'];
+  taxAmount: Scalars['Float']['output'];
+};
+
+export type SalesProfitKpis = {
+  __typename?: 'SalesProfitKpis';
+  cogs: Scalars['Float']['output'];
+  costUnavailableQuantity: Scalars['Int']['output'];
+  grossMargin: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  grossSales: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  returnsAmount: Scalars['Float']['output'];
+  salesDiscounts: Scalars['Float']['output'];
+  taxAmount: Scalars['Float']['output'];
+  transactions: Scalars['Int']['output'];
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitProductRow = {
+  __typename?: 'SalesProfitProductRow';
+  averageCost: Scalars['Float']['output'];
+  averageSellingPrice: Scalars['Float']['output'];
+  category?: Maybe<Scalars['String']['output']>;
+  cogs: Scalars['Float']['output'];
+  costUnavailableQuantity: Scalars['Int']['output'];
+  discountAmount: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  grossSales: Scalars['Float']['output'];
+  itemId: Scalars['String']['output'];
+  itemName: Scalars['String']['output'];
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  marginPercentage: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  profitPerUnit: Scalars['Float']['output'];
+  taxAmount: Scalars['Float']['output'];
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitReport = {
+  __typename?: 'SalesProfitReport';
+  batchProfitability: Array<SalesProfitBatchRow>;
+  batchProfitabilityTotal: Scalars['Int']['output'];
+  categorySummary: Array<SalesProfitGroupRow>;
+  categorySummaryTotal: Scalars['Int']['output'];
+  invoiceDetails: Array<SalesProfitInvoiceItemRow>;
+  invoiceDetailsTotal: Scalars['Int']['output'];
+  kpis: SalesProfitKpis;
+  manufacturerSummary: Array<SalesProfitGroupRow>;
+  manufacturerSummaryTotal: Scalars['Int']['output'];
+  productProfitability: Array<SalesProfitProductRow>;
+  productProfitabilityTotal: Scalars['Int']['output'];
+  supplierSummary: Array<SalesProfitGroupRow>;
+  supplierSummaryTotal: Scalars['Int']['output'];
+  trend: Array<SalesProfitTrendPoint>;
+};
+
+export type SalesProfitReportFilterDto = {
+  batchNumber?: InputMaybe<Scalars['String']['input']>;
+  batchPage?: InputMaybe<Scalars['Int']['input']>;
+  batchPageSize?: InputMaybe<Scalars['Int']['input']>;
+  categories?: InputMaybe<Array<Scalars['String']['input']>>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  categoryPage?: InputMaybe<Scalars['Int']['input']>;
+  categoryPageSize?: InputMaybe<Scalars['Int']['input']>;
+  createdBy?: InputMaybe<Scalars['String']['input']>;
+  createdByIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  invoicePage?: InputMaybe<Scalars['Int']['input']>;
+  invoicePageSize?: InputMaybe<Scalars['Int']['input']>;
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  itemIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  manufacturerPage?: InputMaybe<Scalars['Int']['input']>;
+  manufacturerPageSize?: InputMaybe<Scalars['Int']['input']>;
+  manufacturers?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentStatus?: InputMaybe<Scalars['String']['input']>;
+  paymentStatuses?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentType?: InputMaybe<Scalars['String']['input']>;
+  paymentTypes?: InputMaybe<Array<Scalars['String']['input']>>;
+  prescriptionRequired?: InputMaybe<Scalars['Boolean']['input']>;
+  productPage?: InputMaybe<Scalars['Int']['input']>;
+  productPageSize?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+  supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  supplierPage?: InputMaybe<Scalars['Int']['input']>;
+  supplierPageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type SalesProfitTrendPoint = {
+  __typename?: 'SalesProfitTrendPoint';
+  cogs: Scalars['Float']['output'];
+  date: Scalars['String']['output'];
+  grossProfit: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  unitsSold: Scalars['Int']['output'];
 };
 
 export type Schedule = {
@@ -4235,6 +5408,131 @@ export enum SubscriptionStatus {
   TrialEnded = 'TRIAL_ENDED'
 }
 
+export type Supplier = {
+  __typename?: 'Supplier';
+  address: Scalars['String']['output'];
+  clinicId: Scalars['String']['output'];
+  contactPerson: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  drugLicenseNumber: Scalars['String']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  gstNumber: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  items?: Maybe<Array<InventoryItem>>;
+  landlineNumber?: Maybe<Scalars['String']['output']>;
+  mobileNumber: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  purchaseOrders?: Maybe<Array<PurchaseOrder>>;
+  status: SupplierStatus;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type SupplierFilterDto = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SupplierPayableEntry = {
+  __typename?: 'SupplierPayableEntry';
+  amount: Scalars['Float']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  effectiveDate: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  paymentId?: Maybe<Scalars['String']['output']>;
+  purchaseEntryId?: Maybe<Scalars['String']['output']>;
+  purchaseReturnId?: Maybe<Scalars['String']['output']>;
+  referenceNumber?: Maybe<Scalars['String']['output']>;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  type: SupplierPayableEntryType;
+};
+
+export enum SupplierPayableEntryType {
+  Adjustment = 'ADJUSTMENT',
+  Payment = 'PAYMENT',
+  Purchase = 'PURCHASE',
+  PurchaseReturnCredit = 'PURCHASE_RETURN_CREDIT',
+  SupplierRefund = 'SUPPLIER_REFUND'
+}
+
+export type SupplierPayableInvoice = {
+  __typename?: 'SupplierPayableInvoice';
+  dueDate?: Maybe<Scalars['DateTime']['output']>;
+  invoiceNumber: Scalars['String']['output'];
+  outstandingAmount: Scalars['Float']['output'];
+  paidAmount: Scalars['Float']['output'];
+  purchaseAmount: Scalars['Float']['output'];
+  purchaseDate: Scalars['DateTime']['output'];
+  purchaseEntryId: Scalars['String']['output'];
+  purchaseEntryNumber: Scalars['String']['output'];
+  returnsAmount: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+  supplierId: Scalars['String']['output'];
+  supplierName: Scalars['String']['output'];
+};
+
+export type SupplierPayableSummary = {
+  __typename?: 'SupplierPayableSummary';
+  dueNext7Days: Scalars['Float']['output'];
+  dueToday: Scalars['Float']['output'];
+  invoices: Array<SupplierPayableInvoice>;
+  overdue: Scalars['Float']['output'];
+  supplierCreditBalance: Scalars['Float']['output'];
+  totalOutstanding: Scalars['Float']['output'];
+};
+
+export type SupplierPayment = {
+  __typename?: 'SupplierPayment';
+  allocations: Array<SupplierPaymentAllocation>;
+  amount: Scalars['Float']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  mode: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  paymentDate: Scalars['DateTime']['output'];
+  paymentNumber: Scalars['String']['output'];
+  referenceNumber?: Maybe<Scalars['String']['output']>;
+  status: SupplierPaymentStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type SupplierPaymentAllocation = {
+  __typename?: 'SupplierPaymentAllocation';
+  amountAllocated: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  paymentId: Scalars['String']['output'];
+  purchaseEntry: PurchaseEntry;
+  purchaseEntryId: Scalars['String']['output'];
+};
+
+export type SupplierPaymentAllocationDto = {
+  amountAllocated: Scalars['Float']['input'];
+  purchaseEntryId: Scalars['String']['input'];
+};
+
+export type SupplierPaymentFilterDto = {
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum SupplierPaymentStatus {
+  Posted = 'POSTED',
+  Void = 'VOID'
+}
+
+export enum SupplierStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  OnHold = 'ON_HOLD'
+}
+
 export type Symptoms = {
   name: Scalars['String']['input'];
   properties?: InputMaybe<Scalars['JSON']['input']>;
@@ -4245,6 +5543,11 @@ export type SymptomsList = {
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
+
+export enum TaxationType {
+  Gst = 'GST',
+  None = 'NONE'
+}
 
 export type Template = {
   __typename?: 'Template';
@@ -4322,6 +5625,22 @@ export type UpdateCustomFieldInput = {
   valueType?: InputMaybe<CustomFieldValueType>;
 };
 
+export type UpdateDoctorVitalDefinitionInput = {
+  diastolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  diastolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  id: Scalars['String']['input'];
+  inputType?: InputMaybe<DoctorVitalInputType>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  referenceMax?: InputMaybe<Scalars['Float']['input']>;
+  referenceMin?: InputMaybe<Scalars['Float']['input']>;
+  semanticCode?: InputMaybe<Scalars['String']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  systolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  systolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateDoctorWorkingHoursDto = {
   consultingMins?: InputMaybe<Scalars['Int']['input']>;
   endTime?: InputMaybe<Scalars['String']['input']>;
@@ -4392,17 +5711,31 @@ export type UpdateInpatientWardDto = {
 export type UpdateInventoryItemDto = {
   barcode?: InputMaybe<Scalars['String']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
+  chemicalName?: InputMaybe<Scalars['String']['input']>;
+  costCgstRate?: InputMaybe<Scalars['Float']['input']>;
   costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  costSgstRate?: InputMaybe<Scalars['Float']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  hsnCode?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
   manufacturer?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  requiresPrescription?: InputMaybe<Scalars['Boolean']['input']>;
+  sellingCgstRate?: InputMaybe<Scalars['Float']['input']>;
   sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  sellingSgstRate?: InputMaybe<Scalars['Float']['input']>;
+  strength?: InputMaybe<Scalars['String']['input']>;
+  supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
   type?: InputMaybe<Scalars['String']['input']>;
   unit?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateInventoryLoginStatusDto = {
+  id: Scalars['String']['input'];
+  isActive: Scalars['Boolean']['input'];
 };
 
 export type UpdatePatientGroupInput = {
@@ -4414,6 +5747,27 @@ export type UpdatePatientGroupInput = {
 export type UpdatePatientProfileInput = {
   patientProfileId: Scalars['String']['input'];
   profile: PatientProfileDto;
+};
+
+export type UpdatePatientPurchaseBillDto = {
+  billURL: Scalars['String']['input'];
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+export type UpdatePurchaseOrderDto = {
+  clinicId: Scalars['String']['input'];
+  creditPeriodDays?: InputMaybe<Scalars['Int']['input']>;
+  expectedDelivery?: InputMaybe<Scalars['DateTime']['input']>;
+  id: Scalars['String']['input'];
+  items?: InputMaybe<Array<PurchaseOrderItemDto>>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  orderDate?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentReminderDate?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentType?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateReportSettingsInput = {
@@ -4440,6 +5794,24 @@ export type UpdateSubscriptionDto = {
 export type UpdateSubscriptionStatusDto = {
   status: Scalars['String']['input'];
   subscriptionId: Scalars['String']['input'];
+};
+
+export type UpdateSupplierDto = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  clinicId: Scalars['String']['input'];
+  contactPerson?: InputMaybe<Scalars['String']['input']>;
+  drugLicenseNumber?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  gstNumber?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  landlineNumber?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateWebsiteBookingOriginsInput = {
+  origins: Array<Scalars['String']['input']>;
 };
 
 export type UpdatedCount = {
@@ -4542,7 +5914,16 @@ export type ValidateDoctorOtp = {
 
 export type Vitals = {
   date?: InputMaybe<Scalars['DateTime']['input']>;
+  diastolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  diastolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  doctorVitalDefinitionId?: InputMaybe<Scalars['String']['input']>;
+  inputType?: InputMaybe<DoctorVitalInputType>;
   name: Scalars['String']['input'];
+  referenceMax?: InputMaybe<Scalars['Float']['input']>;
+  referenceMin?: InputMaybe<Scalars['Float']['input']>;
+  semanticCode?: InputMaybe<Scalars['String']['input']>;
+  systolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  systolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
   unit: Scalars['String']['input'];
   value: Scalars['String']['input'];
 };
@@ -4550,10 +5931,19 @@ export type Vitals = {
 export type VitalsType = {
   __typename?: 'VitalsType';
   date: Scalars['DateTime']['output'];
+  diastolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  diastolicReferenceMin?: Maybe<Scalars['Float']['output']>;
+  doctorVitalDefinitionId?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  inputType?: Maybe<DoctorVitalInputType>;
   name: Scalars['String']['output'];
   prescriptionDate?: Maybe<Scalars['DateTime']['output']>;
   prescriptionId?: Maybe<Scalars['String']['output']>;
+  referenceMax?: Maybe<Scalars['Float']['output']>;
+  referenceMin?: Maybe<Scalars['Float']['output']>;
+  semanticCode?: Maybe<Scalars['String']['output']>;
+  systolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  systolicReferenceMin?: Maybe<Scalars['Float']['output']>;
   unit: Scalars['String']['output'];
   value: Scalars['String']['output'];
 };
@@ -4576,6 +5966,112 @@ export type VoidInpatientPaymentDto = {
 export type WalletBalanceResult = {
   __typename?: 'WalletBalanceResult';
   balanceInr: Scalars['Float']['output'];
+};
+
+export type WebsiteAppointmentBookingInput = {
+  clinicId: Scalars['String']['input'];
+  date: Scalars['String']['input'];
+  dob: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  firstName: Scalars['String']['input'];
+  gender: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  mobile: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
+};
+
+export type WebsiteAppointmentBookingResult = {
+  __typename?: 'WebsiteAppointmentBookingResult';
+  appointmentId: Scalars['String']['output'];
+  endTime: Scalars['String']['output'];
+  referenceId: Scalars['String']['output'];
+  startTime: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+};
+
+export type WebsiteBookingAvailability = {
+  __typename?: 'WebsiteBookingAvailability';
+  clinicId: Scalars['String']['output'];
+  date: Scalars['String']['output'];
+  doctorId: Scalars['String']['output'];
+  slotDuration: Scalars['Int']['output'];
+  slots: Array<WebsiteBookingSlot>;
+  timeZone: Scalars['String']['output'];
+};
+
+export type WebsiteBookingAvailabilityInput = {
+  clinicId: Scalars['String']['input'];
+  date: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
+};
+
+export type WebsiteBookingCatalog = {
+  __typename?: 'WebsiteBookingCatalog';
+  businessName: Scalars['String']['output'];
+  clinics: Array<WebsiteBookingClinic>;
+  doctors: Array<WebsiteBookingDoctor>;
+};
+
+export type WebsiteBookingClinic = {
+  __typename?: 'WebsiteBookingClinic';
+  about?: Maybe<Scalars['String']['output']>;
+  cityName: Scalars['String']['output'];
+  closeTime: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  logoUrl?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  openTime: Scalars['String']['output'];
+  workingDays: Array<Scalars['Boolean']['output']>;
+};
+
+export type WebsiteBookingDoctor = {
+  __typename?: 'WebsiteBookingDoctor';
+  about?: Maybe<Scalars['String']['output']>;
+  clinicIds: Array<Scalars['String']['output']>;
+  designation: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  languages: Array<Scalars['String']['output']>;
+  lastName: Scalars['String']['output'];
+  majorSpeciality: Scalars['String']['output'];
+  middleName?: Maybe<Scalars['String']['output']>;
+  profilePicture?: Maybe<Scalars['String']['output']>;
+  specialities: Array<Scalars['String']['output']>;
+};
+
+export type WebsiteBookingIntegration = {
+  __typename?: 'WebsiteBookingIntegration';
+  allowedOrigins: Array<Scalars['String']['output']>;
+  businessId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  enabled: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
+  maskedKey: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  revokedAt?: Maybe<Scalars['DateTime']['output']>;
+  rotatedAt?: Maybe<Scalars['DateTime']['output']>;
+  tokenVersion: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type WebsiteBookingKeyGenerationResult = {
+  __typename?: 'WebsiteBookingKeyGenerationResult';
+  integration: WebsiteBookingIntegration;
+  publishableKey: Scalars['String']['output'];
+};
+
+export type WebsiteBookingSession = {
+  __typename?: 'WebsiteBookingSession';
+  expiresAt: Scalars['DateTime']['output'];
+  token: Scalars['String']['output'];
+};
+
+export type WebsiteBookingSlot = {
+  __typename?: 'WebsiteBookingSlot';
+  label: Scalars['String']['output'];
+  startTime: Scalars['String']['output'];
 };
 
 export type CreateBusinessMutationVariables = Exact<{
@@ -4716,6 +6212,20 @@ export type UpsertInpatientModuleSettingsMutationVariables = Exact<{
 
 
 export type UpsertInpatientModuleSettingsMutation = { __typename?: 'Mutation', upsertInpatientModuleSettings: { __typename?: 'InpatientModuleSettings', id: string, clinicId: string, wardBedTariffs?: any | null, chargeHeads?: any | null, packageTemplates?: any | null, taxSettings?: any | null, invoiceSettings?: any | null, autoPostSettings?: any | null, createdAt: any, updatedAt: any } };
+
+export type CreateInventoryLoginMutationVariables = Exact<{
+  input: CreateInventoryLoginDto;
+}>;
+
+
+export type CreateInventoryLoginMutation = { __typename?: 'Mutation', createInventoryLogin: { __typename?: 'InventoryLoginModel', id: string, username: string, clinicId: string, clinicName: string, isActive: boolean, mustChangePassword: boolean, createdAt: any } };
+
+export type UpdateInventoryLoginStatusMutationVariables = Exact<{
+  input: UpdateInventoryLoginStatusDto;
+}>;
+
+
+export type UpdateInventoryLoginStatusMutation = { __typename?: 'Mutation', updateInventoryLoginStatus: { __typename?: 'InventoryLoginModel', id: string, isActive: boolean } };
 
 export type AddClinicStaffMutationVariables = Exact<{
   input: AddClinicStaffInput;
@@ -4884,6 +6394,13 @@ export type GetInpatientModuleSettingsQueryVariables = Exact<{
 
 
 export type GetInpatientModuleSettingsQuery = { __typename?: 'Query', getInpatientModuleSettings?: { __typename?: 'InpatientModuleSettings', id: string, clinicId: string, wardBedTariffs?: any | null, chargeHeads?: any | null, packageTemplates?: any | null, taxSettings?: any | null, invoiceSettings?: any | null, autoPostSettings?: any | null, createdAt: any, updatedAt: any } | null };
+
+export type GetInventoryLoginsQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetInventoryLoginsQuery = { __typename?: 'Query', getInventoryLogins: Array<{ __typename?: 'InventoryLoginModel', id: string, username: string, clinicId: string, clinicName: string, isActive: boolean, mustChangePassword: boolean, createdAt: any }> };
 
 export type GetClinicStaffQueryVariables = Exact<{
   clinicId: Scalars['String']['input'];
@@ -4926,6 +6443,8 @@ export const AssignDoctorToClinicsDocument = { "kind": "Document", "definitions"
 export const DeleteDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "DeleteDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "deleteDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }] }] } }] } as unknown as DocumentNode<DeleteDoctorMutation, DeleteDoctorMutationVariables>;
 export const UpdateProfilePicUrlDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateProfilePicUrl" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateProfilePicUrl" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "picture_url" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "picture_url" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<UpdateProfilePicUrlMutation, UpdateProfilePicUrlMutationVariables>;
 export const UpsertInpatientModuleSettingsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpsertInpatientModuleSettings" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpsertInpatientModuleSettingsDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "upsertInpatientModuleSettings" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "wardBedTariffs" } }, { "kind": "Field", "name": { "kind": "Name", "value": "chargeHeads" } }, { "kind": "Field", "name": { "kind": "Name", "value": "packageTemplates" } }, { "kind": "Field", "name": { "kind": "Name", "value": "taxSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "invoiceSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "autoPostSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>;
+export const CreateInventoryLoginDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "CreateInventoryLogin" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "CreateInventoryLoginDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "createInventoryLogin" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "username" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "mustChangePassword" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<CreateInventoryLoginMutation, CreateInventoryLoginMutationVariables>;
+export const UpdateInventoryLoginStatusDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateInventoryLoginStatus" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateInventoryLoginStatusDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateInventoryLoginStatus" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }] } }] } }] } as unknown as DocumentNode<UpdateInventoryLoginStatusMutation, UpdateInventoryLoginStatusMutationVariables>;
 export const AddClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AddClinicStaffInput" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<AddClinicStaffMutation, AddClinicStaffMutationVariables>;
 export const UpdateClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateClinicStaffInput" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }] } }] } }] } as unknown as DocumentNode<UpdateClinicStaffMutation, UpdateClinicStaffMutationVariables>;
 export const RemoveClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "staffId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "staffId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "staffId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }] } }] } }] } as unknown as DocumentNode<RemoveClinicStaffMutation, RemoveClinicStaffMutationVariables>;
@@ -4951,6 +6470,7 @@ export const GetDoctorsWithClinicsDocument = { "kind": "Document", "definitions"
 export const GetAllDraftsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getAllDrafts" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinicName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "type" } }] } }] } }] } as unknown as DocumentNode<GetAllDraftsQuery, GetAllDraftsQueryVariables>;
 export const ApproveOrRejectDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "ApproveOrReject" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "approveOrReject" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "status" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "status" } } }] }] } }] } as unknown as DocumentNode<ApproveOrRejectQuery, ApproveOrRejectQueryVariables>;
 export const GetInpatientModuleSettingsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetInpatientModuleSettings" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getInpatientModuleSettings" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "wardBedTariffs" } }, { "kind": "Field", "name": { "kind": "Name", "value": "chargeHeads" } }, { "kind": "Field", "name": { "kind": "Name", "value": "packageTemplates" } }, { "kind": "Field", "name": { "kind": "Name", "value": "taxSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "invoiceSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "autoPostSettings" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>;
+export const GetInventoryLoginsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetInventoryLogins" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getInventoryLogins" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "username" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "mustChangePassword" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables>;
 export const GetClinicStaffDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetClinicStaff" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getClinicStaff" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "clinicId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "firstName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "lastName" } }, { "kind": "Field", "name": { "kind": "Name", "value": "phoneNumber" } }, { "kind": "Field", "name": { "kind": "Name", "value": "staffRole" } }, { "kind": "Field", "name": { "kind": "Name", "value": "permissions" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "isActive" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }] } }] } }] } as unknown as DocumentNode<GetClinicStaffQuery, GetClinicStaffQueryVariables>;
 export const GetSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "subscriptionId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "subscriptionId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "subscriptionId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetSubscriptionQuery, GetSubscriptionQueryVariables>;
 export const GetDoctorSubscriptionDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "query", "name": { "kind": "Name", "value": "GetDoctorSubscription" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "getDoctorSubscription" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "doctorId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "createdAt" } }, { "kind": "Field", "name": { "kind": "Name", "value": "updatedAt" } }] } }] } }] } as unknown as DocumentNode<GetDoctorSubscriptionQuery, GetDoctorSubscriptionQueryVariables>;
@@ -4988,6 +6508,8 @@ export type AddStockDto = {
   notes?: InputMaybe<Scalars['String']['input']>;
   purchasePrice?: InputMaybe<Scalars['Float']['input']>;
   quantity: Scalars['Int']['input'];
+  storageLocation?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Address = {
@@ -5043,8 +6565,13 @@ export type AgeGroupStats = {
 export type AiPrescriptionDiagnosis = {
   __typename?: 'AiPrescriptionDiagnosis';
   duration?: Maybe<Scalars['String']['output']>;
+  isCustom?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  matchedName?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  rawExtractedName?: Maybe<Scalars['String']['output']>;
   severity?: Maybe<Scalars['String']['output']>;
+  suggestedMatches?: Maybe<Array<AiPrescriptionTermSuggestion>>;
 };
 
 export type AiPrescriptionDraft = {
@@ -5056,6 +6583,7 @@ export type AiPrescriptionDraft = {
   notes?: Maybe<Scalars['String']['output']>;
   summary: Scalars['String']['output'];
   symptoms: Array<AiPrescriptionSymptom>;
+  vitals: Array<AiPrescriptionVital>;
 };
 
 export type AiPrescriptionMedication = {
@@ -5063,8 +6591,29 @@ export type AiPrescriptionMedication = {
   dose?: Maybe<Scalars['String']['output']>;
   duration?: Maybe<Scalars['String']['output']>;
   frequency?: Maybe<Scalars['String']['output']>;
+  inventoryItemId?: Maybe<Scalars['String']['output']>;
+  isCustom?: Maybe<Scalars['Boolean']['output']>;
+  isInventoryLinked?: Maybe<Scalars['Boolean']['output']>;
+  lowStock?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  matchedDrugId?: Maybe<Scalars['String']['output']>;
+  matchedDrugName?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  rawExtractedName?: Maybe<Scalars['String']['output']>;
+  suggestedMatches?: Maybe<Array<AiPrescriptionMedicationSuggestion>>;
   timing?: Maybe<Scalars['String']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+};
+
+export type AiPrescriptionMedicationSuggestion = {
+  __typename?: 'AiPrescriptionMedicationSuggestion';
+  id: Scalars['String']['output'];
+  inventoryItemId?: Maybe<Scalars['String']['output']>;
+  isInventoryLinked?: Maybe<Scalars['Boolean']['output']>;
+  lowStock?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  unit?: Maybe<Scalars['String']['output']>;
 };
 
 export type AiPrescriptionSession = {
@@ -5086,8 +6635,26 @@ export type AiPrescriptionSession = {
 export type AiPrescriptionSymptom = {
   __typename?: 'AiPrescriptionSymptom';
   duration?: Maybe<Scalars['String']['output']>;
+  isCustom?: Maybe<Scalars['Boolean']['output']>;
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  matchedName?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  rawExtractedName?: Maybe<Scalars['String']['output']>;
   severity?: Maybe<Scalars['String']['output']>;
+  suggestedMatches?: Maybe<Array<AiPrescriptionTermSuggestion>>;
+};
+
+export type AiPrescriptionTermSuggestion = {
+  __typename?: 'AiPrescriptionTermSuggestion';
+  matchConfidence?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
+export type AiPrescriptionVital = {
+  __typename?: 'AiPrescriptionVital';
+  name: Scalars['String']['output'];
+  unit?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
 };
 
 export type AiUsageStats = {
@@ -5105,6 +6672,23 @@ export type AiUsageStatsInput = {
   endDate?: InputMaybe<Scalars['String']['input']>;
   platform?: InputMaybe<MessagingPlatform>;
   startDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AppointmentApprovalRequest = {
+  __typename?: 'AppointmentApprovalRequest';
+  aid: Scalars['String']['output'];
+  channel: Scalars['String']['output'];
+  clinicId: Scalars['String']['output'];
+  doctorId?: Maybe<Scalars['String']['output']>;
+  doctorName: Scalars['String']['output'];
+  endTime: Scalars['DateTime']['output'];
+  patientMobile: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
+  referenceId?: Maybe<Scalars['String']['output']>;
+  serviceType: Scalars['String']['output'];
+  startTime: Scalars['DateTime']['output'];
+  status: Scalars['String']['output'];
 };
 
 export type AppointmentCount = {
@@ -5209,6 +6793,11 @@ export type CancelInpatientChargeDto = {
   reason: Scalars['String']['input'];
 };
 
+export type ChangeInventoryPasswordDto = {
+  confirmPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+};
+
 export type ChannelCount = {
   __typename?: 'ChannelCount';
   appointmentcount: Scalars['Float']['output'];
@@ -5247,7 +6836,9 @@ export type Clinic = {
   customFeatures?: Maybe<Array<ClinicFeature>>;
   doctors?: Maybe<Array<Doctor>>;
   email: Scalars['String']['output'];
+  gstNumber?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  inventoryGstNumber?: Maybe<Scalars['String']['output']>;
   latitude?: Maybe<Scalars['Float']['output']>;
   location: Array<Scalars['String']['output']>;
   logoUrl?: Maybe<Scalars['String']['output']>;
@@ -5256,6 +6847,7 @@ export type Clinic = {
   openTime: Scalars['String']['output'];
   phone_number: Array<PhoneNumber>;
   speciality?: Maybe<Array<Speciality>>;
+  taxationType: Scalars['String']['output'];
   workingDays: Array<Scalars['Boolean']['output']>;
 };
 
@@ -5339,7 +6931,7 @@ export type ClinicDto = {
   logoUrl?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   openTime?: InputMaybe<Scalars['String']['input']>;
-  phone_number: Array<PhoneNumberDto>;
+  phone_number: Array<ClinicPhoneNumberInput>;
   speciality: Array<SpecailityDto>;
   workingDays?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
@@ -5348,7 +6940,7 @@ export type ClinicDetailDto = {
   addressValue?: InputMaybe<AddressDto>;
   clinicId: Scalars['String']['input'];
   field: Scalars['String']['input'];
-  phoneValue?: InputMaybe<Array<PhoneNumberDto>>;
+  phoneValue?: InputMaybe<Array<ClinicPhoneNumberInput>>;
   stringValue?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -5474,6 +7066,11 @@ export type ClinicPatientsResponse = {
   patients: Array<ClinicPatientBasicInfo>;
 };
 
+export type ClinicPhoneNumberInput = {
+  n: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type ClinicStaffModel = {
   __typename?: 'ClinicStaffModel';
   clinicId: Scalars['String']['output'];
@@ -5497,6 +7094,7 @@ export type ConversationListItemResult = {
   __typename?: 'ConversationListItemResult';
   createdAt: Scalars['DateTime']['output'];
   externalSenderId: Scalars['String']['output'];
+  handoffSummary?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   lastMessage?: Maybe<Scalars['String']['output']>;
   lastMessageAt?: Maybe<Scalars['DateTime']['output']>;
@@ -5506,6 +7104,7 @@ export type ConversationListItemResult = {
   mode: ConversationMode;
   platform: MessagingPlatform;
   updatedAt: Scalars['DateTime']['output'];
+  workflowState?: Maybe<ConversationWorkflowState>;
 };
 
 export type ConversationMessageResult = {
@@ -5527,6 +7126,17 @@ export type ConversationModeResult = {
   conversationId: Scalars['String']['output'];
   mode: ConversationMode;
 };
+
+export enum ConversationWorkflowState {
+  AwaitingSlotSelection = 'AWAITING_SLOT_SELECTION',
+  AwaitingStaff = 'AWAITING_STAFF',
+  Booked = 'BOOKED',
+  CollectingDetails = 'COLLECTING_DETAILS',
+  FollowUpNeeded = 'FOLLOW_UP_NEEDED',
+  Open = 'OPEN',
+  ReadyToBook = 'READY_TO_BOOK',
+  Resolved = 'RESOLVED'
+}
 
 export type CpgDto = {
   barCode: Scalars['String']['input'];
@@ -5559,6 +7169,23 @@ export type CreateCustomFieldInput = {
   options?: InputMaybe<Array<Scalars['String']['input']>>;
   parentComponent: Scalars['String']['input'];
   valueType: CustomFieldValueType;
+};
+
+export type CreateDoctorVitalDefinitionInput = {
+  clinicId: Scalars['String']['input'];
+  diastolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  diastolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  doctorId: Scalars['String']['input'];
+  inputType: DoctorVitalInputType;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  referenceMax?: InputMaybe<Scalars['Float']['input']>;
+  referenceMin?: InputMaybe<Scalars['Float']['input']>;
+  semanticCode?: InputMaybe<Scalars['String']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  systolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  systolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  unit: Scalars['String']['input'];
 };
 
 export type CreateDoctorWorkingHoursDto = {
@@ -5687,24 +7314,42 @@ export type CreateInpatientWardDto = {
 export type CreateInventoryItemDto = {
   barcode?: InputMaybe<Scalars['String']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
+  chemicalName?: InputMaybe<Scalars['String']['input']>;
   clinicId: Scalars['String']['input'];
+  costCgstRate?: InputMaybe<Scalars['Float']['input']>;
   costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  costSgstRate?: InputMaybe<Scalars['Float']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  hsnCode?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
   manufacturer?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  requiresPrescription?: InputMaybe<Scalars['Boolean']['input']>;
+  sellingCgstRate?: InputMaybe<Scalars['Float']['input']>;
   sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  sellingSgstRate?: InputMaybe<Scalars['Float']['input']>;
+  strength?: InputMaybe<Scalars['String']['input']>;
+  supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
   type: Scalars['String']['input'];
   unit: Scalars['String']['input'];
 };
 
+export type CreateInventoryLoginDto = {
+  clinicId: Scalars['String']['input'];
+  temporaryPassword: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
 export type CreateInventoryTransactionDto = {
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  discountValue?: InputMaybe<Scalars['Float']['input']>;
   itemId: Scalars['String']['input'];
   notes?: InputMaybe<Scalars['String']['input']>;
   quantity: Scalars['Int']['input'];
   referenceId?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
   type: Scalars['String']['input'];
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
 };
@@ -5717,12 +7362,57 @@ export type CreatePatientGroupInput = {
 };
 
 export type CreatePatientPurchaseDto = {
+  billDiscountType?: InputMaybe<Scalars['String']['input']>;
+  billDiscountValue?: InputMaybe<Scalars['Float']['input']>;
   clinicId: Scalars['String']['input'];
   items: Array<PatientPurchaseItemDto>;
   notes?: InputMaybe<Scalars['String']['input']>;
   patientProfileId: Scalars['String']['input'];
   paymentStatus?: InputMaybe<Scalars['String']['input']>;
   paymentType?: InputMaybe<Scalars['String']['input']>;
+  prescriptionVerified?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type CreatePurchaseEntryDto = {
+  amountPaid?: InputMaybe<Scalars['Float']['input']>;
+  clinicId: Scalars['String']['input'];
+  creditPeriodDays?: InputMaybe<Scalars['Int']['input']>;
+  dueDate?: InputMaybe<Scalars['DateTime']['input']>;
+  invoiceDate: Scalars['DateTime']['input'];
+  items: Array<PurchaseEntryItemDto>;
+  location: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  paymentType: Scalars['String']['input'];
+  purchaseOrderId?: InputMaybe<Scalars['String']['input']>;
+  receivedDate: Scalars['DateTime']['input'];
+  supplierId: Scalars['String']['input'];
+  supplierInvoiceNumber: Scalars['String']['input'];
+};
+
+export type CreatePurchaseOrderDto = {
+  clinicId: Scalars['String']['input'];
+  creditPeriodDays?: InputMaybe<Scalars['Int']['input']>;
+  expectedDelivery?: InputMaybe<Scalars['DateTime']['input']>;
+  items: Array<PurchaseOrderItemDto>;
+  location: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  orderDate: Scalars['DateTime']['input'];
+  paymentReminderDate?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentType: Scalars['String']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId: Scalars['String']['input'];
+};
+
+export type CreatePurchaseReturnDto = {
+  clinicId: Scalars['String']['input'];
+  creditNoteNumber?: InputMaybe<Scalars['String']['input']>;
+  items: Array<PurchaseReturnItemDto>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  purchaseEntryId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+  returnDate: Scalars['DateTime']['input'];
+  settlementType: Scalars['String']['input'];
+  supplierId: Scalars['String']['input'];
 };
 
 export type CreateReportSettingsInput = {
@@ -5751,6 +7441,30 @@ export type CreateSubscriptionDto = {
   status: Scalars['String']['input'];
   trialEndDate?: InputMaybe<Scalars['String']['input']>;
   trialStartDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateSupplierDto = {
+  address: Scalars['String']['input'];
+  clinicId: Scalars['String']['input'];
+  contactPerson: Scalars['String']['input'];
+  drugLicenseNumber: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  gstNumber: Scalars['String']['input'];
+  landlineNumber?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateSupplierPaymentDto = {
+  allocations?: InputMaybe<Array<SupplierPaymentAllocationDto>>;
+  amount: Scalars['Float']['input'];
+  clinicId: Scalars['String']['input'];
+  mode: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  paymentDate: Scalars['DateTime']['input'];
+  referenceNumber?: InputMaybe<Scalars['String']['input']>;
+  supplierId: Scalars['String']['input'];
 };
 
 export type CreditsUpdateDto = {
@@ -5963,6 +7677,33 @@ export type DoctorSubscription = {
   trialStartDate?: Maybe<Scalars['DateTime']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
+
+export type DoctorVitalDefinition = {
+  __typename?: 'DoctorVitalDefinition';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  diastolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  diastolicReferenceMin?: Maybe<Scalars['Float']['output']>;
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  inputType: DoctorVitalInputType;
+  isActive: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  referenceMax?: Maybe<Scalars['Float']['output']>;
+  referenceMin?: Maybe<Scalars['Float']['output']>;
+  semanticCode?: Maybe<Scalars['String']['output']>;
+  sortOrder: Scalars['Int']['output'];
+  systolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  systolicReferenceMin?: Maybe<Scalars['Float']['output']>;
+  unit: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export enum DoctorVitalInputType {
+  BloodPressure = 'BLOOD_PRESSURE',
+  Numeric = 'NUMERIC',
+  Text = 'TEXT'
+}
 
 export type DoctorWorkingHours = {
   __typename?: 'DoctorWorkingHours';
@@ -6612,20 +8353,31 @@ export type InventoryItem = {
   barcode?: Maybe<Scalars['String']['output']>;
   batchNumber?: Maybe<Scalars['String']['output']>;
   category?: Maybe<Scalars['String']['output']>;
+  chemicalName?: Maybe<Scalars['String']['output']>;
   clinicId: Scalars['String']['output'];
+  costCgstRate: Scalars['Float']['output'];
   costPerUnit?: Maybe<Scalars['Float']['output']>;
+  costSgstRate: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   currentStock: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  hsnCode?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   isActive: Scalars['Boolean']['output'];
   lowStockThreshold: Scalars['Int']['output'];
   manufacturer?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  purchaseOrderItems?: Maybe<Array<PurchaseOrderItem>>;
   reorderLevel?: Maybe<Scalars['Int']['output']>;
+  requiresPrescription: Scalars['Boolean']['output'];
+  sellingCgstRate: Scalars['Float']['output'];
   sellingPrice?: Maybe<Scalars['Float']['output']>;
+  sellingSgstRate: Scalars['Float']['output'];
   stock?: Maybe<Array<InventoryStock>>;
+  storageLocation?: Maybe<Scalars['String']['output']>;
+  strength?: Maybe<Scalars['String']['output']>;
+  suppliers?: Maybe<Array<Supplier>>;
   transactions?: Maybe<Array<InventoryTransaction>>;
   type: InventoryItemType;
   unit: Scalars['String']['output'];
@@ -6639,6 +8391,33 @@ export enum InventoryItemType {
   Medicine = 'MEDICINE',
   Other = 'OTHER'
 }
+
+export type InventoryLoginDto = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+export type InventoryLoginModel = {
+  __typename?: 'InventoryLoginModel';
+  clinicId: Scalars['String']['output'];
+  clinicName: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  mustChangePassword: Scalars['Boolean']['output'];
+  username: Scalars['String']['output'];
+};
+
+export type InventoryLoginSession = {
+  __typename?: 'InventoryLoginSession';
+  businessId: Scalars['String']['output'];
+  clinicId: Scalars['String']['output'];
+  clinicName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  mustChangePassword: Scalars['Boolean']['output'];
+  permissions: Array<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
+};
 
 export type InventoryStats = {
   __typename?: 'InventoryStats';
@@ -6659,18 +8438,32 @@ export type InventoryStock = {
   purchaseDate: Scalars['DateTime']['output'];
   purchasePrice?: Maybe<Scalars['Float']['output']>;
   quantity: Scalars['Int']['output'];
+  storageLocation?: Maybe<Scalars['String']['output']>;
+  supplier?: Maybe<Supplier>;
+  supplierId?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
 export type InventoryTransaction = {
   __typename?: 'InventoryTransaction';
+  cgstAmount?: Maybe<Scalars['Float']['output']>;
+  cgstRate?: Maybe<Scalars['Float']['output']>;
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
+  discountAmount?: Maybe<Scalars['Float']['output']>;
+  discountType?: Maybe<Scalars['String']['output']>;
+  discountValue?: Maybe<Scalars['Float']['output']>;
   id: Scalars['String']['output'];
   itemId: Scalars['String']['output'];
   notes?: Maybe<Scalars['String']['output']>;
   quantity: Scalars['Int']['output'];
   referenceId?: Maybe<Scalars['String']['output']>;
+  sgstAmount?: Maybe<Scalars['Float']['output']>;
+  sgstRate?: Maybe<Scalars['Float']['output']>;
+  subtotalAmount?: Maybe<Scalars['Float']['output']>;
+  supplier?: Maybe<Supplier>;
+  supplierId?: Maybe<Scalars['String']['output']>;
+  taxationType?: Maybe<TaxationType>;
   totalAmount?: Maybe<Scalars['Float']['output']>;
   type: InventoryTransactionType;
   unitPrice?: Maybe<Scalars['Float']['output']>;
@@ -6681,6 +8474,7 @@ export enum InventoryTransactionType {
   Damaged = 'DAMAGED',
   Expired = 'EXPIRED',
   Purchase = 'PURCHASE',
+  PurchaseReturn = 'PURCHASE_RETURN',
   Restock = 'RESTOCK',
   Sale = 'SALE',
   Usage = 'USAGE'
@@ -6700,6 +8494,25 @@ export type LastVisited = {
   visit_checkin: Scalars['String']['output'];
 };
 
+export type LearnAiClinicalAliasDto = {
+  aliasType: Scalars['String']['input'];
+  clinicId: Scalars['String']['input'];
+  doctorId?: InputMaybe<Scalars['String']['input']>;
+  matchedName: Scalars['String']['input'];
+  rawName: Scalars['String']['input'];
+};
+
+export type LearnAiMedicationAliasDto = {
+  clinicId: Scalars['String']['input'];
+  doctorId?: InputMaybe<Scalars['String']['input']>;
+  inventoryItemId?: InputMaybe<Scalars['String']['input']>;
+  isInventoryLinked?: Scalars['Boolean']['input'];
+  matchedDrugId?: InputMaybe<Scalars['String']['input']>;
+  matchedDrugName: Scalars['String']['input'];
+  rawName: Scalars['String']['input'];
+  unit?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type MajorSpecaility = {
   __typename?: 'MajorSpecaility';
   name: Scalars['String']['output'];
@@ -6715,6 +8528,7 @@ export type MeResponse = {
   clinicId?: Maybe<Scalars['String']['output']>;
   clinicIds?: Maybe<Array<Scalars['String']['output']>>;
   firstName?: Maybe<Scalars['String']['output']>;
+  inventoryLoginId?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   permissions: Array<Scalars['String']['output']>;
   role: Scalars['String']['output'];
@@ -6823,13 +8637,16 @@ export type Mutation = {
   assignQueueToken: QueueTokenDetails;
   bookAppointment: AppointmentDetails;
   bookAppointmentOnline: AppointmentDetails;
+  bookWebsiteAppointment: WebsiteAppointmentBookingResult;
   cancelAppointmentByPatient: Scalars['String']['output'];
   cancelInpatientCharge: InpatientCharge;
+  changeInventoryPassword: InventoryLoginSession;
   completeInpatientDischarge: InpatientEncounter;
   createBusiness: Business;
   createClinicMilestone: ClinicMilestone;
   createCustomField: CustomField;
   createDentalChart: DentalChart;
+  createDoctorVitalDefinition: DoctorVitalDefinition;
   createDoctorWorkingHours: DoctorWorkingHours;
   createDraft: Draft;
   createInpatientBed: InpatientBed;
@@ -6842,15 +8659,22 @@ export type Mutation = {
   createInpatientVital: InpatientVital;
   createInpatientWard: InpatientWard;
   createInventoryItem: InventoryItem;
+  createInventoryLogin: InventoryLoginModel;
   createInventoryTransaction: InventoryTransaction;
   createOrder: Scalars['String']['output'];
   createPatientGroup: PatientGroup;
   createPatientPurchase: PatientPurchase;
+  createPurchaseEntry: PurchaseEntry;
+  createPurchaseOrder: PurchaseOrder;
+  createPurchaseReturn: PurchaseReturn;
   createReportSettings: ReportSettings;
   createReview: Review;
   createService: ServicesModel;
   createSubscription: DoctorSubscription;
+  createSupplier: Supplier;
+  createSupplierPayment: SupplierPayment;
   createTemplate: Template;
+  createWebsiteBookingSession: WebsiteBookingSession;
   deleteBilling: Scalars['String']['output'];
   deleteBusiness: Scalars['Boolean']['output'];
   deleteClinic: Scalars['Boolean']['output'];
@@ -6859,24 +8683,31 @@ export type Mutation = {
   deleteCustomField: Scalars['Boolean']['output'];
   deleteDentalChart: Scalars['Boolean']['output'];
   deleteDoctor: Scalars['Boolean']['output'];
+  deleteDoctorVitalDefinition: Scalars['Boolean']['output'];
   deleteDoctorWorkingHours: Scalars['String']['output'];
   deleteDocument: Scalars['Boolean']['output'];
   deleteInventoryItem: Scalars['String']['output'];
   deletePatientGroup: Scalars['Boolean']['output'];
   deletePrescription: Scalars['Boolean']['output'];
+  deletePurchaseOrder: Scalars['String']['output'];
   deleteReportSettings: Scalars['String']['output'];
   deleteReview: Scalars['String']['output'];
   deleteSchedule: Scalars['Float']['output'];
+  deleteSupplier: Scalars['String']['output'];
   editBilling: Scalars['String']['output'];
   editMedication: Medication;
   evaluateClinicMilestones: Array<ClinicMilestoneAchievement>;
   finalizeInpatientBill: InpatientBillingAccount;
   generateReport: Scalars['String']['output'];
+  generateWebsiteBookingKey: WebsiteBookingKeyGenerationResult;
   getAppointmentGraph: Array<GraphData>;
   getAppointmentStats: AppointmentStats;
   getProductMetrics: Cpg;
   getRevenue: RevenueStats;
   initiateInpatientDischarge: InpatientEncounter;
+  inventoryLogin: InventoryLoginSession;
+  learnAiClinicalAlias: Scalars['Boolean']['output'];
+  learnAiMedicationAlias: Scalars['Boolean']['output'];
   loginOTPRequest: OtpRequestStatus;
   logout: Scalars['String']['output'];
   onboarding: RegisterResponse;
@@ -6894,6 +8725,7 @@ export type Mutation = {
   removeFavourite: Scalars['String']['output'];
   removePatientsFromGroup: PatientGroup;
   rescheduleAppointmentByPatient: AppointmentDetails;
+  resolveAppointmentApproval: AppointmentApprovalRequest;
   savePrescription: Prescription;
   savePrescriptionTemplate: PrescriptionTemplate;
   sendConversationMessage: ConversationMessageResult;
@@ -6916,6 +8748,7 @@ export type Mutation = {
   updateDoctorActiveStatus: Scalars['Boolean']['output'];
   updateDoctorAppointmentLimit: Scalars['Int']['output'];
   updateDoctorSettings: Scalars['Boolean']['output'];
+  updateDoctorVitalDefinition: DoctorVitalDefinition;
   updateDoctorWorkingHours: DoctorWorkingHours;
   updateInpatientBed: InpatientBed;
   updateInpatientCharge: InpatientCharge;
@@ -6924,18 +8757,24 @@ export type Mutation = {
   updateInpatientOrderStatus: InpatientOrder;
   updateInpatientWard: InpatientWard;
   updateInventoryItem: InventoryItem;
+  updateInventoryLoginStatus: InventoryLoginModel;
   updateMedicationStatus: MedicationStatus;
   updateNotifications: Notifications;
   updatePatientGroup: PatientGroup;
   updatePatientProfile: PatientProfile;
+  updatePatientPurchaseBill: PatientPurchase;
   updatePaymentDetails: Scalars['String']['output'];
   updateProfilePicUrl: Doctor;
+  updatePurchaseOrder: PurchaseOrder;
+  updateQueueTokenStatus: QueueTokenDetails;
   updateReportSettings: ReportSettings;
   updateReview: Review;
   updateService: ServicesModel;
   updateSubscription: DoctorSubscription;
   updateSubscriptionStatus: DoctorSubscription;
+  updateSupplier: Supplier;
   updateVideoDuration: Scalars['String']['output'];
+  updateWebsiteBookingOrigins: WebsiteBookingIntegration;
   upsertAiPrescriptionSession: AiPrescriptionSession;
   upsertCheckInData: CheckInDataModel;
   upsertClinicModuleSubscription: ClinicModuleSubscription;
@@ -6946,6 +8785,7 @@ export type Mutation = {
   validateLoginOTP: UnifiedLoginResponse;
   voidInpatientDocument: InpatientDocument;
   voidInpatientPayment: InpatientPayment;
+  voidSupplierPayment: SupplierPayment;
 };
 
 
@@ -7054,6 +8894,11 @@ export type MutationBookAppointmentOnlineArgs = {
 };
 
 
+export type MutationBookWebsiteAppointmentArgs = {
+  input: WebsiteAppointmentBookingInput;
+};
+
+
 export type MutationCancelAppointmentByPatientArgs = {
   input: PatientCancelAppointmentInput;
 };
@@ -7061,6 +8906,11 @@ export type MutationCancelAppointmentByPatientArgs = {
 
 export type MutationCancelInpatientChargeArgs = {
   input: CancelInpatientChargeDto;
+};
+
+
+export type MutationChangeInventoryPasswordArgs = {
+  input: ChangeInventoryPasswordDto;
 };
 
 
@@ -7086,6 +8936,11 @@ export type MutationCreateCustomFieldArgs = {
 
 export type MutationCreateDentalChartArgs = {
   input: DentalChartCreateInput;
+};
+
+
+export type MutationCreateDoctorVitalDefinitionArgs = {
+  input: CreateDoctorVitalDefinitionInput;
 };
 
 
@@ -7149,6 +9004,11 @@ export type MutationCreateInventoryItemArgs = {
 };
 
 
+export type MutationCreateInventoryLoginArgs = {
+  input: CreateInventoryLoginDto;
+};
+
+
 export type MutationCreateInventoryTransactionArgs = {
   input: CreateInventoryTransactionDto;
 };
@@ -7166,6 +9026,21 @@ export type MutationCreatePatientGroupArgs = {
 
 export type MutationCreatePatientPurchaseArgs = {
   input: CreatePatientPurchaseDto;
+};
+
+
+export type MutationCreatePurchaseEntryArgs = {
+  input: CreatePurchaseEntryDto;
+};
+
+
+export type MutationCreatePurchaseOrderArgs = {
+  input: CreatePurchaseOrderDto;
+};
+
+
+export type MutationCreatePurchaseReturnArgs = {
+  input: CreatePurchaseReturnDto;
 };
 
 
@@ -7187,6 +9062,16 @@ export type MutationCreateServiceArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   input: CreateSubscriptionDto;
+};
+
+
+export type MutationCreateSupplierArgs = {
+  input: CreateSupplierDto;
+};
+
+
+export type MutationCreateSupplierPaymentArgs = {
+  input: CreateSupplierPaymentDto;
 };
 
 
@@ -7235,6 +9120,11 @@ export type MutationDeleteDoctorArgs = {
 };
 
 
+export type MutationDeleteDoctorVitalDefinitionArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteDoctorWorkingHoursArgs = {
   workingHoursId: Scalars['String']['input'];
 };
@@ -7260,6 +9150,12 @@ export type MutationDeletePrescriptionArgs = {
 };
 
 
+export type MutationDeletePurchaseOrderArgs = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteReportSettingsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -7272,6 +9168,12 @@ export type MutationDeleteReviewArgs = {
 
 export type MutationDeleteScheduleArgs = {
   id: Scalars['Float']['input'];
+};
+
+
+export type MutationDeleteSupplierArgs = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -7325,6 +9227,21 @@ export type MutationGetRevenueArgs = {
 
 export type MutationInitiateInpatientDischargeArgs = {
   input: DischargeInpatientDto;
+};
+
+
+export type MutationInventoryLoginArgs = {
+  input: InventoryLoginDto;
+};
+
+
+export type MutationLearnAiClinicalAliasArgs = {
+  input: LearnAiClinicalAliasDto;
+};
+
+
+export type MutationLearnAiMedicationAliasArgs = {
+  input: LearnAiMedicationAliasDto;
 };
 
 
@@ -7402,6 +9319,12 @@ export type MutationRemovePatientsFromGroupArgs = {
 
 export type MutationRescheduleAppointmentByPatientArgs = {
   input: PatientRescheduleAppointmentInput;
+};
+
+
+export type MutationResolveAppointmentApprovalArgs = {
+  aid: Scalars['String']['input'];
+  approved: Scalars['Boolean']['input'];
 };
 
 
@@ -7523,6 +9446,11 @@ export type MutationUpdateDoctorSettingsArgs = {
 };
 
 
+export type MutationUpdateDoctorVitalDefinitionArgs = {
+  input: UpdateDoctorVitalDefinitionInput;
+};
+
+
 export type MutationUpdateDoctorWorkingHoursArgs = {
   input: UpdateDoctorWorkingHoursDto;
 };
@@ -7563,6 +9491,11 @@ export type MutationUpdateInventoryItemArgs = {
 };
 
 
+export type MutationUpdateInventoryLoginStatusArgs = {
+  input: UpdateInventoryLoginStatusDto;
+};
+
+
 export type MutationUpdateMedicationStatusArgs = {
   medicationStatusInput: MedicationStatusDto;
 };
@@ -7585,6 +9518,11 @@ export type MutationUpdatePatientProfileArgs = {
 };
 
 
+export type MutationUpdatePatientPurchaseBillArgs = {
+  input: UpdatePatientPurchaseBillDto;
+};
+
+
 export type MutationUpdatePaymentDetailsArgs = {
   paymentInput: PaymentDto;
 };
@@ -7593,6 +9531,18 @@ export type MutationUpdatePaymentDetailsArgs = {
 export type MutationUpdateProfilePicUrlArgs = {
   doctor_id: Scalars['String']['input'];
   picture_url: Scalars['String']['input'];
+};
+
+
+export type MutationUpdatePurchaseOrderArgs = {
+  input: UpdatePurchaseOrderDto;
+};
+
+
+export type MutationUpdateQueueTokenStatusArgs = {
+  clinic_id: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  tokenId: Scalars['String']['input'];
 };
 
 
@@ -7623,10 +9573,20 @@ export type MutationUpdateSubscriptionStatusArgs = {
 };
 
 
+export type MutationUpdateSupplierArgs = {
+  input: UpdateSupplierDto;
+};
+
+
 export type MutationUpdateVideoDurationArgs = {
   aid: Scalars['String']['input'];
   clinic_id: Scalars['String']['input'];
   mins: Scalars['Float']['input'];
+};
+
+
+export type MutationUpdateWebsiteBookingOriginsArgs = {
+  input: UpdateWebsiteBookingOriginsInput;
 };
 
 
@@ -7677,6 +9637,12 @@ export type MutationVoidInpatientDocumentArgs = {
 
 export type MutationVoidInpatientPaymentArgs = {
   input: VoidInpatientPaymentDto;
+};
+
+
+export type MutationVoidSupplierPaymentArgs = {
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
 };
 
 export type NotificationCredits = {
@@ -7767,11 +9733,83 @@ export type PaginatedCpg = {
   totalCount: Scalars['Int']['output'];
 };
 
+export type PaginatedInventoryItems = {
+  __typename?: 'PaginatedInventoryItems';
+  nodes: Array<InventoryItem>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedPatientPurchases = {
+  __typename?: 'PaginatedPatientPurchases';
+  nodes: Array<PatientPurchase>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
 export type PaginatedPatients = {
   __typename?: 'PaginatedPatients';
   patients: Array<PatientsWithAppointment>;
   totalCount: Scalars['Float']['output'];
   totalPages: Scalars['Float']['output'];
+};
+
+export type PaginatedPurchaseEntries = {
+  __typename?: 'PaginatedPurchaseEntries';
+  nodes: Array<PurchaseEntry>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedPurchaseOrders = {
+  __typename?: 'PaginatedPurchaseOrders';
+  nodes: Array<PurchaseOrder>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedPurchaseReturns = {
+  __typename?: 'PaginatedPurchaseReturns';
+  nodes: Array<PurchaseReturn>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedSupplierLedger = {
+  __typename?: 'PaginatedSupplierLedger';
+  nodes: Array<SupplierPayableEntry>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedSupplierPayableInvoices = {
+  __typename?: 'PaginatedSupplierPayableInvoices';
+  nodes: Array<SupplierPayableInvoice>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type PaginatedSupplierPayments = {
+  __typename?: 'PaginatedSupplierPayments';
+  nodes: Array<SupplierPayment>;
+  page: Scalars['Int']['output'];
+  pageSize: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
 };
 
 export type Patient = {
@@ -7943,36 +9981,59 @@ export type PatientProfileLastVisited = {
 
 export type PatientPurchase = {
   __typename?: 'PatientPurchase';
+  billDiscountAmount: Scalars['Float']['output'];
+  billDiscountType?: Maybe<Scalars['String']['output']>;
+  billDiscountValue: Scalars['Float']['output'];
   billNo?: Maybe<Scalars['String']['output']>;
   billURL?: Maybe<Scalars['String']['output']>;
+  cgstAmount: Scalars['Float']['output'];
   clinicId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
   finalAmount: Scalars['Float']['output'];
   id: Scalars['String']['output'];
+  itemDiscountAmount: Scalars['Float']['output'];
   items: Array<PatientPurchaseItem>;
   notes?: Maybe<Scalars['String']['output']>;
   patientProfileId: Scalars['String']['output'];
   paymentStatus?: Maybe<Scalars['String']['output']>;
   paymentType?: Maybe<Scalars['String']['output']>;
+  prescriptionVerified: Scalars['Boolean']['output'];
+  sgstAmount: Scalars['Float']['output'];
+  stockAllocations?: Maybe<Array<SaleStockAllocation>>;
+  taxationType?: Maybe<TaxationType>;
   totalAmount: Scalars['Float']['output'];
+  totalDiscountAmount: Scalars['Float']['output'];
+  totalTaxAmount: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
 export type PatientPurchaseItem = {
   __typename?: 'PatientPurchaseItem';
+  cgstAmount: Scalars['Float']['output'];
+  cgstRate: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
+  discountAmount: Scalars['Float']['output'];
+  discountType?: Maybe<Scalars['String']['output']>;
+  discountValue: Scalars['Float']['output'];
+  finalPrice: Scalars['Float']['output'];
   id: Scalars['String']['output'];
   item?: Maybe<InventoryItem>;
   itemId: Scalars['String']['output'];
   purchaseId: Scalars['String']['output'];
   quantity: Scalars['Int']['output'];
+  sgstAmount: Scalars['Float']['output'];
+  sgstRate: Scalars['Float']['output'];
+  stockAllocations?: Maybe<Array<SaleStockAllocation>>;
+  taxableAmount: Scalars['Float']['output'];
   totalPrice: Scalars['Float']['output'];
   unitPrice: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
 export type PatientPurchaseItemDto = {
+  discountType?: InputMaybe<Scalars['String']['input']>;
+  discountValue?: InputMaybe<Scalars['Float']['input']>;
   itemId: Scalars['String']['input'];
   quantity: Scalars['Int']['input'];
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
@@ -7989,6 +10050,26 @@ export type PatientStatsResponse = {
   __typename?: 'PatientStatsResponse';
   groupedPatients: GroupedPatients;
   totalPatients: Scalars['Int']['output'];
+};
+
+export type PatientVitalTrend = {
+  __typename?: 'PatientVitalTrend';
+  definition: DoctorVitalDefinition;
+  latestPoint?: Maybe<PatientVitalTrendPoint>;
+  points: Array<PatientVitalTrendPoint>;
+};
+
+export type PatientVitalTrendPoint = {
+  __typename?: 'PatientVitalTrendPoint';
+  diastolicValue?: Maybe<Scalars['Float']['output']>;
+  isOutOfRange: Scalars['Boolean']['output'];
+  numericValue?: Maybe<Scalars['Float']['output']>;
+  prescriptionId?: Maybe<Scalars['String']['output']>;
+  recordedAt: Scalars['DateTime']['output'];
+  systolicValue?: Maybe<Scalars['Float']['output']>;
+  unit?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
+  vitalId: Scalars['String']['output'];
 };
 
 export type PatientsWithAppointment = {
@@ -8097,11 +10178,6 @@ export type PhoneNumber = {
 };
 
 export type PhoneNumberDto = {
-  n: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-};
-
-export type PhoneNumberDto = {
   phoneNumber: Scalars['String']['input'];
 };
 
@@ -8190,6 +10266,217 @@ export type ProfileDto = {
   professional: ProfessionalDto;
 };
 
+export type PurchaseEntry = {
+  __typename?: 'PurchaseEntry';
+  amountPaid: Scalars['Float']['output'];
+  balanceAmount: Scalars['Float']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  creditPeriodDays?: Maybe<Scalars['Int']['output']>;
+  discountAmount: Scalars['Float']['output'];
+  dueDate?: Maybe<Scalars['DateTime']['output']>;
+  grossAmount: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  invoiceDate: Scalars['DateTime']['output'];
+  items: Array<PurchaseEntryItem>;
+  location: Scalars['String']['output'];
+  netAmount: Scalars['Float']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  paymentType: PurchaseOrderPaymentType;
+  purchaseEntryNumber: Scalars['String']['output'];
+  purchaseOrder?: Maybe<PurchaseOrder>;
+  purchaseOrderId?: Maybe<Scalars['String']['output']>;
+  receivedDate: Scalars['DateTime']['output'];
+  status: PurchaseEntryStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  supplierInvoiceNumber: Scalars['String']['output'];
+  taxAmount: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseEntryFilterDto = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PurchaseEntryItem = {
+  __typename?: 'PurchaseEntryItem';
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  cgstAmount: Scalars['Float']['output'];
+  cgstRate: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  discountAmount: Scalars['Float']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  freeQuantity: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  inventoryStock?: Maybe<InventoryStock>;
+  item: InventoryItem;
+  itemId: Scalars['String']['output'];
+  lineTotal: Scalars['Float']['output'];
+  orderedQuantity?: Maybe<Scalars['Int']['output']>;
+  purchaseEntryId: Scalars['String']['output'];
+  purchaseOrderItemId?: Maybe<Scalars['String']['output']>;
+  purchasePrice: Scalars['Float']['output'];
+  receivedQuantity: Scalars['Int']['output'];
+  sgstAmount: Scalars['Float']['output'];
+  sgstRate: Scalars['Float']['output'];
+  storageLocation?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseEntryItemDto = {
+  batchNumber?: InputMaybe<Scalars['String']['input']>;
+  cgstRate?: InputMaybe<Scalars['Float']['input']>;
+  discountAmount?: InputMaybe<Scalars['Float']['input']>;
+  expiryDate?: InputMaybe<Scalars['DateTime']['input']>;
+  freeQuantity?: InputMaybe<Scalars['Int']['input']>;
+  itemId: Scalars['String']['input'];
+  purchaseOrderItemId?: InputMaybe<Scalars['String']['input']>;
+  purchasePrice: Scalars['Float']['input'];
+  receivedQuantity: Scalars['Int']['input'];
+  sgstRate?: InputMaybe<Scalars['Float']['input']>;
+  storageLocation?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum PurchaseEntryStatus {
+  Open = 'OPEN',
+  Paid = 'PAID',
+  PartiallyPaid = 'PARTIALLY_PAID',
+  Void = 'VOID'
+}
+
+export type PurchaseOrder = {
+  __typename?: 'PurchaseOrder';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  creditPeriodDays?: Maybe<Scalars['Int']['output']>;
+  expectedDelivery?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['String']['output'];
+  items: Array<PurchaseOrderItem>;
+  location: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  orderDate: Scalars['DateTime']['output'];
+  paymentReminderDate?: Maybe<Scalars['DateTime']['output']>;
+  paymentType: PurchaseOrderPaymentType;
+  poNumber: Scalars['String']['output'];
+  status: PurchaseOrderStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  totalAmount: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseOrderFilterDto = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PurchaseOrderItem = {
+  __typename?: 'PurchaseOrderItem';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  item: InventoryItem;
+  itemId: Scalars['String']['output'];
+  purchaseOrderId: Scalars['String']['output'];
+  purchasePrice: Scalars['Float']['output'];
+  quantity: Scalars['Int']['output'];
+  receivedQuantity: Scalars['Int']['output'];
+  totalPrice: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseOrderItemDto = {
+  itemId: Scalars['String']['input'];
+  purchasePrice: Scalars['Float']['input'];
+  quantity: Scalars['Int']['input'];
+};
+
+export enum PurchaseOrderPaymentType {
+  Cash = 'CASH',
+  Credit = 'CREDIT'
+}
+
+export enum PurchaseOrderStatus {
+  Cancelled = 'CANCELLED',
+  Draft = 'DRAFT',
+  PartiallyReceived = 'PARTIALLY_RECEIVED',
+  Received = 'RECEIVED',
+  Sent = 'SENT'
+}
+
+export type PurchaseReturn = {
+  __typename?: 'PurchaseReturn';
+  approvedBy?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  creditNoteNumber?: Maybe<Scalars['String']['output']>;
+  grossReturnAmount: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  items: Array<PurchaseReturnItem>;
+  netReturnAmount: Scalars['Float']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  purchaseEntry: PurchaseEntry;
+  purchaseEntryId: Scalars['String']['output'];
+  reason: Scalars['String']['output'];
+  returnDate: Scalars['DateTime']['output'];
+  returnNumber: Scalars['String']['output'];
+  settlementType: PurchaseReturnSettlementType;
+  status: PurchaseReturnStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  taxAdjustment: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseReturnFilterDto = {
+  purchaseEntryId?: InputMaybe<Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PurchaseReturnItem = {
+  __typename?: 'PurchaseReturnItem';
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  inventoryStockId: Scalars['String']['output'];
+  item: InventoryItem;
+  itemId: Scalars['String']['output'];
+  purchaseEntryItemId: Scalars['String']['output'];
+  purchaseReturnId: Scalars['String']['output'];
+  quantityReturned: Scalars['Int']['output'];
+  reason?: Maybe<Scalars['String']['output']>;
+  returnAmount: Scalars['Float']['output'];
+  taxAdjustment: Scalars['Float']['output'];
+  unitCost: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type PurchaseReturnItemDto = {
+  inventoryStockId: Scalars['String']['input'];
+  purchaseEntryItemId: Scalars['String']['input'];
+  quantityReturned: Scalars['Int']['input'];
+  reason?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum PurchaseReturnSettlementType {
+  CarryCredit = 'CARRY_CREDIT',
+  ReduceOutstanding = 'REDUCE_OUTSTANDING',
+  Refund = 'REFUND'
+}
+
+export enum PurchaseReturnStatus {
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  Draft = 'DRAFT'
+}
+
 export type Query = {
   __typename?: 'Query';
   aiUsageStats: AiUsageStats;
@@ -8245,6 +10532,7 @@ export type Query = {
   getDoctorCustomFields: Array<CustomField>;
   getDoctorSettings: DoctorSettings;
   getDoctorSubscription?: Maybe<DoctorSubscription>;
+  getDoctorVitalDefinitions: Array<DoctorVitalDefinition>;
   getDoctorWorkingHours?: Maybe<DoctorWorkingHours>;
   getDoctors: Array<Doctor>;
   getDrugList: Array<DrugList>;
@@ -8266,9 +10554,12 @@ export type Query = {
   getInpatientWards: Array<InpatientWard>;
   getInventoryItem: InventoryItem;
   getInventoryItems: Array<InventoryItem>;
+  getInventoryItemsPaginated: PaginatedInventoryItems;
+  getInventoryLogins: Array<InventoryLoginModel>;
   getInventoryStats: InventoryStats;
   getInventoryTransactions: Array<InventoryTransaction>;
   getLowStockItems: Array<InventoryItem>;
+  getLowStockItemsPaginated: PaginatedInventoryItems;
   getMedicationRange: Array<Medication>;
   getNearestDoctors: Array<Doctor>;
   getNotificationCredits: NotificationCredits;
@@ -8282,26 +10573,51 @@ export type Query = {
   getPatientHistory: Array<AppointmentDetails>;
   getPatientPurchase: PatientPurchase;
   getPatientPurchases: Array<PatientPurchase>;
+  getPatientPurchasesPaginated: PaginatedPatientPurchases;
+  getPatientVitalTrend: PatientVitalTrend;
   getPatientsByAgeAndGender: PatientStatsResponse;
   getPatientsCount: Scalars['Float']['output'];
   getPatientsPaginated: PaginatedPatients;
   getPaymentAnalytics: Array<PaymentCount>;
   getPaymentModeBreakdown: Array<PaymentModeBreakdown>;
+  getPendingAppointmentApprovals: Array<AppointmentApprovalRequest>;
   getPrescriptionTemplate: PrescriptionTemplate;
   getProduct: Cpg;
   getProducts: PaginatedCpg;
+  getPurchaseEntries: Array<PurchaseEntry>;
+  getPurchaseEntriesPaginated: PaginatedPurchaseEntries;
+  getPurchaseEntry: PurchaseEntry;
+  getPurchaseOrder: PurchaseOrder;
+  getPurchaseOrders: Array<PurchaseOrder>;
+  getPurchaseOrdersPaginated: PaginatedPurchaseOrders;
+  getPurchaseReturn: PurchaseReturn;
+  getPurchaseReturns: Array<PurchaseReturn>;
+  getPurchaseReturnsPaginated: PaginatedPurchaseReturns;
+  getQueueDisplay: QueueDisplay;
   getReportSettings?: Maybe<ReportSettings>;
   getReportStatus: Scalars['String']['output'];
   getReviewsByDoctor: Array<Review>;
   getRooms: Scalars['String']['output'];
+  getSalesProfitReport: SalesProfitReport;
   getServices: Array<ServicesModel>;
   getSlots: Array<Scalars['String']['output']>;
   getStats: Stats;
   getStock: Array<InventoryStock>;
   getSubscription: DoctorSubscription;
+  getSupplier: Supplier;
+  getSupplierLedger: Array<SupplierPayableEntry>;
+  getSupplierLedgerPaginated: PaginatedSupplierLedger;
+  getSupplierPayableInvoicesPaginated: PaginatedSupplierPayableInvoices;
+  getSupplierPayableSummary: SupplierPayableSummary;
+  getSupplierPayments: Array<SupplierPayment>;
+  getSupplierPaymentsPaginated: PaginatedSupplierPayments;
+  getSuppliers: Array<Supplier>;
   getSymptomsList: Array<SymptomsList>;
   getUserByPhoneNumber: User;
   getUsers: Array<User>;
+  getWebsiteBookingAvailability: WebsiteBookingAvailability;
+  getWebsiteBookingCatalog: WebsiteBookingCatalog;
+  getWebsiteBookingIntegration?: Maybe<WebsiteBookingIntegration>;
   getWeeklyRevenue: Array<GraphData>;
   me: MeResponse;
   search: SearchResult;
@@ -8555,6 +10871,12 @@ export type QueryGetDoctorSubscriptionArgs = {
 };
 
 
+export type QueryGetDoctorVitalDefinitionsArgs = {
+  doctorId: Scalars['String']['input'];
+  includeInactive?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type QueryGetDoctorWorkingHoursArgs = {
   doctorId: Scalars['String']['input'];
 };
@@ -8663,6 +10985,19 @@ export type QueryGetInventoryItemsArgs = {
 };
 
 
+export type QueryGetInventoryItemsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<InventoryFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetInventoryLoginsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetInventoryStatsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -8677,6 +11012,13 @@ export type QueryGetInventoryTransactionsArgs = {
 
 export type QueryGetLowStockItemsArgs = {
   clinicId: Scalars['String']['input'];
+};
+
+
+export type QueryGetLowStockItemsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -8753,6 +11095,24 @@ export type QueryGetPatientPurchasesArgs = {
 };
 
 
+export type QueryGetPatientPurchasesPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+  patientProfileId?: InputMaybe<Scalars['String']['input']>;
+  paymentStatus?: InputMaybe<Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetPatientVitalTrendArgs = {
+  doctorVitalDefinitionId: Scalars['String']['input'];
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  patientProfileId: Scalars['String']['input'];
+  to?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+
 export type QueryGetPatientsByAgeAndGenderArgs = {
   clinic_id: Scalars['String']['input'];
 };
@@ -8786,6 +11146,11 @@ export type QueryGetPaymentModeBreakdownArgs = {
 };
 
 
+export type QueryGetPendingAppointmentApprovalsArgs = {
+  clinicId: Scalars['String']['input'];
+};
+
+
 export type QueryGetPrescriptionTemplateArgs = {
   doctor_id: Scalars['String']['input'];
 };
@@ -8801,6 +11166,71 @@ export type QueryGetProductsArgs = {
 };
 
 
+export type QueryGetPurchaseEntriesArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseEntryFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseEntriesPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseEntryFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseEntryArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPurchaseOrderArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPurchaseOrdersArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseOrderFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseOrdersPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseOrderFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseReturnArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetPurchaseReturnsArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseReturnFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetPurchaseReturnsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<PurchaseReturnFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetQueueDisplayArgs = {
+  clinic_id: Scalars['String']['input'];
+};
+
+
 export type QueryGetReportSettingsArgs = {
   clinicId: Scalars['String']['input'];
 };
@@ -8813,6 +11243,12 @@ export type QueryGetReportStatusArgs = {
 
 export type QueryGetReviewsByDoctorArgs = {
   doctorId: Scalars['String']['input'];
+};
+
+
+export type QueryGetSalesProfitReportArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SalesProfitReportFilterDto>;
 };
 
 
@@ -8843,6 +11279,61 @@ export type QueryGetSubscriptionArgs = {
 };
 
 
+export type QueryGetSupplierArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetSupplierLedgerArgs = {
+  clinicId: Scalars['String']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierLedgerPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierPayableInvoicesPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierPayableSummaryArgs = {
+  clinicId: Scalars['String']['input'];
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetSupplierPaymentsArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SupplierPaymentFilterDto>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetSupplierPaymentsPaginatedArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SupplierPaymentFilterDto>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetSuppliersArgs = {
+  clinicId: Scalars['String']['input'];
+  filter?: InputMaybe<SupplierFilterDto>;
+};
+
+
 export type QueryGetSymptomsListArgs = {
   query: Scalars['String']['input'];
 };
@@ -8850,6 +11341,11 @@ export type QueryGetSymptomsListArgs = {
 
 export type QueryGetUserByPhoneNumberArgs = {
   phoneNumber: Scalars['String']['input'];
+};
+
+
+export type QueryGetWebsiteBookingAvailabilityArgs = {
+  input: WebsiteBookingAvailabilityInput;
 };
 
 
@@ -8875,6 +11371,31 @@ export type QuerySearchClinicPatientsForGroupAssignmentArgs = {
 
 export type QueryTodayMedicationArgs = {
   userId: Scalars['String']['input'];
+};
+
+export type QueueDisplay = {
+  __typename?: 'QueueDisplay';
+  clinicId: Scalars['String']['output'];
+  clinicName?: Maybe<Scalars['String']['output']>;
+  current: Array<QueueDisplayToken>;
+  enabled: Scalars['Boolean']['output'];
+  generatedAt: Scalars['DateTime']['output'];
+  skipped: Array<QueueDisplayToken>;
+  upcoming: Array<QueueDisplayToken>;
+};
+
+export type QueueDisplayToken = {
+  __typename?: 'QueueDisplayToken';
+  appointmentTime?: Maybe<Scalars['DateTime']['output']>;
+  calledAt?: Maybe<Scalars['DateTime']['output']>;
+  consultationStartedAt?: Maybe<Scalars['DateTime']['output']>;
+  doctorId?: Maybe<Scalars['String']['output']>;
+  doctorName: Scalars['String']['output'];
+  patientName: Scalars['String']['output'];
+  serviceType?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  tokenId: Scalars['String']['output'];
+  tokenNumber: Scalars['Float']['output'];
 };
 
 export type QueueTokenDetails = {
@@ -9004,6 +11525,177 @@ export type Review = {
   patientProfileId: Scalars['String']['output'];
   rating: Scalars['Int']['output'];
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type SaleStockAllocation = {
+  __typename?: 'SaleStockAllocation';
+  allocationMethod: Scalars['String']['output'];
+  batchNumber?: Maybe<Scalars['String']['output']>;
+  clinicId: Scalars['String']['output'];
+  cogsAmount: Scalars['Float']['output'];
+  costUnavailable: Scalars['Boolean']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  historicalUnitCost?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['String']['output'];
+  inventoryStock?: Maybe<InventoryStock>;
+  inventoryStockId?: Maybe<Scalars['String']['output']>;
+  itemId: Scalars['String']['output'];
+  patientPurchaseId: Scalars['String']['output'];
+  patientPurchaseItemId: Scalars['String']['output'];
+  purchaseEntryItem?: Maybe<PurchaseEntryItem>;
+  purchaseEntryItemId?: Maybe<Scalars['String']['output']>;
+  quantity: Scalars['Int']['output'];
+  supplier?: Maybe<Supplier>;
+  supplierId?: Maybe<Scalars['String']['output']>;
+};
+
+export type SalesProfitBatchRow = {
+  __typename?: 'SalesProfitBatchRow';
+  batchNumber: Scalars['String']['output'];
+  cogs: Scalars['Float']['output'];
+  costUnavailable: Scalars['Boolean']['output'];
+  expiryDate?: Maybe<Scalars['DateTime']['output']>;
+  grossProfit: Scalars['Float']['output'];
+  itemId: Scalars['String']['output'];
+  itemName: Scalars['String']['output'];
+  marginPercentage: Scalars['Float']['output'];
+  purchaseCostPerUnit?: Maybe<Scalars['Float']['output']>;
+  purchaseEntryNumber?: Maybe<Scalars['String']['output']>;
+  salesValue: Scalars['Float']['output'];
+  supplierName?: Maybe<Scalars['String']['output']>;
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitGroupRow = {
+  __typename?: 'SalesProfitGroupRow';
+  cogs: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  key: Scalars['String']['output'];
+  label: Scalars['String']['output'];
+  marginPercentage: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitInvoiceItemRow = {
+  __typename?: 'SalesProfitInvoiceItemRow';
+  billNo?: Maybe<Scalars['String']['output']>;
+  cogs: Scalars['Float']['output'];
+  costUnavailableQuantity: Scalars['Int']['output'];
+  discountAmount: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  itemId: Scalars['String']['output'];
+  itemName: Scalars['String']['output'];
+  marginPercentage: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  patientName: Scalars['String']['output'];
+  patientProfileId: Scalars['String']['output'];
+  paymentStatus?: Maybe<Scalars['String']['output']>;
+  paymentType?: Maybe<Scalars['String']['output']>;
+  purchaseId: Scalars['String']['output'];
+  purchaseItemId: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
+  saleDate: Scalars['DateTime']['output'];
+  sellingValue: Scalars['Float']['output'];
+  taxAmount: Scalars['Float']['output'];
+};
+
+export type SalesProfitKpis = {
+  __typename?: 'SalesProfitKpis';
+  cogs: Scalars['Float']['output'];
+  costUnavailableQuantity: Scalars['Int']['output'];
+  grossMargin: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  grossSales: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  returnsAmount: Scalars['Float']['output'];
+  salesDiscounts: Scalars['Float']['output'];
+  taxAmount: Scalars['Float']['output'];
+  transactions: Scalars['Int']['output'];
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitProductRow = {
+  __typename?: 'SalesProfitProductRow';
+  averageCost: Scalars['Float']['output'];
+  averageSellingPrice: Scalars['Float']['output'];
+  category?: Maybe<Scalars['String']['output']>;
+  cogs: Scalars['Float']['output'];
+  costUnavailableQuantity: Scalars['Int']['output'];
+  discountAmount: Scalars['Float']['output'];
+  grossProfit: Scalars['Float']['output'];
+  grossSales: Scalars['Float']['output'];
+  itemId: Scalars['String']['output'];
+  itemName: Scalars['String']['output'];
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  marginPercentage: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  profitPerUnit: Scalars['Float']['output'];
+  taxAmount: Scalars['Float']['output'];
+  unitsSold: Scalars['Int']['output'];
+};
+
+export type SalesProfitReport = {
+  __typename?: 'SalesProfitReport';
+  batchProfitability: Array<SalesProfitBatchRow>;
+  batchProfitabilityTotal: Scalars['Int']['output'];
+  categorySummary: Array<SalesProfitGroupRow>;
+  categorySummaryTotal: Scalars['Int']['output'];
+  invoiceDetails: Array<SalesProfitInvoiceItemRow>;
+  invoiceDetailsTotal: Scalars['Int']['output'];
+  kpis: SalesProfitKpis;
+  manufacturerSummary: Array<SalesProfitGroupRow>;
+  manufacturerSummaryTotal: Scalars['Int']['output'];
+  productProfitability: Array<SalesProfitProductRow>;
+  productProfitabilityTotal: Scalars['Int']['output'];
+  supplierSummary: Array<SalesProfitGroupRow>;
+  supplierSummaryTotal: Scalars['Int']['output'];
+  trend: Array<SalesProfitTrendPoint>;
+};
+
+export type SalesProfitReportFilterDto = {
+  batchNumber?: InputMaybe<Scalars['String']['input']>;
+  batchPage?: InputMaybe<Scalars['Int']['input']>;
+  batchPageSize?: InputMaybe<Scalars['Int']['input']>;
+  categories?: InputMaybe<Array<Scalars['String']['input']>>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  categoryPage?: InputMaybe<Scalars['Int']['input']>;
+  categoryPageSize?: InputMaybe<Scalars['Int']['input']>;
+  createdBy?: InputMaybe<Scalars['String']['input']>;
+  createdByIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
+  dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  invoicePage?: InputMaybe<Scalars['Int']['input']>;
+  invoicePageSize?: InputMaybe<Scalars['Int']['input']>;
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  itemIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  manufacturerPage?: InputMaybe<Scalars['Int']['input']>;
+  manufacturerPageSize?: InputMaybe<Scalars['Int']['input']>;
+  manufacturers?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentStatus?: InputMaybe<Scalars['String']['input']>;
+  paymentStatuses?: InputMaybe<Array<Scalars['String']['input']>>;
+  paymentType?: InputMaybe<Scalars['String']['input']>;
+  paymentTypes?: InputMaybe<Array<Scalars['String']['input']>>;
+  prescriptionRequired?: InputMaybe<Scalars['Boolean']['input']>;
+  productPage?: InputMaybe<Scalars['Int']['input']>;
+  productPageSize?: InputMaybe<Scalars['Int']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+  supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
+  supplierPage?: InputMaybe<Scalars['Int']['input']>;
+  supplierPageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type SalesProfitTrendPoint = {
+  __typename?: 'SalesProfitTrendPoint';
+  cogs: Scalars['Float']['output'];
+  date: Scalars['String']['output'];
+  grossProfit: Scalars['Float']['output'];
+  netSales: Scalars['Float']['output'];
+  unitsSold: Scalars['Int']['output'];
 };
 
 export type Schedule = {
@@ -9178,6 +11870,131 @@ export enum SubscriptionStatus {
   TrialEnded = 'TRIAL_ENDED'
 }
 
+export type Supplier = {
+  __typename?: 'Supplier';
+  address: Scalars['String']['output'];
+  clinicId: Scalars['String']['output'];
+  contactPerson: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  drugLicenseNumber: Scalars['String']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  gstNumber: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  items?: Maybe<Array<InventoryItem>>;
+  landlineNumber?: Maybe<Scalars['String']['output']>;
+  mobileNumber: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  purchaseOrders?: Maybe<Array<PurchaseOrder>>;
+  status: SupplierStatus;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type SupplierFilterDto = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SupplierPayableEntry = {
+  __typename?: 'SupplierPayableEntry';
+  amount: Scalars['Float']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  effectiveDate: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  paymentId?: Maybe<Scalars['String']['output']>;
+  purchaseEntryId?: Maybe<Scalars['String']['output']>;
+  purchaseReturnId?: Maybe<Scalars['String']['output']>;
+  referenceNumber?: Maybe<Scalars['String']['output']>;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  type: SupplierPayableEntryType;
+};
+
+export enum SupplierPayableEntryType {
+  Adjustment = 'ADJUSTMENT',
+  Payment = 'PAYMENT',
+  Purchase = 'PURCHASE',
+  PurchaseReturnCredit = 'PURCHASE_RETURN_CREDIT',
+  SupplierRefund = 'SUPPLIER_REFUND'
+}
+
+export type SupplierPayableInvoice = {
+  __typename?: 'SupplierPayableInvoice';
+  dueDate?: Maybe<Scalars['DateTime']['output']>;
+  invoiceNumber: Scalars['String']['output'];
+  outstandingAmount: Scalars['Float']['output'];
+  paidAmount: Scalars['Float']['output'];
+  purchaseAmount: Scalars['Float']['output'];
+  purchaseDate: Scalars['DateTime']['output'];
+  purchaseEntryId: Scalars['String']['output'];
+  purchaseEntryNumber: Scalars['String']['output'];
+  returnsAmount: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+  supplierId: Scalars['String']['output'];
+  supplierName: Scalars['String']['output'];
+};
+
+export type SupplierPayableSummary = {
+  __typename?: 'SupplierPayableSummary';
+  dueNext7Days: Scalars['Float']['output'];
+  dueToday: Scalars['Float']['output'];
+  invoices: Array<SupplierPayableInvoice>;
+  overdue: Scalars['Float']['output'];
+  supplierCreditBalance: Scalars['Float']['output'];
+  totalOutstanding: Scalars['Float']['output'];
+};
+
+export type SupplierPayment = {
+  __typename?: 'SupplierPayment';
+  allocations: Array<SupplierPaymentAllocation>;
+  amount: Scalars['Float']['output'];
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  mode: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  paymentDate: Scalars['DateTime']['output'];
+  paymentNumber: Scalars['String']['output'];
+  referenceNumber?: Maybe<Scalars['String']['output']>;
+  status: SupplierPaymentStatus;
+  supplier: Supplier;
+  supplierId: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type SupplierPaymentAllocation = {
+  __typename?: 'SupplierPaymentAllocation';
+  amountAllocated: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  paymentId: Scalars['String']['output'];
+  purchaseEntry: PurchaseEntry;
+  purchaseEntryId: Scalars['String']['output'];
+};
+
+export type SupplierPaymentAllocationDto = {
+  amountAllocated: Scalars['Float']['input'];
+  purchaseEntryId: Scalars['String']['input'];
+};
+
+export type SupplierPaymentFilterDto = {
+  supplierId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export enum SupplierPaymentStatus {
+  Posted = 'POSTED',
+  Void = 'VOID'
+}
+
+export enum SupplierStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  OnHold = 'ON_HOLD'
+}
+
 export type Symptoms = {
   name: Scalars['String']['input'];
   properties?: InputMaybe<Scalars['JSON']['input']>;
@@ -9188,6 +12005,11 @@ export type SymptomsList = {
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
 };
+
+export enum TaxationType {
+  Gst = 'GST',
+  None = 'NONE'
+}
 
 export type Template = {
   __typename?: 'Template';
@@ -9265,6 +12087,22 @@ export type UpdateCustomFieldInput = {
   valueType?: InputMaybe<CustomFieldValueType>;
 };
 
+export type UpdateDoctorVitalDefinitionInput = {
+  diastolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  diastolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  id: Scalars['String']['input'];
+  inputType?: InputMaybe<DoctorVitalInputType>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  referenceMax?: InputMaybe<Scalars['Float']['input']>;
+  referenceMin?: InputMaybe<Scalars['Float']['input']>;
+  semanticCode?: InputMaybe<Scalars['String']['input']>;
+  sortOrder?: InputMaybe<Scalars['Int']['input']>;
+  systolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  systolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  unit?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateDoctorWorkingHoursDto = {
   consultingMins?: InputMaybe<Scalars['Int']['input']>;
   endTime?: InputMaybe<Scalars['String']['input']>;
@@ -9335,17 +12173,31 @@ export type UpdateInpatientWardDto = {
 export type UpdateInventoryItemDto = {
   barcode?: InputMaybe<Scalars['String']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
+  chemicalName?: InputMaybe<Scalars['String']['input']>;
+  costCgstRate?: InputMaybe<Scalars['Float']['input']>;
   costPerUnit?: InputMaybe<Scalars['Float']['input']>;
+  costSgstRate?: InputMaybe<Scalars['Float']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  hsnCode?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   lowStockThreshold?: InputMaybe<Scalars['Int']['input']>;
   manufacturer?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   reorderLevel?: InputMaybe<Scalars['Int']['input']>;
+  requiresPrescription?: InputMaybe<Scalars['Boolean']['input']>;
+  sellingCgstRate?: InputMaybe<Scalars['Float']['input']>;
   sellingPrice?: InputMaybe<Scalars['Float']['input']>;
+  sellingSgstRate?: InputMaybe<Scalars['Float']['input']>;
+  strength?: InputMaybe<Scalars['String']['input']>;
+  supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
   type?: InputMaybe<Scalars['String']['input']>;
   unit?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateInventoryLoginStatusDto = {
+  id: Scalars['String']['input'];
+  isActive: Scalars['Boolean']['input'];
 };
 
 export type UpdatePatientGroupInput = {
@@ -9357,6 +12209,27 @@ export type UpdatePatientGroupInput = {
 export type UpdatePatientProfileInput = {
   patientProfileId: Scalars['String']['input'];
   profile: PatientProfileDto;
+};
+
+export type UpdatePatientPurchaseBillDto = {
+  billURL: Scalars['String']['input'];
+  clinicId: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+};
+
+export type UpdatePurchaseOrderDto = {
+  clinicId: Scalars['String']['input'];
+  creditPeriodDays?: InputMaybe<Scalars['Int']['input']>;
+  expectedDelivery?: InputMaybe<Scalars['DateTime']['input']>;
+  id: Scalars['String']['input'];
+  items?: InputMaybe<Array<PurchaseOrderItemDto>>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  orderDate?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentReminderDate?: InputMaybe<Scalars['DateTime']['input']>;
+  paymentType?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  supplierId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateReportSettingsInput = {
@@ -9383,6 +12256,24 @@ export type UpdateSubscriptionDto = {
 export type UpdateSubscriptionStatusDto = {
   status: Scalars['String']['input'];
   subscriptionId: Scalars['String']['input'];
+};
+
+export type UpdateSupplierDto = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  clinicId: Scalars['String']['input'];
+  contactPerson?: InputMaybe<Scalars['String']['input']>;
+  drugLicenseNumber?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  gstNumber?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  landlineNumber?: InputMaybe<Scalars['String']['input']>;
+  mobileNumber?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateWebsiteBookingOriginsInput = {
+  origins: Array<Scalars['String']['input']>;
 };
 
 export type UpdatedCount = {
@@ -9485,7 +12376,16 @@ export type ValidateDoctorOtp = {
 
 export type Vitals = {
   date?: InputMaybe<Scalars['DateTime']['input']>;
+  diastolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  diastolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
+  doctorVitalDefinitionId?: InputMaybe<Scalars['String']['input']>;
+  inputType?: InputMaybe<DoctorVitalInputType>;
   name: Scalars['String']['input'];
+  referenceMax?: InputMaybe<Scalars['Float']['input']>;
+  referenceMin?: InputMaybe<Scalars['Float']['input']>;
+  semanticCode?: InputMaybe<Scalars['String']['input']>;
+  systolicReferenceMax?: InputMaybe<Scalars['Float']['input']>;
+  systolicReferenceMin?: InputMaybe<Scalars['Float']['input']>;
   unit: Scalars['String']['input'];
   value: Scalars['String']['input'];
 };
@@ -9493,10 +12393,19 @@ export type Vitals = {
 export type VitalsType = {
   __typename?: 'VitalsType';
   date: Scalars['DateTime']['output'];
+  diastolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  diastolicReferenceMin?: Maybe<Scalars['Float']['output']>;
+  doctorVitalDefinitionId?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  inputType?: Maybe<DoctorVitalInputType>;
   name: Scalars['String']['output'];
   prescriptionDate?: Maybe<Scalars['DateTime']['output']>;
   prescriptionId?: Maybe<Scalars['String']['output']>;
+  referenceMax?: Maybe<Scalars['Float']['output']>;
+  referenceMin?: Maybe<Scalars['Float']['output']>;
+  semanticCode?: Maybe<Scalars['String']['output']>;
+  systolicReferenceMax?: Maybe<Scalars['Float']['output']>;
+  systolicReferenceMin?: Maybe<Scalars['Float']['output']>;
   unit: Scalars['String']['output'];
   value: Scalars['String']['output'];
 };
@@ -9519,6 +12428,112 @@ export type VoidInpatientPaymentDto = {
 export type WalletBalanceResult = {
   __typename?: 'WalletBalanceResult';
   balanceInr: Scalars['Float']['output'];
+};
+
+export type WebsiteAppointmentBookingInput = {
+  clinicId: Scalars['String']['input'];
+  date: Scalars['String']['input'];
+  dob: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  firstName: Scalars['String']['input'];
+  gender: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+  mobile: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
+};
+
+export type WebsiteAppointmentBookingResult = {
+  __typename?: 'WebsiteAppointmentBookingResult';
+  appointmentId: Scalars['String']['output'];
+  endTime: Scalars['String']['output'];
+  referenceId: Scalars['String']['output'];
+  startTime: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+};
+
+export type WebsiteBookingAvailability = {
+  __typename?: 'WebsiteBookingAvailability';
+  clinicId: Scalars['String']['output'];
+  date: Scalars['String']['output'];
+  doctorId: Scalars['String']['output'];
+  slotDuration: Scalars['Int']['output'];
+  slots: Array<WebsiteBookingSlot>;
+  timeZone: Scalars['String']['output'];
+};
+
+export type WebsiteBookingAvailabilityInput = {
+  clinicId: Scalars['String']['input'];
+  date: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
+};
+
+export type WebsiteBookingCatalog = {
+  __typename?: 'WebsiteBookingCatalog';
+  businessName: Scalars['String']['output'];
+  clinics: Array<WebsiteBookingClinic>;
+  doctors: Array<WebsiteBookingDoctor>;
+};
+
+export type WebsiteBookingClinic = {
+  __typename?: 'WebsiteBookingClinic';
+  about?: Maybe<Scalars['String']['output']>;
+  cityName: Scalars['String']['output'];
+  closeTime: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  logoUrl?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  openTime: Scalars['String']['output'];
+  workingDays: Array<Scalars['Boolean']['output']>;
+};
+
+export type WebsiteBookingDoctor = {
+  __typename?: 'WebsiteBookingDoctor';
+  about?: Maybe<Scalars['String']['output']>;
+  clinicIds: Array<Scalars['String']['output']>;
+  designation: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  languages: Array<Scalars['String']['output']>;
+  lastName: Scalars['String']['output'];
+  majorSpeciality: Scalars['String']['output'];
+  middleName?: Maybe<Scalars['String']['output']>;
+  profilePicture?: Maybe<Scalars['String']['output']>;
+  specialities: Array<Scalars['String']['output']>;
+};
+
+export type WebsiteBookingIntegration = {
+  __typename?: 'WebsiteBookingIntegration';
+  allowedOrigins: Array<Scalars['String']['output']>;
+  businessId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  enabled: Scalars['Boolean']['output'];
+  id: Scalars['String']['output'];
+  lastUsedAt?: Maybe<Scalars['DateTime']['output']>;
+  maskedKey: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  revokedAt?: Maybe<Scalars['DateTime']['output']>;
+  rotatedAt?: Maybe<Scalars['DateTime']['output']>;
+  tokenVersion: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type WebsiteBookingKeyGenerationResult = {
+  __typename?: 'WebsiteBookingKeyGenerationResult';
+  integration: WebsiteBookingIntegration;
+  publishableKey: Scalars['String']['output'];
+};
+
+export type WebsiteBookingSession = {
+  __typename?: 'WebsiteBookingSession';
+  expiresAt: Scalars['DateTime']['output'];
+  token: Scalars['String']['output'];
+};
+
+export type WebsiteBookingSlot = {
+  __typename?: 'WebsiteBookingSlot';
+  label: Scalars['String']['output'];
+  startTime: Scalars['String']['output'];
 };
 
 export type CreateBusinessMutationVariables = Exact<{
@@ -9659,6 +12674,20 @@ export type UpsertInpatientModuleSettingsMutationVariables = Exact<{
 
 
 export type UpsertInpatientModuleSettingsMutation = { __typename?: 'Mutation', upsertInpatientModuleSettings: { __typename?: 'InpatientModuleSettings', id: string, clinicId: string, wardBedTariffs?: any | null, chargeHeads?: any | null, packageTemplates?: any | null, taxSettings?: any | null, invoiceSettings?: any | null, autoPostSettings?: any | null, createdAt: any, updatedAt: any } };
+
+export type CreateInventoryLoginMutationVariables = Exact<{
+  input: CreateInventoryLoginDto;
+}>;
+
+
+export type CreateInventoryLoginMutation = { __typename?: 'Mutation', createInventoryLogin: { __typename?: 'InventoryLoginModel', id: string, username: string, clinicId: string, clinicName: string, isActive: boolean, mustChangePassword: boolean, createdAt: any } };
+
+export type UpdateInventoryLoginStatusMutationVariables = Exact<{
+  input: UpdateInventoryLoginStatusDto;
+}>;
+
+
+export type UpdateInventoryLoginStatusMutation = { __typename?: 'Mutation', updateInventoryLoginStatus: { __typename?: 'InventoryLoginModel', id: string, isActive: boolean } };
 
 export type AddClinicStaffMutationVariables = Exact<{
   input: AddClinicStaffInput;
@@ -9827,6 +12856,13 @@ export type GetInpatientModuleSettingsQueryVariables = Exact<{
 
 
 export type GetInpatientModuleSettingsQuery = { __typename?: 'Query', getInpatientModuleSettings?: { __typename?: 'InpatientModuleSettings', id: string, clinicId: string, wardBedTariffs?: any | null, chargeHeads?: any | null, packageTemplates?: any | null, taxSettings?: any | null, invoiceSettings?: any | null, autoPostSettings?: any | null, createdAt: any, updatedAt: any } | null };
+
+export type GetInventoryLoginsQueryVariables = Exact<{
+  clinicId: Scalars['String']['input'];
+}>;
+
+
+export type GetInventoryLoginsQuery = { __typename?: 'Query', getInventoryLogins: Array<{ __typename?: 'InventoryLoginModel', id: string, username: string, clinicId: string, clinicName: string, isActive: boolean, mustChangePassword: boolean, createdAt: any }> };
 
 export type GetClinicStaffQueryVariables = Exact<{
   clinicId: Scalars['String']['input'];
@@ -10590,6 +13626,79 @@ export function useUpsertInpatientModuleSettingsMutation(baseOptions?: Apollo.Mu
 export type UpsertInpatientModuleSettingsMutationHookResult = ReturnType<typeof useUpsertInpatientModuleSettingsMutation>;
 export type UpsertInpatientModuleSettingsMutationResult = Apollo.MutationResult<UpsertInpatientModuleSettingsMutation>;
 export type UpsertInpatientModuleSettingsMutationOptions = Apollo.BaseMutationOptions<UpsertInpatientModuleSettingsMutation, UpsertInpatientModuleSettingsMutationVariables>;
+export const CreateInventoryLoginDocument = gql`
+    mutation CreateInventoryLogin($input: CreateInventoryLoginDTO!) {
+  createInventoryLogin(input: $input) {
+    id
+    username
+    clinicId
+    clinicName
+    isActive
+    mustChangePassword
+    createdAt
+  }
+}
+    `;
+export type CreateInventoryLoginMutationFn = Apollo.MutationFunction<CreateInventoryLoginMutation, CreateInventoryLoginMutationVariables>;
+
+/**
+ * __useCreateInventoryLoginMutation__
+ *
+ * To run a mutation, you first call `useCreateInventoryLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateInventoryLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createInventoryLoginMutation, { data, loading, error }] = useCreateInventoryLoginMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateInventoryLoginMutation(baseOptions?: Apollo.MutationHookOptions<CreateInventoryLoginMutation, CreateInventoryLoginMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<CreateInventoryLoginMutation, CreateInventoryLoginMutationVariables>(CreateInventoryLoginDocument, options);
+}
+export type CreateInventoryLoginMutationHookResult = ReturnType<typeof useCreateInventoryLoginMutation>;
+export type CreateInventoryLoginMutationResult = Apollo.MutationResult<CreateInventoryLoginMutation>;
+export type CreateInventoryLoginMutationOptions = Apollo.BaseMutationOptions<CreateInventoryLoginMutation, CreateInventoryLoginMutationVariables>;
+export const UpdateInventoryLoginStatusDocument = gql`
+    mutation UpdateInventoryLoginStatus($input: UpdateInventoryLoginStatusDTO!) {
+  updateInventoryLoginStatus(input: $input) {
+    id
+    isActive
+  }
+}
+    `;
+export type UpdateInventoryLoginStatusMutationFn = Apollo.MutationFunction<UpdateInventoryLoginStatusMutation, UpdateInventoryLoginStatusMutationVariables>;
+
+/**
+ * __useUpdateInventoryLoginStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateInventoryLoginStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateInventoryLoginStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateInventoryLoginStatusMutation, { data, loading, error }] = useUpdateInventoryLoginStatusMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateInventoryLoginStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateInventoryLoginStatusMutation, UpdateInventoryLoginStatusMutationVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useMutation<UpdateInventoryLoginStatusMutation, UpdateInventoryLoginStatusMutationVariables>(UpdateInventoryLoginStatusDocument, options);
+}
+export type UpdateInventoryLoginStatusMutationHookResult = ReturnType<typeof useUpdateInventoryLoginStatusMutation>;
+export type UpdateInventoryLoginStatusMutationResult = Apollo.MutationResult<UpdateInventoryLoginStatusMutation>;
+export type UpdateInventoryLoginStatusMutationOptions = Apollo.BaseMutationOptions<UpdateInventoryLoginStatusMutation, UpdateInventoryLoginStatusMutationVariables>;
 export const AddClinicStaffDocument = gql`
     mutation AddClinicStaff($input: AddClinicStaffInput!) {
   addClinicStaff(input: $input) {
@@ -11834,6 +14943,52 @@ export type GetInpatientModuleSettingsQueryHookResult = ReturnType<typeof useGet
 export type GetInpatientModuleSettingsLazyQueryHookResult = ReturnType<typeof useGetInpatientModuleSettingsLazyQuery>;
 export type GetInpatientModuleSettingsSuspenseQueryHookResult = ReturnType<typeof useGetInpatientModuleSettingsSuspenseQuery>;
 export type GetInpatientModuleSettingsQueryResult = Apollo.QueryResult<GetInpatientModuleSettingsQuery, GetInpatientModuleSettingsQueryVariables>;
+export const GetInventoryLoginsDocument = gql`
+    query GetInventoryLogins($clinicId: String!) {
+  getInventoryLogins(clinicId: $clinicId) {
+    id
+    username
+    clinicId
+    clinicName
+    isActive
+    mustChangePassword
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetInventoryLoginsQuery__
+ *
+ * To run a query within a React component, call `useGetInventoryLoginsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInventoryLoginsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInventoryLoginsQuery({
+ *   variables: {
+ *      clinicId: // value for 'clinicId'
+ *   },
+ * });
+ */
+export function useGetInventoryLoginsQuery(baseOptions: Apollo.QueryHookOptions<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables> & ({ variables: GetInventoryLoginsQueryVariables; skip?: boolean; } | { skip: boolean; })) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useQuery<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables>(GetInventoryLoginsDocument, options);
+}
+export function useGetInventoryLoginsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions }
+  return Apollo.useLazyQuery<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables>(GetInventoryLoginsDocument, options);
+}
+export function useGetInventoryLoginsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables>) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions }
+  return Apollo.useSuspenseQuery<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables>(GetInventoryLoginsDocument, options);
+}
+export type GetInventoryLoginsQueryHookResult = ReturnType<typeof useGetInventoryLoginsQuery>;
+export type GetInventoryLoginsLazyQueryHookResult = ReturnType<typeof useGetInventoryLoginsLazyQuery>;
+export type GetInventoryLoginsSuspenseQueryHookResult = ReturnType<typeof useGetInventoryLoginsSuspenseQuery>;
+export type GetInventoryLoginsQueryResult = Apollo.QueryResult<GetInventoryLoginsQuery, GetInventoryLoginsQueryVariables>;
 export const GetClinicStaffDocument = gql`
     query GetClinicStaff($clinicId: String!) {
   getClinicStaff(clinicId: $clinicId) {
