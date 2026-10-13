@@ -60,6 +60,10 @@ const stepLabels = [
     subtitle: "About their Speciality",
   },
   {
+    title: "Working Hours",
+    subtitle: "Availability and Slots",
+  },
+  {
     title: "Upload Image and Preview",
     subtitle: "Profile Picture",
   },
@@ -202,6 +206,23 @@ interface FormValues {
   degree: Degree[];
 }
 
+type WorkingShift = {
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+};
+
+const WORKING_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+const toTwentyFourHourTime = (value: string | undefined, fallback: string) => {
+  if (/^([01]\d|2[0-3]):[0-5]\d$/.test(value || "")) return value as string;
+  const match = (value || "").trim().toLowerCase().match(/^(\d{1,2}):(\d{2})\s*(am|pm)$/);
+  if (!match) return fallback;
+  let hours = Number(match[1]) % 12;
+  if (match[3] === "pm") hours += 12;
+  return `${String(hours).padStart(2, "0")}:${match[2]}`;
+};
+
 // Add mutation definition after the imports
 const UPDATE_DOCTOR_ACTIVE_STATUS = gql`
   mutation UpdateDoctorActiveStatus($doctor_id: String!, $isActive: Boolean!) {
@@ -217,13 +238,14 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
   const { data: allDoctorsData, refetch: refetchAllDoctors } = useQuery(GET_DOCTORS_WITH_CLINICS);
 
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
   const [openExistingDoctorDialog, setOpenExistingDoctorDialog] = useState(false);
   const [selectedExistingDoctor, setSelectedExistingDoctor] = useState<any>(null);
   const [step, setStep] = useState(0);
   const [openConfigureModal, setOpenConfigureModal] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [doctorToDelete, setDoctorToDelete] = useState<Doctor | null>(null);
+  const [slotDuration, setSlotDuration] = useState(30);
+  const [workingShifts, setWorkingShifts] = useState<WorkingShift[]>([]);
 
   const { control, handleSubmit, setValue, getValues, watch } = useForm<FormValues>({
     defaultValues: {
@@ -265,6 +287,22 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
   const [deleteDoctor, { loading: deletingDoctor }] = useMutation(DELETE_DOCTOR);
 
   const currentClinic = clinicsData?.getClinics?.find((clinic: any) => clinic.id === clinicId);
+  const clinicStartTime = toTwentyFourHourTime(currentClinic?.openTime, "09:00");
+  const clinicEndTime = toTwentyFourHourTime(currentClinic?.closeTime, "17:00");
+  const handleOpen = () => {
+    if (!open) {
+      setStep(0);
+      setSlotDuration(30);
+      setWorkingShifts(
+        (currentClinic?.workingDays || []).flatMap((isWorkingDay: boolean, dayOfWeek: number) =>
+          isWorkingDay
+            ? [{ dayOfWeek, startTime: clinicStartTime, endTime: clinicEndTime }]
+            : [],
+        ),
+      );
+    }
+    setOpen(!open);
+  };
   const currentBusinessId = currentClinic?.business_id;
   const currentDoctorIds = new Set((data?.getClinicDoctors || []).map((doctor: Doctor) => doctor.doctor_id));
   const reusableDoctors = (allDoctorsData?.getDoctors || []).filter((doctor: any) => {
@@ -384,6 +422,11 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
   };
 
   async function onSave(formData: FormValues) {
+    if (workingShifts.length === 0) {
+      toast.error("Add at least one doctor working day");
+      setStep(2);
+      return;
+    }
     try {
       // const s3 = new S3Client({
       //   region: process.env.NEXT_PUBLIC_CARE_SYNC_STAGING_REGION || '',
@@ -417,6 +460,14 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
         variables: {
           clinicIds: clinicId,
           doctorInput,
+          workingHours: {
+            slotDuration,
+            shifts: workingShifts.map(({ dayOfWeek, startTime, endTime }) => ({
+              dayOfWeek,
+              startTime,
+              endTime,
+            })),
+          },
         },
       });
 
@@ -965,6 +1016,106 @@ const DoctorsList = ({ clinicId }: { clinicId: string }) => {
               </form>
             )}
             {step === 2 && (
+              <form onSubmit={handleSubmit(onNext)}>
+                <div className="mb-6">
+                  <label className="block mb-1 font-bold text-gray-900">Appointment slot duration</label>
+                  <select
+                    className="w-full max-w-xs rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                    value={slotDuration}
+                    onChange={(event) => setSlotDuration(Number(event.target.value))}
+                  >
+                    <option value={15}>15 minutes</option>
+                    <option value={30}>30 minutes</option>
+                  </select>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Shifts must stay within clinic hours ({currentClinic?.openTime}–{currentClinic?.closeTime}).
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  {WORKING_DAYS.map((day, dayOfWeek) => {
+                    const dayShifts = workingShifts.filter((shift) => shift.dayOfWeek === dayOfWeek);
+                    const clinicOpen = Boolean(currentClinic?.workingDays?.[dayOfWeek]);
+                    return (
+                      <div key={day} className="rounded-lg border border-gray-200 p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-bold text-gray-900">{day}</p>
+                            {!clinicOpen && <p className="text-xs text-gray-500">Clinic closed</p>}
+                          </div>
+                          <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                            <input
+                              type="checkbox"
+                              checked={dayShifts.length > 0}
+                              disabled={!clinicOpen}
+                              onChange={(event) => {
+                                setWorkingShifts((current) =>
+                                  event.target.checked
+                                    ? [...current, { dayOfWeek, startTime: clinicStartTime, endTime: clinicEndTime }]
+                                    : current.filter((shift) => shift.dayOfWeek !== dayOfWeek),
+                                );
+                              }}
+                            />
+                            Working
+                          </label>
+                        </div>
+
+                        {dayShifts.length > 0 && (
+                          <div className="mt-4 space-y-3">
+                            {dayShifts.map((shift, index) => (
+                              <div key={`${day}-${index}`} className="grid grid-cols-[1fr_1fr_auto] items-end gap-3">
+                                <div>
+                                  <label className="mb-1 block text-xs font-semibold text-gray-700">Starts</label>
+                                  <input
+                                    type="time"
+                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2"
+                                    value={shift.startTime}
+                                    onChange={(event) => setWorkingShifts((current) => current.map((item) => item === shift ? { ...item, startTime: event.target.value } : item))}
+                                  />
+                                </div>
+                                <div>
+                                  <label className="mb-1 block text-xs font-semibold text-gray-700">Ends</label>
+                                  <input
+                                    type="time"
+                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2"
+                                    value={shift.endTime}
+                                    onChange={(event) => setWorkingShifts((current) => current.map((item) => item === shift ? { ...item, endTime: event.target.value } : item))}
+                                  />
+                                </div>
+                                <button
+                                  type="button"
+                                  className="rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+                                  onClick={() => setWorkingShifts((current) => current.filter((item) => item !== shift))}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            ))}
+                            <button
+                              type="button"
+                              className="text-sm font-semibold text-purple-600 hover:text-purple-800"
+                              onClick={() => setWorkingShifts((current) => [...current, { dayOfWeek, startTime: clinicStartTime, endTime: clinicEndTime }])}
+                            >
+                              + Add shift
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex justify-between mt-8">
+                  <Button color="white" size="lg" type="button" className="border border-blue-900 text-blue-900" onClick={onPrev} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                    Previous
+                  </Button>
+                  <Button color="white" size="lg" type="submit" className="border border-blue-900 text-blue-900 flex items-center gap-2" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                    Next <span className="text-xl">→</span>
+                  </Button>
+                </div>
+              </form>
+            )}
+            {step === 3 && (
               <form onSubmit={handleSubmit(onSave)}>
                 <div className="flex gap-8">
                   {/* Doctor Preview Card */}

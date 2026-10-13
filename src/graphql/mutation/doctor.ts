@@ -5,10 +5,12 @@ export const ADD_DOCTOR_TO_CLINIC = gql`
   mutation AddDoctor(
     $clinicIds: String!
     $doctorInput: DoctorDTO!
+    $workingHours: DoctorClinicScheduleConfigInput!
   ){
     addDoctor(
       doctorInput: $doctorInput
       clinicIds: $clinicIds
+      workingHours: $workingHours
     ){
       doctor_id
     }
