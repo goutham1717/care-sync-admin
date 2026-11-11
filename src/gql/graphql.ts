@@ -1,4 +1,3 @@
-// @ts-nocheck
 /* eslint-disable */
 // @ts-nocheck
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -374,6 +373,7 @@ export type Clinic = {
   customFeatures?: Maybe<Array<ClinicFeature>>;
   doctors?: Maybe<Array<Doctor>>;
   email: Scalars['String']['output'];
+  embedPrescriptionQrCode: Scalars['Boolean']['output'];
   gstNumber?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   inventoryGstNumber?: Maybe<Scalars['String']['output']>;
@@ -476,6 +476,7 @@ export type ClinicDto = {
 
 export type ClinicDetailDto = {
   addressValue?: InputMaybe<AddressDto>;
+  booleanValue?: InputMaybe<Scalars['Boolean']['input']>;
   clinicId: Scalars['String']['input'];
   field: Scalars['String']['input'];
   phoneValue?: InputMaybe<Array<ClinicPhoneNumberInput>>;
@@ -909,6 +910,7 @@ export type CreatePatientPurchaseDto = {
   paymentStatus?: InputMaybe<Scalars['String']['input']>;
   paymentType?: InputMaybe<Scalars['String']['input']>;
   prescriptionVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  recommendedByDoctorId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreatePurchaseEntryDto = {
@@ -1186,6 +1188,37 @@ export type DoctorAdminDashboardDoctorSummary = {
   phoneNumber?: Maybe<Scalars['String']['output']>;
   profilePic?: Maybe<Scalars['String']['output']>;
   speciality?: Maybe<Scalars['String']['output']>;
+};
+
+export type DoctorClinicSchedule = {
+  __typename?: 'DoctorClinicSchedule';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  shifts: Array<DoctorClinicScheduleShift>;
+  slotDuration: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DoctorClinicScheduleConfigInput = {
+  shifts: Array<DoctorClinicScheduleShiftInput>;
+  slotDuration: Scalars['Int']['input'];
+};
+
+export type DoctorClinicScheduleShift = {
+  __typename?: 'DoctorClinicScheduleShift';
+  dayOfWeek: Scalars['Int']['output'];
+  endTime: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  sortOrder: Scalars['Int']['output'];
+  startTime: Scalars['String']['output'];
+};
+
+export type DoctorClinicScheduleShiftInput = {
+  dayOfWeek: Scalars['Int']['input'];
+  endTime: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
 };
 
 export type DoctorDto = {
@@ -2270,6 +2303,8 @@ export type Mutation = {
   sendMessage: Scalars['String']['output'];
   sendOTP: OtpStatus;
   sendVideoLink: Scalars['String']['output'];
+  setDoctorClinicSchedule: DoctorClinicSchedule;
+  settlePatientDues: Scalars['String']['output'];
   signInpatientDischargeSummary: InpatientDischargeSummary;
   toggleConversationMode: ConversationModeResult;
   transferInpatient: InpatientEncounter;
@@ -2357,6 +2392,7 @@ export type MutationAddCpgDetailsArgs = {
 export type MutationAddDoctorArgs = {
   clinicIds: Scalars['String']['input'];
   doctorInput: DoctorDto;
+  workingHours?: InputMaybe<DoctorClinicScheduleConfigInput>;
 };
 
 
@@ -2896,6 +2932,16 @@ export type MutationSendOtpArgs = {
 
 export type MutationSendVideoLinkArgs = {
   phoneNumber: Scalars['String']['input'];
+};
+
+
+export type MutationSetDoctorClinicScheduleArgs = {
+  input: SetDoctorClinicScheduleInput;
+};
+
+
+export type MutationSettlePatientDuesArgs = {
+  input: SettlePatientDuesDto;
 };
 
 
@@ -3537,6 +3583,7 @@ export type PatientPurchase = {
   paymentStatus?: Maybe<Scalars['String']['output']>;
   paymentType?: Maybe<Scalars['String']['output']>;
   prescriptionVerified: Scalars['Boolean']['output'];
+  recommendedByDoctorId?: Maybe<Scalars['String']['output']>;
   sgstAmount: Scalars['Float']['output'];
   stockAllocations?: Maybe<Array<SaleStockAllocation>>;
   taxationType?: Maybe<TaxationType>;
@@ -3648,6 +3695,7 @@ export type PaymentDetails = {
   payment_status: Scalars['String']['output'];
   payment_type?: Maybe<Scalars['String']['output']>;
   pid: Scalars['String']['output'];
+  receipts?: Maybe<Array<PaymentReceiptDetail>>;
   services?: Maybe<Array<Scalars['String']['output']>>;
 };
 
@@ -3682,6 +3730,14 @@ export type PaymentModeInput = {
 
 export type PaymentOrderDto = {
   amount: Scalars['Float']['input'];
+};
+
+export type PaymentReceiptDetail = {
+  __typename?: 'PaymentReceiptDetail';
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  paymentMode: Scalars['String']['output'];
+  receiptNo: Scalars['String']['output'];
 };
 
 export type Personal = {
@@ -4067,6 +4123,7 @@ export type Query = {
   getDoctor: Doctor;
   getDoctorAdminDashboard: DoctorAdminDashboard;
   getDoctorAppointmentLimit: Scalars['Int']['output'];
+  getDoctorClinicSchedule: DoctorClinicSchedule;
   getDoctorCustomFields: Array<CustomField>;
   getDoctorSettings: DoctorSettings;
   getDoctorSubscription?: Maybe<DoctorSubscription>;
@@ -4222,6 +4279,7 @@ export type QueryGetAllClinicTemplatesArgs = {
 
 export type QueryGetAllPatientProfilesArgs = {
   businessId: Scalars['String']['input'];
+  clinicId?: InputMaybe<Scalars['String']['input']>;
   phoneNumber: Scalars['String']['input'];
 };
 
@@ -4390,6 +4448,12 @@ export type QueryGetDoctorAdminDashboardArgs = {
 
 export type QueryGetDoctorAppointmentLimitArgs = {
   doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorClinicScheduleArgs = {
+  clinicId: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
 };
 
 
@@ -5134,6 +5198,8 @@ export type SalesProfitInvoiceItemRow = {
   purchaseId: Scalars['String']['output'];
   purchaseItemId: Scalars['String']['output'];
   quantity: Scalars['Int']['output'];
+  recommendedByDoctorId?: Maybe<Scalars['String']['output']>;
+  recommendedByDoctorName?: Maybe<Scalars['String']['output']>;
   saleDate: Scalars['DateTime']['output'];
   sellingValue: Scalars['Float']['output'];
   taxAmount: Scalars['Float']['output'];
@@ -5180,6 +5246,8 @@ export type SalesProfitReport = {
   batchProfitabilityTotal: Scalars['Int']['output'];
   categorySummary: Array<SalesProfitGroupRow>;
   categorySummaryTotal: Scalars['Int']['output'];
+  doctorRecommendationSummary: Array<SalesProfitGroupRow>;
+  doctorRecommendationSummaryTotal: Scalars['Int']['output'];
   invoiceDetails: Array<SalesProfitInvoiceItemRow>;
   invoiceDetailsTotal: Scalars['Int']['output'];
   kpis: SalesProfitKpis;
@@ -5204,6 +5272,8 @@ export type SalesProfitReportFilterDto = {
   createdByIds?: InputMaybe<Array<Scalars['String']['input']>>;
   dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
   dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  doctorPage?: InputMaybe<Scalars['Int']['input']>;
+  doctorPageSize?: InputMaybe<Scalars['Int']['input']>;
   invoicePage?: InputMaybe<Scalars['Int']['input']>;
   invoicePageSize?: InputMaybe<Scalars['Int']['input']>;
   itemId?: InputMaybe<Scalars['String']['input']>;
@@ -5221,6 +5291,8 @@ export type SalesProfitReportFilterDto = {
   prescriptionRequired?: InputMaybe<Scalars['Boolean']['input']>;
   productPage?: InputMaybe<Scalars['Int']['input']>;
   productPageSize?: InputMaybe<Scalars['Int']['input']>;
+  recommendedByDoctorId?: InputMaybe<Scalars['String']['input']>;
+  recommendedByDoctorIds?: InputMaybe<Array<Scalars['String']['input']>>;
   supplierId?: InputMaybe<Scalars['String']['input']>;
   supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
   supplierPage?: InputMaybe<Scalars['Int']['input']>;
@@ -5301,6 +5373,19 @@ export type ServicesModel = {
   id: Scalars['String']['output'];
   metaData?: Maybe<Scalars['JSON']['output']>;
   name: Scalars['String']['output'];
+};
+
+export type SetDoctorClinicScheduleInput = {
+  clinicId: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
+  shifts: Array<DoctorClinicScheduleShiftInput>;
+  slotDuration: Scalars['Int']['input'];
+};
+
+export type SettlePatientDuesDto = {
+  clinicId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+  paymentModes: Array<PaymentModeInput>;
 };
 
 export type SignInpatientDischargeSummaryDto = {
@@ -6162,6 +6247,7 @@ export type RemoveCustomFeaturesFromDoctorMutation = { __typename?: 'Mutation', 
 export type AddDoctorMutationVariables = Exact<{
   clinicIds: Scalars['String']['input'];
   doctorInput: DoctorDto;
+  workingHours: DoctorClinicScheduleConfigInput;
 }>;
 
 
@@ -6436,7 +6522,7 @@ export const UpsertClinicModuleSubscriptionDocument = { "kind": "Document", "def
 export const UpdateClinicModuleSubscriptionStatusDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateClinicModuleSubscriptionStatus" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "UpdateClinicModuleSubscriptionStatusDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateClinicModuleSubscriptionStatus" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "clinicId" } }, { "kind": "Field", "name": { "kind": "Name", "value": "moduleKey" } }, { "kind": "Field", "name": { "kind": "Name", "value": "status" } }, { "kind": "Field", "name": { "kind": "Name", "value": "startDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "endDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialStartDate" } }, { "kind": "Field", "name": { "kind": "Name", "value": "trialEndDate" } }] } }] } }] } as unknown as DocumentNode<UpdateClinicModuleSubscriptionStatusMutation, UpdateClinicModuleSubscriptionStatusMutationVariables>;
 export const AssignCustomFeaturesToDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignCustomFeaturesToDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "AssignCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignCustomFeaturesToDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }] } }] } }] } as unknown as DocumentNode<AssignCustomFeaturesToDoctorMutation, AssignCustomFeaturesToDoctorMutationVariables>;
 export const RemoveCustomFeaturesFromDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RemoveCustomFeaturesFromDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "RemoveCustomFeaturesDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "removeCustomFeaturesFromDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "input" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "input" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "customFeatures" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "value" } }] } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "personal" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "first_name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "last_name" } }] } }] } }] } }] } }] } as unknown as DocumentNode<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
-export const AddDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "DoctorDTO" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicIds" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }] } }] } }] } as unknown as DocumentNode<AddDoctorMutation, AddDoctorMutationVariables>;
+export const AddDoctorDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AddDoctor" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "DoctorDTO" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "workingHours" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "DoctorClinicScheduleConfigInput" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "addDoctor" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorInput" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorInput" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicIds" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "workingHours" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "workingHours" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }] } }] } }] } as unknown as DocumentNode<AddDoctorMutation, AddDoctorMutationVariables>;
 export const UpdateDoctorAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "UpdateDoctorAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "appointmentLimit" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Int" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "updateDoctorAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "appointmentLimit" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "appointmentLimit" } } }] }] } }] } as unknown as DocumentNode<UpdateDoctorAppointmentLimitMutation, UpdateDoctorAppointmentLimitMutationVariables>;
 export const RechargeAppointmentLimitDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "RechargeAppointmentLimit" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "amount" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "Int" } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "rechargeAppointmentLimit" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctor_id" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctor_id" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "amount" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "amount" } } }] }] } }] } as unknown as DocumentNode<RechargeAppointmentLimitMutation, RechargeAppointmentLimitMutationVariables>;
 export const AssignDoctorToClinicsDocument = { "kind": "Document", "definitions": [{ "kind": "OperationDefinition", "operation": "mutation", "name": { "kind": "Name", "value": "AssignDoctorToClinics" }, "variableDefinitions": [{ "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } }, "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } }, { "kind": "VariableDefinition", "variable": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } }, "type": { "kind": "NonNullType", "type": { "kind": "ListType", "type": { "kind": "NonNullType", "type": { "kind": "NamedType", "name": { "kind": "Name", "value": "String" } } } } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "assignDoctorToClinics" }, "arguments": [{ "kind": "Argument", "name": { "kind": "Name", "value": "doctorId" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "doctorId" } } }, { "kind": "Argument", "name": { "kind": "Name", "value": "clinicIds" }, "value": { "kind": "Variable", "name": { "kind": "Name", "value": "clinicIds" } } }], "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "doctor_id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "profile" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "professional" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "clinic" }, "selectionSet": { "kind": "SelectionSet", "selections": [{ "kind": "Field", "name": { "kind": "Name", "value": "id" } }, { "kind": "Field", "name": { "kind": "Name", "value": "name" } }, { "kind": "Field", "name": { "kind": "Name", "value": "business_id" } }] } }] } }] } }] } }] } }] } as unknown as DocumentNode<AssignDoctorToClinicsMutation, AssignDoctorToClinicsMutationVariables>;
@@ -6836,6 +6922,7 @@ export type Clinic = {
   customFeatures?: Maybe<Array<ClinicFeature>>;
   doctors?: Maybe<Array<Doctor>>;
   email: Scalars['String']['output'];
+  embedPrescriptionQrCode: Scalars['Boolean']['output'];
   gstNumber?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   inventoryGstNumber?: Maybe<Scalars['String']['output']>;
@@ -6938,6 +7025,7 @@ export type ClinicDto = {
 
 export type ClinicDetailDto = {
   addressValue?: InputMaybe<AddressDto>;
+  booleanValue?: InputMaybe<Scalars['Boolean']['input']>;
   clinicId: Scalars['String']['input'];
   field: Scalars['String']['input'];
   phoneValue?: InputMaybe<Array<ClinicPhoneNumberInput>>;
@@ -7371,6 +7459,7 @@ export type CreatePatientPurchaseDto = {
   paymentStatus?: InputMaybe<Scalars['String']['input']>;
   paymentType?: InputMaybe<Scalars['String']['input']>;
   prescriptionVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  recommendedByDoctorId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreatePurchaseEntryDto = {
@@ -7648,6 +7737,37 @@ export type DoctorAdminDashboardDoctorSummary = {
   phoneNumber?: Maybe<Scalars['String']['output']>;
   profilePic?: Maybe<Scalars['String']['output']>;
   speciality?: Maybe<Scalars['String']['output']>;
+};
+
+export type DoctorClinicSchedule = {
+  __typename?: 'DoctorClinicSchedule';
+  clinicId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  doctorId: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  shifts: Array<DoctorClinicScheduleShift>;
+  slotDuration: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type DoctorClinicScheduleConfigInput = {
+  shifts: Array<DoctorClinicScheduleShiftInput>;
+  slotDuration: Scalars['Int']['input'];
+};
+
+export type DoctorClinicScheduleShift = {
+  __typename?: 'DoctorClinicScheduleShift';
+  dayOfWeek: Scalars['Int']['output'];
+  endTime: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  sortOrder: Scalars['Int']['output'];
+  startTime: Scalars['String']['output'];
+};
+
+export type DoctorClinicScheduleShiftInput = {
+  dayOfWeek: Scalars['Int']['input'];
+  endTime: Scalars['String']['input'];
+  startTime: Scalars['String']['input'];
 };
 
 export type DoctorDto = {
@@ -8732,6 +8852,8 @@ export type Mutation = {
   sendMessage: Scalars['String']['output'];
   sendOTP: OtpStatus;
   sendVideoLink: Scalars['String']['output'];
+  setDoctorClinicSchedule: DoctorClinicSchedule;
+  settlePatientDues: Scalars['String']['output'];
   signInpatientDischargeSummary: InpatientDischargeSummary;
   toggleConversationMode: ConversationModeResult;
   transferInpatient: InpatientEncounter;
@@ -8819,6 +8941,7 @@ export type MutationAddCpgDetailsArgs = {
 export type MutationAddDoctorArgs = {
   clinicIds: Scalars['String']['input'];
   doctorInput: DoctorDto;
+  workingHours?: InputMaybe<DoctorClinicScheduleConfigInput>;
 };
 
 
@@ -9358,6 +9481,16 @@ export type MutationSendOtpArgs = {
 
 export type MutationSendVideoLinkArgs = {
   phoneNumber: Scalars['String']['input'];
+};
+
+
+export type MutationSetDoctorClinicScheduleArgs = {
+  input: SetDoctorClinicScheduleInput;
+};
+
+
+export type MutationSettlePatientDuesArgs = {
+  input: SettlePatientDuesDto;
 };
 
 
@@ -9999,6 +10132,7 @@ export type PatientPurchase = {
   paymentStatus?: Maybe<Scalars['String']['output']>;
   paymentType?: Maybe<Scalars['String']['output']>;
   prescriptionVerified: Scalars['Boolean']['output'];
+  recommendedByDoctorId?: Maybe<Scalars['String']['output']>;
   sgstAmount: Scalars['Float']['output'];
   stockAllocations?: Maybe<Array<SaleStockAllocation>>;
   taxationType?: Maybe<TaxationType>;
@@ -10110,6 +10244,7 @@ export type PaymentDetails = {
   payment_status: Scalars['String']['output'];
   payment_type?: Maybe<Scalars['String']['output']>;
   pid: Scalars['String']['output'];
+  receipts?: Maybe<Array<PaymentReceiptDetail>>;
   services?: Maybe<Array<Scalars['String']['output']>>;
 };
 
@@ -10144,6 +10279,14 @@ export type PaymentModeInput = {
 
 export type PaymentOrderDto = {
   amount: Scalars['Float']['input'];
+};
+
+export type PaymentReceiptDetail = {
+  __typename?: 'PaymentReceiptDetail';
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  paymentMode: Scalars['String']['output'];
+  receiptNo: Scalars['String']['output'];
 };
 
 export type Personal = {
@@ -10529,6 +10672,7 @@ export type Query = {
   getDoctor: Doctor;
   getDoctorAdminDashboard: DoctorAdminDashboard;
   getDoctorAppointmentLimit: Scalars['Int']['output'];
+  getDoctorClinicSchedule: DoctorClinicSchedule;
   getDoctorCustomFields: Array<CustomField>;
   getDoctorSettings: DoctorSettings;
   getDoctorSubscription?: Maybe<DoctorSubscription>;
@@ -10684,6 +10828,7 @@ export type QueryGetAllClinicTemplatesArgs = {
 
 export type QueryGetAllPatientProfilesArgs = {
   businessId: Scalars['String']['input'];
+  clinicId?: InputMaybe<Scalars['String']['input']>;
   phoneNumber: Scalars['String']['input'];
 };
 
@@ -10852,6 +10997,12 @@ export type QueryGetDoctorAdminDashboardArgs = {
 
 export type QueryGetDoctorAppointmentLimitArgs = {
   doctor_id: Scalars['String']['input'];
+};
+
+
+export type QueryGetDoctorClinicScheduleArgs = {
+  clinicId: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
 };
 
 
@@ -11596,6 +11747,8 @@ export type SalesProfitInvoiceItemRow = {
   purchaseId: Scalars['String']['output'];
   purchaseItemId: Scalars['String']['output'];
   quantity: Scalars['Int']['output'];
+  recommendedByDoctorId?: Maybe<Scalars['String']['output']>;
+  recommendedByDoctorName?: Maybe<Scalars['String']['output']>;
   saleDate: Scalars['DateTime']['output'];
   sellingValue: Scalars['Float']['output'];
   taxAmount: Scalars['Float']['output'];
@@ -11642,6 +11795,8 @@ export type SalesProfitReport = {
   batchProfitabilityTotal: Scalars['Int']['output'];
   categorySummary: Array<SalesProfitGroupRow>;
   categorySummaryTotal: Scalars['Int']['output'];
+  doctorRecommendationSummary: Array<SalesProfitGroupRow>;
+  doctorRecommendationSummaryTotal: Scalars['Int']['output'];
   invoiceDetails: Array<SalesProfitInvoiceItemRow>;
   invoiceDetailsTotal: Scalars['Int']['output'];
   kpis: SalesProfitKpis;
@@ -11666,6 +11821,8 @@ export type SalesProfitReportFilterDto = {
   createdByIds?: InputMaybe<Array<Scalars['String']['input']>>;
   dateFrom?: InputMaybe<Scalars['DateTime']['input']>;
   dateTo?: InputMaybe<Scalars['DateTime']['input']>;
+  doctorPage?: InputMaybe<Scalars['Int']['input']>;
+  doctorPageSize?: InputMaybe<Scalars['Int']['input']>;
   invoicePage?: InputMaybe<Scalars['Int']['input']>;
   invoicePageSize?: InputMaybe<Scalars['Int']['input']>;
   itemId?: InputMaybe<Scalars['String']['input']>;
@@ -11683,6 +11840,8 @@ export type SalesProfitReportFilterDto = {
   prescriptionRequired?: InputMaybe<Scalars['Boolean']['input']>;
   productPage?: InputMaybe<Scalars['Int']['input']>;
   productPageSize?: InputMaybe<Scalars['Int']['input']>;
+  recommendedByDoctorId?: InputMaybe<Scalars['String']['input']>;
+  recommendedByDoctorIds?: InputMaybe<Array<Scalars['String']['input']>>;
   supplierId?: InputMaybe<Scalars['String']['input']>;
   supplierIds?: InputMaybe<Array<Scalars['String']['input']>>;
   supplierPage?: InputMaybe<Scalars['Int']['input']>;
@@ -11763,6 +11922,19 @@ export type ServicesModel = {
   id: Scalars['String']['output'];
   metaData?: Maybe<Scalars['JSON']['output']>;
   name: Scalars['String']['output'];
+};
+
+export type SetDoctorClinicScheduleInput = {
+  clinicId: Scalars['String']['input'];
+  doctorId: Scalars['String']['input'];
+  shifts: Array<DoctorClinicScheduleShiftInput>;
+  slotDuration: Scalars['Int']['input'];
+};
+
+export type SettlePatientDuesDto = {
+  clinicId: Scalars['String']['input'];
+  patientProfileId: Scalars['String']['input'];
+  paymentModes: Array<PaymentModeInput>;
 };
 
 export type SignInpatientDischargeSummaryDto = {
@@ -12624,6 +12796,7 @@ export type RemoveCustomFeaturesFromDoctorMutation = { __typename?: 'Mutation', 
 export type AddDoctorMutationVariables = Exact<{
   clinicIds: Scalars['String']['input'];
   doctorInput: DoctorDto;
+  workingHours: DoctorClinicScheduleConfigInput;
 }>;
 
 
@@ -13374,8 +13547,12 @@ export type RemoveCustomFeaturesFromDoctorMutationHookResult = ReturnType<typeof
 export type RemoveCustomFeaturesFromDoctorMutationResult = Apollo.MutationResult<RemoveCustomFeaturesFromDoctorMutation>;
 export type RemoveCustomFeaturesFromDoctorMutationOptions = Apollo.BaseMutationOptions<RemoveCustomFeaturesFromDoctorMutation, RemoveCustomFeaturesFromDoctorMutationVariables>;
 export const AddDoctorDocument = gql`
-    mutation AddDoctor($clinicIds: String!, $doctorInput: DoctorDTO!) {
-  addDoctor(doctorInput: $doctorInput, clinicIds: $clinicIds) {
+    mutation AddDoctor($clinicIds: String!, $doctorInput: DoctorDTO!, $workingHours: DoctorClinicScheduleConfigInput!) {
+  addDoctor(
+    doctorInput: $doctorInput
+    clinicIds: $clinicIds
+    workingHours: $workingHours
+  ) {
     doctor_id
   }
 }
@@ -13397,6 +13574,7 @@ export type AddDoctorMutationFn = Apollo.MutationFunction<AddDoctorMutation, Add
  *   variables: {
  *      clinicIds: // value for 'clinicIds'
  *      doctorInput: // value for 'doctorInput'
+ *      workingHours: // value for 'workingHours'
  *   },
  * });
  */
