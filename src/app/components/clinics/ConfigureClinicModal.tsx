@@ -48,6 +48,7 @@ const CONNECT_WITH_INVENTORY_KEY = "Connect with inventory";
 const QUEUE_MANAGEMENT_FEATURE_KEY = "Queue management system";
 const SOFT_DELETE_BILLING_FEATURE_KEY = "Soft delete billing";
 const MILESTONES_FEATURE_KEY = "Milestones";
+const PATIENT_ADDRESS_FEATURE_KEY = "Patient address";
 
 type MilestoneTab = "addons" | "modules" | "milestones";
 
@@ -101,6 +102,11 @@ const FEATURE_COPY: Record<string, { label: string; description: string }> = {
     label: "Milestones",
     description:
       "Unlock rewards automatically when a clinic hits configured activity goals.",
+  },
+  [PATIENT_ADDRESS_FEATURE_KEY]: {
+    label: "Patient Address",
+    description:
+      "Collect patient addresses while booking appointments and allow patient search by city or PIN code.",
   },
 };
 
